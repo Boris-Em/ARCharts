@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tXr-a1-R10">
+            <objects>
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARBarChart" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pMZ-aP-02b"/>
+                        <viewControllerLayoutGuide type="bottom" id="ftf-bb-77o"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Woi-8b-Xcb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qpt-h8-HES">
+                                <rect key="frame" x="-0.5" y="-0.5" width="375" height="667"/>
+                            </arscnView>
+                            <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="blP-Rf-Drw" userLabel="Add">
+                                <rect key="frame" x="165" y="603" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="8d4-rW-zKL"/>
+                                    <constraint firstAttribute="width" secondItem="blP-Rf-Drw" secondAttribute="height" multiplier="1:1" id="RAl-JA-Z3u"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="handleTapAddButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="lb3-Wy-Vnf"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="blP-Rf-Drw" firstAttribute="centerX" secondItem="Woi-8b-Xcb" secondAttribute="centerX" id="4xN-Mf-FLt"/>
+                            <constraint firstItem="Qpt-h8-HES" firstAttribute="centerX" secondItem="Woi-8b-Xcb" secondAttribute="centerX" id="CIj-pq-pOY"/>
+                            <constraint firstItem="Qpt-h8-HES" firstAttribute="centerY" secondItem="Woi-8b-Xcb" secondAttribute="centerY" id="Fcz-Mn-GnZ"/>
+                            <constraint firstItem="Qpt-h8-HES" firstAttribute="height" secondItem="Woi-8b-Xcb" secondAttribute="height" id="bzk-B2-Kq8"/>
+                            <constraint firstItem="ftf-bb-77o" firstAttribute="top" secondItem="blP-Rf-Drw" secondAttribute="bottom" constant="20" id="gMc-q4-UHw"/>
+                            <constraint firstItem="Qpt-h8-HES" firstAttribute="width" secondItem="Woi-8b-Xcb" secondAttribute="width" id="h3h-vj-3WK"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="Qpt-h8-HES" id="bHd-bW-PbX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>
