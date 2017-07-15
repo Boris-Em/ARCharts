@@ -17,7 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C36287421F0E084800B6598D /* ARBarChart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARBarChart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C36287421F0E084800B6598D /* ARBarChartsSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARBarChartsSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C36287451F0E084800B6598D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C36287491F0E084800B6598D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C362874C1F0E084800B6598D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -42,7 +42,7 @@
 		C36287391F0E084800B6598D = {
 			isa = PBXGroup;
 			children = (
-				C36287441F0E084800B6598D /* ARBarChart */,
+				C36287441F0E084800B6598D /* SampleApp */,
 				C36287431F0E084800B6598D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,12 +50,12 @@
 		C36287431F0E084800B6598D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C36287421F0E084800B6598D /* ARBarChart.app */,
+				C36287421F0E084800B6598D /* ARBarChartsSampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C36287441F0E084800B6598D /* ARBarChart */ = {
+		C36287441F0E084800B6598D /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
 				C36287451F0E084800B6598D /* AppDelegate.swift */,
@@ -67,15 +67,15 @@
 				C36287501F0E084800B6598D /* LaunchScreen.storyboard */,
 				C36287531F0E084800B6598D /* Info.plist */,
 			);
-			path = ARBarChart;
+			path = SampleApp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C36287411F0E084800B6598D /* ARBarChart */ = {
+		C36287411F0E084800B6598D /* ARBarChartsSampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C36287561F0E084800B6598D /* Build configuration list for PBXNativeTarget "ARBarChart" */;
+			buildConfigurationList = C36287561F0E084800B6598D /* Build configuration list for PBXNativeTarget "ARBarChartsSampleApp" */;
 			buildPhases = (
 				C362873E1F0E084800B6598D /* Sources */,
 				C362873F1F0E084800B6598D /* Frameworks */,
@@ -85,9 +85,9 @@
 			);
 			dependencies = (
 			);
-			name = ARBarChart;
+			name = ARBarChartsSampleApp;
 			productName = ARBarChart;
-			productReference = C36287421F0E084800B6598D /* ARBarChart.app */;
+			productReference = C36287421F0E084800B6598D /* ARBarChartsSampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -105,7 +105,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C362873D1F0E084800B6598D /* Build configuration list for PBXProject "ARBarChart" */;
+			buildConfigurationList = C362873D1F0E084800B6598D /* Build configuration list for PBXProject "ARBarChartsSampleApp" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -118,7 +118,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C36287411F0E084800B6598D /* ARBarChart */,
+				C36287411F0E084800B6598D /* ARBarChartsSampleApp */,
 			);
 		};
 /* End PBXProject section */
@@ -280,9 +280,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 67V847367C;
-				INFOPLIST_FILE = ARBarChart/Info.plist;
+				INFOPLIST_FILE = SampleApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARBarChart;
+				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARBarCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "6288405e-6a4b-4e21-b635-694242ea8c39";
 				PROVISIONING_PROFILE_SPECIFIER = Wildcard;
@@ -296,9 +296,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 67V847367C;
-				INFOPLIST_FILE = ARBarChart/Info.plist;
+				INFOPLIST_FILE = SampleApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARBarChart;
+				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARBarCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "6288405e-6a4b-4e21-b635-694242ea8c39";
 				PROVISIONING_PROFILE_SPECIFIER = Wildcard;
@@ -310,7 +310,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C362873D1F0E084800B6598D /* Build configuration list for PBXProject "ARBarChart" */ = {
+		C362873D1F0E084800B6598D /* Build configuration list for PBXProject "ARBarChartsSampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C36287541F0E084800B6598D /* Debug */,
@@ -319,7 +319,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C36287561F0E084800B6598D /* Build configuration list for PBXNativeTarget "ARBarChart" */ = {
+		C36287561F0E084800B6598D /* Build configuration list for PBXNativeTarget "ARBarChartsSampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C36287571F0E084800B6598D /* Debug */,

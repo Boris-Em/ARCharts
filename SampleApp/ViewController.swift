@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  ARBarChart
+//  ARBarCharts
 //
 //  Created by Bobo on 7/5/17.
 //  Copyright © 2017 Boris Emorine. All rights reserved.
