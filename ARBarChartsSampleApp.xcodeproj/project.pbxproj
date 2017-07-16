@@ -150,8 +150,8 @@
 			children = (
 				C3C2EC451F1A83B3001EC280 /* ARBarCharts.h */,
 				C3C2EC461F1A83B3001EC280 /* Info.plist */,
-				C3C2EC611F1A8467001EC280 /* ARBarChartsProtocols.swift */,
 				C3C2EC641F1A8B94001EC280 /* ARBarChart.swift */,
+				C3C2EC611F1A8467001EC280 /* ARBarChartsProtocols.swift */,
 				C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */,
 			);
 			path = ARBarCharts;
