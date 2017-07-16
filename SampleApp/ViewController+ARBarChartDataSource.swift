@@ -13,7 +13,7 @@ import UIKit
 extension ViewController: ARBarChartsDataSource {
     
     /// Read sample data from the fruit sales CSV file
-    internal func initialize() {
+    internal func readData() {
         let dataPath = Bundle.main.path(forResource: "fruit_sales", ofType: "csv") ?? ""
         if let fruitSalesCSV = try? String(contentsOfFile: dataPath) {
             self.data = []
@@ -38,15 +38,15 @@ extension ViewController: ARBarChartsDataSource {
         }
     }
     
-    func numberOfSeries(in barChart: ARBarChartNode) -> Int {
+    func numberOfSeries(in barChart: ARBarChart) -> Int {
         return self.data.count
     }
     
-    func barChart(_ barChart: ARBarChartNode, numberOfValuesInSeries series: Int) -> Int {
+    func barChart(_ barChart: ARBarChart, numberOfValuesInSeries series: Int) -> Int {
         return self.data[series].count
     }
     
-    func barChart(_ barChart: ARBarChartNode, valueAtIndex index: Int, forSeries series: Int) -> Double {
+    func barChart(_ barChart: ARBarChart, valueAtIndex index: Int, forSeries series: Int) -> Double {
         return self.data[series][index]
     }
     

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		20D557D21F1C0C7700924685 /* ViewController+ARBarChartDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D557D11F1C0C7700924685 /* ViewController+ARBarChartDataSource.swift */; };
 		20D557D31F1C0E0800924685 /* fruit_sales.csv in Resources */ = {isa = PBXBuildFile; fileRef = 20D557D01F1C0C3D00924685 /* fruit_sales.csv */; };
+		20D557D51F1C198100924685 /* ViewController+ARBarChartDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D557D41F1C198100924685 /* ViewController+ARBarChartDelegate.swift */; };
 		C36287461F0E084800B6598D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36287451F0E084800B6598D /* AppDelegate.swift */; };
 		C362874A1F0E084800B6598D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36287491F0E084800B6598D /* ViewController.swift */; };
 		C362874D1F0E084800B6598D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C362874B1F0E084800B6598D /* Main.storyboard */; };
@@ -67,6 +68,7 @@
 /* Begin PBXFileReference section */
 		20D557D01F1C0C3D00924685 /* fruit_sales.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fruit_sales.csv; sourceTree = "<group>"; };
 		20D557D11F1C0C7700924685 /* ViewController+ARBarChartDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+ARBarChartDataSource.swift"; sourceTree = "<group>"; };
+		20D557D41F1C198100924685 /* ViewController+ARBarChartDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+ARBarChartDelegate.swift"; sourceTree = "<group>"; };
 		C36287421F0E084800B6598D /* ARBarChartsSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARBarChartsSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C36287451F0E084800B6598D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C36287491F0E084800B6598D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				20D557CF1F1C0C3D00924685 /* Data */,
 				C36287451F0E084800B6598D /* AppDelegate.swift */,
 				C36287491F0E084800B6598D /* ViewController.swift */,
+				20D557D41F1C198100924685 /* ViewController+ARBarChartDelegate.swift */,
 				20D557D11F1C0C7700924685 /* ViewController+ARBarChartDataSource.swift */,
 				C362874B1F0E084800B6598D /* Main.storyboard */,
 				C3BD6FB11F1346820042479D /* Utilities.swift */,
@@ -328,6 +331,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3BD6FB21F13470E0042479D /* Utilities.swift in Sources */,
+				20D557D51F1C198100924685 /* ViewController+ARBarChartDelegate.swift in Sources */,
 				C3D4C4531F174B29001116AC /* FocusSquare.swift in Sources */,
 				C362874A1F0E084800B6598D /* ViewController.swift in Sources */,
 				C36287461F0E084800B6598D /* AppDelegate.swift in Sources */,
