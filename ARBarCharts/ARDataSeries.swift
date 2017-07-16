@@ -8,18 +8,27 @@
 
 import Foundation
 
-class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
-    func numberOfSeries(in barChart: ARBarChartNode) -> Int {
-        
+/**
+ * The `ARDataSeries` object is used as a convenience to easily create bar charts with `ARBarcharts`. If more customization is desired, you should create your own object conforming to `ARBarChartsDataSource` and `ARBarChartsDelegate`.
+ */
+public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
+    
+    private let values: [[Double]]
+    
+    public required init(withValues values: [[Double]]) {
+        self.values = values
     }
     
-    func barChart(_ barChart: ARBarChartNode, numberOfValuesInSeries series: Int) -> Int {
-        
+    public func numberOfSeries(in barChart: ARBarChartNode) -> Int {
+        return values.count
     }
     
-    func barChart(_ barChart: ARBarChartNode, valueAtIndex index: Int, forSeries series: Int) -> Double {
-        
+    public func barChart(_ barChart: ARBarChartNode, numberOfValuesInSeries series: Int) -> Int {
+        return values[series].count
     }
     
+    public func barChart(_ barChart: ARBarChartNode, valueAtIndex index: Int, forSeries series: Int) -> Double {
+        return values[series][index]
+    }
     
 }
