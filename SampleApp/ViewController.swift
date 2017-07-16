@@ -11,9 +11,12 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
+    
     @IBOutlet var sceneView: ARSCNView!
     
+    var data: [[Double]]!
+    var rowLabels: [String]!
+    var columnLabels: [String]!
     var session: ARSession {
         get {
             return sceneView.session
@@ -26,6 +29,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Read the data set and labels
+        self.initialize()
+        
+        // Check the data set
+        assert(self.rowLabels.count == self.data.count, "Mismatched number of labels and rows")
+        for (label, series) in zip(self.rowLabels, self.data) {
+            print("\(label): \(series)")
+        }
+        
         sceneView.delegate = self
         sceneView.showsStatistics = true
         sceneView.scene = SCNScene()
