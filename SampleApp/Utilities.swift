@@ -623,3 +623,35 @@ func createPlane(size: CGSize, contents: AnyObject?) -> SCNPlane {
 	plane.materials = [SCNMaterial.material(withDiffuse: contents)]
 	return plane
 }
+
+// MARK: Generators
+
+func generateRandomNumbers(withRange range: Range<Int>, numberOfRows rowCount: Int, numberOfColumns columnCount: Int) -> [[Int]] {
+    guard rowCount > 0 && columnCount > 0 else {
+        return [[0]]
+    }
+    
+    var columnCount = columnCount
+    var numbers = [[Int]]()
+    while columnCount > 0 {
+        numbers.append(generateRandomNumbers(withRange: range, count: rowCount))
+        columnCount -= 1
+    }
+    
+    return numbers
+}
+
+func generateRandomNumbers(withRange range: Range<Int>, count: Int) -> [Int] {
+    var count = count
+    var numbers = [Int]()
+    while count > 0 {
+        numbers.append(generateRandomNumber(withRange: range))
+        count -= 1
+    }
+    
+    return numbers
+}
+
+func generateRandomNumber(withRange range: Range<Int>) -> Int {
+    return Int(arc4random_uniform(UInt32(range.upperBound - range.lowerBound))) + range.lowerBound
+}
