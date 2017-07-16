@@ -20,6 +20,7 @@
 		C3C2EC591F1A83B4001EC280 /* ARBarCharts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C3C2EC431F1A83B3001EC280 /* ARBarCharts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C3C2EC631F1A853C001EC280 /* ARBarChartsProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C2EC611F1A8467001EC280 /* ARBarChartsProtocols.swift */; };
 		C3C2EC651F1A8B94001EC280 /* ARBarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C2EC641F1A8B94001EC280 /* ARBarChart.swift */; };
+		C3C2EC691F1BD6C3001EC280 /* ARDataSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */; };
 		C3D4C4531F174B29001116AC /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4C4521F174A97001116AC /* FocusSquare.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,6 +79,7 @@
 		C3C2EC541F1A83B4001EC280 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3C2EC611F1A8467001EC280 /* ARBarChartsProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBarChartsProtocols.swift; sourceTree = "<group>"; };
 		C3C2EC641F1A8B94001EC280 /* ARBarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBarChart.swift; sourceTree = "<group>"; };
+		C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDataSeries.swift; sourceTree = "<group>"; };
 		C3D4C4521F174A97001116AC /* FocusSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -150,6 +152,7 @@
 				C3C2EC461F1A83B3001EC280 /* Info.plist */,
 				C3C2EC611F1A8467001EC280 /* ARBarChartsProtocols.swift */,
 				C3C2EC641F1A8B94001EC280 /* ARBarChart.swift */,
+				C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */,
 			);
 			path = ARBarCharts;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3C2EC691F1BD6C3001EC280 /* ARDataSeries.swift in Sources */,
 				C3C2EC651F1A8B94001EC280 /* ARBarChart.swift in Sources */,
 				C3C2EC631F1A853C001EC280 /* ARBarChartsProtocols.swift in Sources */,
 			);
@@ -618,6 +622,7 @@
 				C3C2EC5B1F1A83B4001EC280 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C3C2EC601F1A83B4001EC280 /* Build configuration list for PBXNativeTarget "ARBarChartsTests" */ = {
 			isa = XCConfigurationList;
@@ -626,6 +631,7 @@
 				C3C2EC5D1F1A83B4001EC280 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
