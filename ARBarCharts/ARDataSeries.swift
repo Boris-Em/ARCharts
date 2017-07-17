@@ -9,7 +9,8 @@
 import Foundation
 
 /**
- * The `ARDataSeries` object is used as a convenience to easily create bar charts with `ARBarcharts`. If more customization is desired, you should create your own object conforming to `ARBarChartsDataSource` and `ARBarChartsDelegate`.
+ * The `ARDataSeries` object is used as a convenience to easily create bar charts with `ARBarcharts`.
+ * If more customization is desired, you should create your own object conforming to `ARBarChartsDataSource` and `ARBarChartsDelegate`.
  */
 public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
     
