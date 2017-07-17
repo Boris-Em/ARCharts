@@ -11,7 +11,7 @@ import SceneKit
 
 public class ARBarChartNode: SCNNode {
     
-    var dataSource: ARBarChartsDataSource?
-    var delegate: ARBarChartsDelegate?
+    weak var dataSource: ARBarChartsDataSource?
+    weak var delegate: ARBarChartsDelegate?
     
 }
