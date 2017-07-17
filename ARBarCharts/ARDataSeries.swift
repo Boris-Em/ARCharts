@@ -15,8 +15,10 @@ public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
     
     private let values: [[Double]]
     
-    public required init(withValues values: [[Double]]) {
+    public required init(withValues values: [[Double]], barChart: ARBarChartNode) {
         self.values = values
+        barChart.dataSource = self
+        barChart.delegate = self
     }
     
     public func numberOfSeries(in barChart: ARBarChartNode) -> Int {
