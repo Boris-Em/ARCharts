@@ -10,7 +10,7 @@
  * The `ARBarChartsDataSource` protocol is adopted by an object that mediates the application's data model for an `ARBarChartNode` object.
  * The data source proves the bar chart object with the information it needs to construct and modify a bar chart.
  */
-public protocol ARBarChartsDataSource {
+public protocol ARBarChartsDataSource: NSObjectProtocol {
     
     /**
      *  Asks the data source to return the number of series (rows on the Y axis) in the bar chart.
@@ -41,6 +41,6 @@ public protocol ARBarChartsDataSource {
     
 }
 
-public protocol ARBarChartsDelegate {
+public protocol ARBarChartsDelegate: NSObjectProtocol {
     
 }
