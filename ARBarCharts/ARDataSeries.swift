@@ -14,6 +14,11 @@ import Foundation
  */
 public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
     
+    public func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
+        let colors = [UIColor.blue, UIColor.green, UIColor.yellow, UIColor.red]
+        return colors[Int.random(0, colors.count)]
+    }
+    
     private let values: [[Double]]
     
     public required init(withValues values: [[Double]], barChart: ARBarChartNode) {
@@ -22,15 +27,15 @@ public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
         barChart.delegate = self
     }
     
-    public func numberOfSeries(in barChart: ARBarChartNode) -> Int {
+    public func numberOfSeries(in barChart: ARBarChart) -> Int {
         return values.count
     }
     
-    public func barChart(_ barChart: ARBarChartNode, numberOfValuesInSeries series: Int) -> Int {
+    public func barChart(_ barChart: ARBarChart, numberOfValuesInSeries series: Int) -> Int {
         return values[series].count
     }
     
-    public func barChart(_ barChart: ARBarChartNode, valueAtIndex index: Int, forSeries series: Int) -> Double {
+    public func barChart(_ barChart: ARBarChart, valueAtIndex index: Int, forSeries series: Int) -> Double {
         return values[series][index]
     }
     

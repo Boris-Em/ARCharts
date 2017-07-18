@@ -9,53 +9,83 @@
 import Foundation
 import SceneKit
 
-public class ARBarChartNode: SCNNode {
+public class ARBarChart: SCNNode {
     
-    weak var dataSource: ARBarChartsDataSource?
-    weak var delegate: ARBarChartsDelegate?
+    public var dataSource: ARBarChartsDataSource?
+    public var delegate: ARBarChartsDelegate?
     
-    // MARK: - Convenience Functions
-    
-    private lazy var numberOfSeries: Int = {
-        guard let dataSource = self.dataSource else {
-            return 0
-        }
-        
-        return dataSource.numberOfSeries(in: self)
-    }()
-    
-    private func numberOfValues(forSeries series: Int) -> Int {
-        guard let dataSource = dataSource else {
-            return 0
-        }
-        
-        return dataSource.barChart(self, numberOfValuesInSeries: series)
+    public required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
-    private func valueAtIndex(index: Int, forSeries series: Int) -> Double? {
-        guard let dataSource = dataSource else {
-            return nil
-        }
-        
-        return dataSource.barChart(self, valueAtIndex: index, forSeries: series)
+    public init(geometry: SCNGeometry) {
+        super.init()
+        self.geometry = geometry
     }
     
-    private lazy var maxValue: Double? = {
-        var seriesIndex = 0
-        var maxValue = Double.leastNonzeroMagnitude
-        while seriesIndex < self.numberOfSeries {
-            var valuesIndex = 0
-            while valuesIndex < self.numberOfValues(forSeries: seriesIndex) {
-                guard let value = self.valueAtIndex(index: valuesIndex, forSeries: seriesIndex) else {
-                    return nil
+    
+    /// Initialize an `ARBarChart` with a dataSource and bounding dimensions.
+    /// Dimensions should be read as if you were looking down on the graph from above.
+    /// Width and height determine the square in the XY-plane on which the graph lies.
+    /// Depth is the distance from the planar surface to the top of the bar in the graph.
+    ///
+    /// - Parameters:
+    ///   - dataSource: Provides data to the chart.
+    ///   - width: Distance taken up by x-dimension (columns).
+    ///   - height: Distance taken up by y-dimension (rows).
+    ///   - depth: Distance taken up by z-dimension (from surface to top of largest bar).
+    public init(dataSource: ARBarChartsDataSource, width: CGFloat, height: CGFloat, depth: CGFloat) {
+        super.init()
+        self.dataSource = dataSource
+        
+        // Compute normalization constants to scale the bars to fit inside the bounding box
+        let xRange = dataSource.numberOfSeries(in: self)
+        let yRange = Array(0 ..< xRange).map({ dataSource.barChart(self, numberOfValuesInSeries: $0) }).max() ?? 1
+        // TODO: Should we always let zMin be 0? I.e. minimum bar should always have some depth, right?
+        var zMin = 0.0
+        var zMax = 0.0
+        for xValue in 0 ..< dataSource.numberOfSeries(in: self) {
+            for yValue in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: xValue) {
+                let zValue = dataSource.barChart(self, valueAtIndex: yValue, forSeries: xValue)
+                if zValue < zMin {
+                    zMin = zValue
                 }
-                maxValue = max(maxValue, value)
-                valuesIndex += 1
+                if zValue > zMax {
+                    zMax = zValue
+                }
             }
-            seriesIndex += 1
         }
+        let zRange = (zMin == zMax) ? 1.0 : zMax - zMin
         
-        return maxValue
-    }()
-    
+        let boxWidth = width / CGFloat(xRange)
+        let boxLength = height / CGFloat(yRange)
+        let zNormalizer = depth / CGFloat(zRange)
+        
+        // Construct the bars
+        for yValue in 0 ..< dataSource.numberOfSeries(in: self) {
+            for xValue in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: yValue) {
+                let zValue = dataSource.barChart(self, valueAtIndex: xValue, forSeries: yValue)
+                
+                // Construct a box with the bar's dimensions
+                let boxHeight = CGFloat(zValue) * zNormalizer
+                let barBox = SCNBox(width: boxWidth,
+                                    height: boxHeight,
+                                    length: boxLength,
+                                    chamferRadius: 0)
+                let barNode = SCNNode(geometry: barBox)
+                
+                // Position the box
+                let xPosition = Float(xValue) * Float(boxWidth)
+                let zPosition = Float(yValue) * Float(boxLength)
+                let yPosition = Float(zValue) * Float(zNormalizer) / 2.0
+                barNode.position = SCNVector3(x: Float(xPosition), y: Float(yPosition), z: Float(zPosition))
+                
+                // Color the bar
+                let barColor = dataSource.barChart(self, colorForValueAtIndex: xValue, forSeries: yValue)
+                barNode.geometry?.firstMaterial?.diffuse.contents = barColor
+                
+                self.addChildNode(barNode)
+            }
+        }
+    }
 }

@@ -6,13 +6,20 @@
 //  Copyright © 2017 Boris Emorine. All rights reserved.
 //
 
-import UIKit
-import SceneKit
+import ARBarCharts
 import ARKit
+import SceneKit
+import UIKit
+
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
+    
     @IBOutlet var sceneView: ARSCNView!
+    
+    var barChart: ARBarChart!
+    var data: [[Double]]!
+    var rowLabels: [String]!
+    var columnLabels: [String]!
     
     var session: ARSession {
         get {
@@ -26,9 +33,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Read the data set and labels
+        self.readData()
+        
+        // Check the data set
+        assert(self.rowLabels.count == self.data.count, "Mismatched number of labels and rows")
+        for (label, series) in zip(self.rowLabels, self.data) {
+            print("\(label): \(series)")
+        }
+        
         sceneView.delegate = self
         sceneView.showsStatistics = true
         sceneView.scene = SCNScene()
+        
         setupFocusSquare()
     }
     
@@ -64,7 +82,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         focusSquare.removeFromParentNode()
         sceneView.scene.rootNode.addChildNode(focusSquare)
     }
-
+    
+    func constructBarChart(at position: SCNVector3) {
+        // Remove previous bar chart
+        if self.barChart != nil {
+            self.barChart.removeFromParentNode()
+            self.barChart = nil
+        }
+        
+        // Dummy setup for now -- use a green box instead of a bar chart
+        let cube = SCNBox(width: 0.1, height: 0.005, length: 0.1, chamferRadius: 0)
+        cube.firstMaterial?.diffuse.contents = UIColor.green
+        self.barChart = ARBarChart(dataSource: self, width: 0.1, height: 0.1, depth: 0.1)
+        self.barChart.position = position
+        
+        // Draw bar chart in the scene
+        self.sceneView.scene.rootNode.addChildNode(self.barChart)
+    }
+    
     // MARK: - ARSCNViewDelegate
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -104,12 +139,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard let lastPosition = focusSquare.lastPosition else {
             return
         }
-        let cube = SCNBox(width: 1, height: 0.005, length: 1, chamferRadius: 0)
-        cube.firstMaterial?.diffuse.contents = UIColor.green
-        let cubeNode = SCNNode(geometry: cube)
-        cubeNode.position = lastPosition
         
-        self.sceneView.scene.rootNode.addChildNode(cubeNode)
+        // Reconstruct the bar chart at the new focus square position
+        self.constructBarChart(at: lastPosition)
     }
     
     // MARK: - Helper Functions
