@@ -9,8 +9,8 @@
 import ARCharts
 import UIKit
 
-// Implements ARBarChartsDataSource protocol for the Fruit Sales sample data set.
-extension ViewController: ARBarChartsDataSource {
+// Implements ARBarChartDataSource protocol for the Fruit Sales sample data set.
+extension ViewController: ARBarChartDataSource {
     
     /// Read sample data from the fruit sales CSV file
     internal func readData() {

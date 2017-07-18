@@ -11,8 +11,8 @@ import SceneKit
 
 public class ARBarChart: SCNNode {
     
-    public var dataSource: ARBarChartsDataSource?
-    public var delegate: ARBarChartsDelegate?
+    public var dataSource: ARBarChartDataSource?
+    public var delegate: ARBarChartDelegate?
     
     public required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -34,7 +34,7 @@ public class ARBarChart: SCNNode {
     ///   - width: Distance taken up by x-dimension (columns).
     ///   - height: Distance taken up by y-dimension (rows).
     ///   - depth: Distance taken up by z-dimension (from surface to top of largest bar).
-    public init(dataSource: ARBarChartsDataSource, width: CGFloat, height: CGFloat, depth: CGFloat) {
+    public init(dataSource: ARBarChartDataSource, width: CGFloat, height: CGFloat, depth: CGFloat) {
         super.init()
         self.dataSource = dataSource
         

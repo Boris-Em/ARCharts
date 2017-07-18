@@ -11,9 +11,9 @@ import UIKit
 
 /**
  * The `ARDataSeries` object is used as a convenience to easily create bar charts with `ARBarcharts`.
- * If more customization is desired, you should create your own object conforming to `ARBarChartsDataSource` and `ARBarChartsDelegate`.
+ * If more customization is desired, you should create your own object conforming to `ARBarChartDataSource` and `ARBarChartDelegate`.
  */
-public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
+public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
         let colors = [UIColor.blue, UIColor.green, UIColor.yellow, UIColor.red]

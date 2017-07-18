@@ -9,7 +9,7 @@
 import ARCharts
 import UIKit
 
-// Implements ARBarChartsDelegate protocol for the Fruit Sales sample data set.
-extension ViewController: ARBarChartsDelegate {
+// Implements ARBarChartDelegate protocol for the Fruit Sales sample data set.
+extension ViewController: ARBarChartDelegate {
     
 }
