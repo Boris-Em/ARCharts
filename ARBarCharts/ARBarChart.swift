@@ -38,12 +38,6 @@ public class ARBarChart: SCNNode {
         super.init()
         self.dataSource = dataSource
         
-        // Construct the graph's planar base
-        let basePlane = SCNPlane(width: width, height: height)
-        let baseNode = SCNNode(geometry: basePlane)
-        let (origin, _) = baseNode.boundingBox
-        self.addChildNode(baseNode)
-        
         // Compute normalization constants to scale the bars to fit inside the bounding box
         let xRange = dataSource.numberOfSeries(in: self)
         let yRange = Array(0 ..< xRange).map({ dataSource.barChart(self, numberOfValuesInSeries: $0) }).max() ?? 1
@@ -64,7 +58,7 @@ public class ARBarChart: SCNNode {
         let zRange = (zMin == zMax) ? 1.0 : zMax - zMin
         
         let boxWidth = width / CGFloat(xRange)
-        let boxHeight = height / CGFloat(yRange)
+        let boxLength = height / CGFloat(yRange)
         let zNormalizer = depth / CGFloat(zRange)
         
         // Construct the bars
@@ -73,18 +67,18 @@ public class ARBarChart: SCNNode {
                 let zValue = dataSource.barChart(self, valueAtIndex: xValue, forSeries: yValue)
                 
                 // Construct a box with the bar's dimensions
+                let boxHeight = CGFloat(zValue) * zNormalizer
                 let barBox = SCNBox(width: boxWidth,
                                     height: boxHeight,
-                                    length: CGFloat(zValue) * zNormalizer,
+                                    length: boxLength,
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
                 // Position the box
-                let xPosition = origin.x + Float(xValue) * Float(boxWidth)
-                let yPosition = origin.y + Float(yValue) * Float(boxHeight)
-                let zPosition = origin.z + Float(zValue) * Float(zNormalizer) / 2.0
+                let xPosition = Float(xValue) * Float(boxWidth)
+                let zPosition = Float(yValue) * Float(boxLength)
+                let yPosition = Float(zValue) * Float(zNormalizer) / 2.0
                 barNode.position = SCNVector3(x: Float(xPosition), y: Float(yPosition), z: Float(zPosition))
-                // barNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: Float(-M_PI_2))
                 
                 // Color the bar
                 let barColor = dataSource.barChart(self, colorForValueAtIndex: xValue, forSeries: yValue)
