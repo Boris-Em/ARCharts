@@ -93,7 +93,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Dummy setup for now -- use a green box instead of a bar chart
         let cube = SCNBox(width: 0.1, height: 0.005, length: 0.1, chamferRadius: 0)
         cube.firstMaterial?.diffuse.contents = UIColor.green
-        self.barChart = ARBarChart(geometry: cube)
+        self.barChart = ARBarChart(dataSource: self, width: 0.1, height: 0.1, depth: 0.1)
         self.barChart.position = position
         
         // Draw bar chart in the scene

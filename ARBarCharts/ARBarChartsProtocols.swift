@@ -39,6 +39,17 @@ public protocol ARBarChartsDataSource {
                   valueAtIndex index: Int,
                   forSeries series: Int) -> Double
     
+    /**
+     *  Asks the data source to return the color for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
+     * - parameter barChart: The `ARBarCharNode` object requesting the number of values.
+     * - parameter index: The index number identifying an index in the bar chart (X axis).
+     * - parameter series: The index number identifying a series in the bar chart (Y axis).
+     * - returns: The color to use for the bar corresponding to the given index and series.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  colorForValueAtIndex index: Int,
+                  forSeries series: Int) -> UIColor
+    
 }
 
 public protocol ARBarChartsDelegate {

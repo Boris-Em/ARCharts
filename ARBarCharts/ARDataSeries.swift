@@ -13,6 +13,11 @@ import Foundation
  */
 public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
     
+    public func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
+        let colors = [UIColor.blue, UIColor.green, UIColor.yellow, UIColor.red]
+        return colors[Int.random(0, colors.count)]
+    }
+    
     private let values: [[Double]]
     
     public required init(withValues values: [[Double]]) {

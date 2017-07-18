@@ -50,4 +50,9 @@ extension ViewController: ARBarChartsDataSource {
         return self.data[series][index]
     }
     
+    func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
+        let colors = [UIColor.red, UIColor.green, UIColor.blue]
+        return colors[Int.random(0, colors.count)]
+    }
+    
 }
