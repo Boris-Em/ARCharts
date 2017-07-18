@@ -34,14 +34,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Read the data set and labels
-        self.readData()
-        
-        // Check the data set
+        self.parseData()
         assert(self.rowLabels.count == self.data.count, "Mismatched number of labels and rows")
-        for (label, series) in zip(self.rowLabels, self.data) {
-            print("\(label): \(series)")
-        }
         
         sceneView.delegate = self
         sceneView.showsStatistics = true
@@ -64,13 +58,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // Pause the view's session
         sceneView.session.pause()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
     }
     
     // MARK - Setups
@@ -84,19 +76,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func constructBarChart(at position: SCNVector3) {
-        // Remove previous bar chart
-        if self.barChart != nil {
-            self.barChart.removeFromParentNode()
-            self.barChart = nil
+        if barChart != nil {
+            barChart.removeFromParentNode()
+            barChart = nil
         }
         
-        // Dummy setup for now -- use a green box instead of a bar chart
+        // TODO: Dummy setup for now -- use a green box instead of a bar chart
         let cube = SCNBox(width: 0.1, height: 0.005, length: 0.1, chamferRadius: 0)
         cube.firstMaterial?.diffuse.contents = UIColor.green
-        self.barChart = ARBarChart(dataSource: self, width: 0.1, height: 0.1, depth: 0.1)
+        self.barChart = ARBarChart(dataSource: self, delegate: self, size: SCNVector3(0.1, 0.1, 0.1))
         self.barChart.position = position
-        
-        // Draw bar chart in the scene
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
@@ -110,7 +99,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
-    // Override to create and configure nodes for anchors added to the view's session.
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         let node = SCNNode()
      
@@ -121,16 +109,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
+        // TODO: Present an error message to the user
     }
     
     func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
+        // TODO: Inform the user that the session has been interrupted, for example, by presenting an overlay
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
+        // TODO: Reset tracking and/or remove existing anchors if consistent tracking is required
     }
     
     // MARK: - Actions
@@ -140,7 +127,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             return
         }
         
-        // Reconstruct the bar chart at the new focus square position
         self.constructBarChart(at: lastPosition)
     }
     
