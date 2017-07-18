@@ -8,7 +8,7 @@ Utility functions and type extensions used throughout the projects.
 import Foundation
 import ARKit
 
-// - MARK: UIImage extensions
+// MARK: - UIImage extensions
 
 extension UIImage {
 	func inverted() -> UIImage? {

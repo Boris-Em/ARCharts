@@ -40,6 +40,10 @@ public protocol ARBarChartDataSource: class {
     func barChart(_ barChart: ARBarChart,
                   valueAtIndex index: Int,
                   forSeries series: Int) -> Double
+        
+}
+
+public protocol ARBarChartDelegate: class {
     
     /**
      *  Asks the data source to return the color for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
@@ -51,9 +55,5 @@ public protocol ARBarChartDataSource: class {
     func barChart(_ barChart: ARBarChart,
                   colorForValueAtIndex index: Int,
                   forSeries series: Int) -> UIColor
-    
-}
-
-public protocol ARBarChartDelegate: class {
     
 }

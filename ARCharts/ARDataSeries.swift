@@ -15,12 +15,9 @@ import UIKit
  */
 public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
-    public func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
-        let colors = [UIColor.blue, UIColor.green, UIColor.yellow, UIColor.red]
-        return colors[Int.random(0, colors.count)]
-    }
-    
     private let values: [[Double]]
+    
+    // MARK - ARBarChartDataSource
     
     public required init(withValues values: [[Double]], barChart: ARBarChart) {
         self.values = values
@@ -38,6 +35,12 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart, valueAtIndex index: Int, forSeries series: Int) -> Double {
         return values[series][index]
+    }
+    
+    // MARK - ARBarChartDelegate
+    
+    public func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
+        return UIColor.white
     }
     
 }

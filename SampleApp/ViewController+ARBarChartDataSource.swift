@@ -9,11 +9,11 @@
 import ARCharts
 import UIKit
 
-// Implements ARBarChartDataSource protocol for the Fruit Sales sample data set.
 extension ViewController: ARBarChartDataSource {
     
-    /// Read sample data from the fruit sales CSV file
-    internal func readData() {
+    // TODO: We will need to use ARDataSeries eventually, as our sample app should reflect the "default" customization state. The data is very specific right now as well. We will eventually need a more generic way of handling / displaying the data.
+    
+    internal func parseData() {
         let dataPath = Bundle.main.path(forResource: "fruit_sales", ofType: "csv") ?? ""
         if let fruitSalesCSV = try? String(contentsOfFile: dataPath) {
             self.data = []
@@ -52,7 +52,7 @@ extension ViewController: ARBarChartDataSource {
     
     func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
         let colors = [UIColor.red, UIColor.green, UIColor.blue]
-        return colors[Int.random(0, colors.count)]
+        return colors[generateRandomNumber(withRange: 0 ..< colors.count)]
     }
     
 }
