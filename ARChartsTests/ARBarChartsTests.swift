@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import ARBarCharts
+@testable import ARCharts
 
 class ARBarChartsTests: XCTestCase {
     

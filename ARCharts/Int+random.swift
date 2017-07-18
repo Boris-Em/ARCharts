@@ -1,6 +1,6 @@
 //
 //  Int+random.swift
-//  ARBarCharts
+//  ARCharts
 //
 //  Created by Christopher Chute on 7/17/17.
 //  Copyright © 2017 Boris Emorine. All rights reserved.

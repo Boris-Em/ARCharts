@@ -1,12 +1,12 @@
 //
 //  ViewController+ARBarChartDataSource.swift
-//  ARBarChartsSampleApp
+//  ARChartsSampleApp
 //
 //  Created by Christopher Chute on 7/16/17.
 //  Copyright © 2017 Boris Emorine. All rights reserved.
 //
 
-import ARBarCharts
+import ARCharts
 import UIKit
 
 // Implements ARBarChartsDataSource protocol for the Fruit Sales sample data set.

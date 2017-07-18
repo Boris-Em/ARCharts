@@ -1,12 +1,12 @@
 //
 //  ViewController.swift
-//  ARBarCharts
+//  ARCharts
 //
 //  Created by Bobo on 7/5/17.
 //  Copyright © 2017 Boris Emorine. All rights reserved.
 //
 
-import ARBarCharts
+import ARCharts
 import ARKit
 import SceneKit
 import UIKit

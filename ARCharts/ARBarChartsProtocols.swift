@@ -6,6 +6,8 @@
 //  Copyright © 2017 Boris Emorine. All rights reserved.
 //
 
+import UIKit
+
 /**
  * The `ARBarChartsDataSource` protocol is adopted by an object that mediates the application's data model for an `ARBarChart` object.
  * The data source proves the bar chart object with the information it needs to construct and modify a bar chart.

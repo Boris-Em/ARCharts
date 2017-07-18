@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 /**
  * The `ARDataSeries` object is used as a convenience to easily create bar charts with `ARBarcharts`.
@@ -21,7 +22,7 @@ public class ARDataSeries: ARBarChartsDataSource, ARBarChartsDelegate {
     
     private let values: [[Double]]
     
-    public required init(withValues values: [[Double]], barChart: ARBarChartNode) {
+    public required init(withValues values: [[Double]], barChart: ARBarChart) {
         self.values = values
         barChart.dataSource = self
         barChart.delegate = self
