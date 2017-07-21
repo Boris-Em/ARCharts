@@ -39,7 +39,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     // MARK - ARBarChartDelegate
     
-    public func barChart(_ barChart: ARBarChart, colorForValueAtIndex index: Int, forSeries series: Int) -> UIColor {
+    public func barChart(_ barChart: ARBarChart, colorForBarAtIndex index: Int, forSeries series: Int) -> UIColor {
         return UIColor.white
     }
     

@@ -33,57 +33,107 @@ public class ARBarChart: SCNNode {
      */
     public init(dataSource: ARBarChartDataSource, delegate: ARBarChartDelegate, size: SCNVector3) {
         super.init()
+        
         self.dataSource = dataSource
         self.delegate = delegate
-        
-        // Compute normalization constants to scale the bars to fit inside the bounding box
-        let xRange = dataSource.numberOfSeries(in: self)
-        let yRange = Array(0 ..< xRange).map({ dataSource.barChart(self, numberOfValuesInSeries: $0) }).max() ?? 1
-        // TODO: Should we always let zMin be 0? I.e. minimum bar should always have some depth, right?
-        var zMin = 0.0
-        var zMax = 0.0
-        for xValue in 0 ..< dataSource.numberOfSeries(in: self) {
-            for yValue in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: xValue) {
-                let zValue = dataSource.barChart(self, valueAtIndex: yValue, forSeries: xValue)
-                if zValue < zMin {
-                    zMin = zValue
-                }
-                if zValue > zMax {
-                    zMax = zValue
+        drawGraph(withSize: size)
+    }
+    
+    public func reloadGraph() {
+        // TODO: Implement
+    }
+    
+    // TODO: Cache (with lazy?)
+    private var numberOfSeries: Int? {
+        get {
+            return self.dataSource?.numberOfSeries(in: self)
+        }
+    }
+    
+    // TODO: Cache (with lazy?)
+    private var maxNumberOfIndeces: Int? {
+        get {
+            guard let numberOfSeries = self.numberOfSeries, let dataSource = self.dataSource else {
+                return nil
+            }
+            
+            return Array(0 ..< numberOfSeries).map({ dataSource.barChart(self, numberOfValuesInSeries: $0) }).max()
+        }
+    }
+    
+    // TODO: Cache (lazy?)
+    private var minAndMaxChartValues: (minValue: Double, maxValue: Double)? {
+        get {
+            guard let dataSource = self.dataSource else {
+                return nil
+            }
+            
+            var minValue = Double.greatestFiniteMagnitude
+            var maxValue = Double.leastNormalMagnitude
+            
+            var didProcessValue = false
+            
+            for series in 0 ..< dataSource.numberOfSeries(in: self) {
+                for index in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: series) {
+                    let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
+                    minValue = min(minValue, value)
+                    maxValue = max(maxValue, value)
+                    didProcessValue = true
                 }
             }
+            
+            guard didProcessValue == true else {
+                return nil
+            }
+            
+            return (minValue, maxValue)
         }
-        let zRange = (zMin == zMax) ? 1.0 : zMax - zMin
+    }
+    public var minValue: Double?
+    public var maxValue: Double?
+    
+    private func drawGraph(withSize size: SCNVector3) {
+        guard let dataSource = dataSource,
+            let delegate = delegate,
+            let numberOfSeries = self.numberOfSeries,
+            let maxNumberOfIndeces = self.maxNumberOfIndeces else {
+                // TODO: Print or assert
+                return
+        }
         
-        let boxWidth = size.x / Float(xRange)
-        let boxLength = size.y / Float(yRange)
-        let zNormalizer = size.z / Float(zRange)
+        guard let minValue = self.minValue ?? self.minAndMaxChartValues?.minValue,
+            let maxValue = self.maxValue ?? self.minAndMaxChartValues?.maxValue,
+            minValue < maxValue else {
+                // TODO: Print or assert
+                return
+        }
         
-        // Construct the bars
-        for yValue in 0 ..< dataSource.numberOfSeries(in: self) {
-            for xValue in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: yValue) {
-                let zValue = dataSource.barChart(self, valueAtIndex: xValue, forSeries: yValue)
+        let biggestValueRange = maxValue - minValue
+        let barsWidth = size.x / Float(numberOfSeries)
+        let barsLength = size.y / Float(maxNumberOfIndeces)
+        let maxBarHeight = size.z / Float(biggestValueRange)
+        
+        for series in 0 ..< numberOfSeries {
+            for index in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: series) {
+                let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
-                // Construct a box with the bar's dimensions
-                let boxHeight = Float(zValue) * zNormalizer
-                let barBox = SCNBox(width: CGFloat(boxWidth),
-                                    height: CGFloat(boxHeight),
-                                    length: CGFloat(boxLength),
+                let barHeight = Float(value) * maxBarHeight
+                let barBox = SCNBox(width: CGFloat(barsWidth),
+                                    height: CGFloat(barHeight),
+                                    length: CGFloat(barsLength),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
-                // Position the box
-                let xPosition = Float(xValue) * Float(boxWidth)
-                let zPosition = Float(yValue) * Float(boxLength)
-                let yPosition = Float(zValue) * Float(zNormalizer) / 2.0
-                barNode.position = SCNVector3(x: Float(xPosition), y: Float(yPosition), z: Float(zPosition))
+                let xPosition = Float(series) * barsWidth
+                let yPosition = Float(value) * Float(maxBarHeight) / 2.0
+                let zPosition = Float(index) * barsLength
+                barNode.position = SCNVector3(x: xPosition, y: yPosition, z: zPosition)
                 
-                // Color the bar
-                let barColor = delegate.barChart(self, colorForValueAtIndex: xValue, forSeries: yValue)
+                let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
                 barNode.geometry?.firstMaterial?.diffuse.contents = barColor
                 
                 self.addChildNode(barNode)
             }
         }
-    }
+    }    
 }

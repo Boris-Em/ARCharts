@@ -53,7 +53,7 @@ public protocol ARBarChartDelegate: class {
      * - returns: The color to use for the bar corresponding to the given index and series.
      */
     func barChart(_ barChart: ARBarChart,
-                  colorForValueAtIndex index: Int,
+                  colorForBarAtIndex index: Int,
                   forSeries series: Int) -> UIColor
     
 }
