@@ -51,7 +51,7 @@ public class ARBarChart: SCNNode {
     }
     
     // TODO: Cache (with lazy?)
-    private var maxNumberOfIndeces: Int? {
+    private var maxNumberOfIndices: Int? {
         get {
             guard let numberOfSeries = self.numberOfSeries, let dataSource = self.dataSource else {
                 return nil
@@ -96,7 +96,7 @@ public class ARBarChart: SCNNode {
         guard let dataSource = dataSource,
             let delegate = delegate,
             let numberOfSeries = self.numberOfSeries,
-            let maxNumberOfIndeces = self.maxNumberOfIndeces else {
+            let maxNumberOfIndices = self.maxNumberOfIndices else {
                 // TODO: Print or assert
                 return
         }
@@ -110,7 +110,7 @@ public class ARBarChart: SCNNode {
         
         let biggestValueRange = maxValue - minValue
         let barsWidth = size.x / Float(numberOfSeries)
-        let barsLength = size.y / Float(maxNumberOfIndeces)
+        let barsLength = size.y / Float(maxNumberOfIndices)
         let maxBarHeight = size.z / Float(biggestValueRange)
         
         for series in 0 ..< numberOfSeries {
