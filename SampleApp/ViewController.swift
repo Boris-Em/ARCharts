@@ -34,9 +34,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.parseData()
-        assert(self.rowLabels.count == self.data.count, "Mismatched number of labels and rows")
-        
         sceneView.delegate = self
         sceneView.showsStatistics = true
         sceneView.scene = SCNScene()
@@ -81,7 +78,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-        self.barChart = ARBarChart(dataSource: self, delegate: self, size: SCNVector3(0.2, 0.2, 0.2))
+        let values = generateRandomNumbers(withRange: 0..<50, numberOfRows: 50, numberOfColumns: 50)
+            
+        let dataSeries = ARDataSeries(withValues: values)
+        self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.2, 0.2, 0.2))
         self.barChart.position = position
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
