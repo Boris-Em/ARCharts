@@ -626,13 +626,13 @@ func createPlane(size: CGSize, contents: AnyObject?) -> SCNPlane {
 
 // MARK: Generators
 
-func generateRandomNumbers(withRange range: Range<Int>, numberOfRows rowCount: Int, numberOfColumns columnCount: Int) -> [[Int]] {
+func generateRandomNumbers(withRange range: Range<Int>, numberOfRows rowCount: Int, numberOfColumns columnCount: Int) -> [[Double]] {
     guard rowCount > 0 && columnCount > 0 else {
         return [[0]]
     }
     
     var columnCount = columnCount
-    var numbers = [[Int]]()
+    var numbers = [[Double]]()
     while columnCount > 0 {
         numbers.append(generateRandomNumbers(withRange: range, count: rowCount))
         columnCount -= 1
@@ -641,9 +641,9 @@ func generateRandomNumbers(withRange range: Range<Int>, numberOfRows rowCount: I
     return numbers
 }
 
-func generateRandomNumbers(withRange range: Range<Int>, count: Int) -> [Int] {
+func generateRandomNumbers(withRange range: Range<Int>, count: Int) -> [Double] {
     var count = count
-    var numbers = [Int]()
+    var numbers = [Double]()
     while count > 0 {
         numbers.append(generateRandomNumber(withRange: range))
         count -= 1
@@ -652,6 +652,29 @@ func generateRandomNumbers(withRange range: Range<Int>, count: Int) -> [Int] {
     return numbers
 }
 
-func generateRandomNumber(withRange range: Range<Int>) -> Int {
-    return Int(arc4random_uniform(UInt32(range.upperBound - range.lowerBound))) + range.lowerBound
+func generateRandomNumber(withRange range: Range<Int>) -> Double {
+    return Double(arc4random_uniform(UInt32(range.upperBound - range.lowerBound))) + Double(range.lowerBound)
+}
+
+func generateNumbers(fromDataSampleWithIndex index: Int) -> [[Double]]? {
+    let resourceName = String(format: "DataSample_%i", index)
+    
+    guard let dataPath = Bundle.main.path(forResource: resourceName, ofType: "csv") else {
+        print("Could Not Load Data Sample File")
+        return nil
+    }
+    
+    var data = [[Double]]()
+    if let dataSampleString = try? String(contentsOfFile: dataPath) {
+        let lines = dataSampleString.components(separatedBy: "\n")
+        let headerEntries = lines[0].components(separatedBy: ",")
+        for line in lines[1...] {
+            let lineEntries = line.components(separatedBy: ",")
+            if lineEntries.count == headerEntries.count {
+                data.append(lineEntries[1...].map({ Double($0) ?? 0.0 }))
+            }
+        }
+    }
+    
+    return data
 }
