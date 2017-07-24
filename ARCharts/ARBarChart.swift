@@ -112,34 +112,34 @@ public class ARBarChart: SCNNode {
         
         let biggestValueRange = maxValue - minValue
         let seriesSize = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: size.z)
-        let barsLength = size.x / Float(maxNumberOfIndices)
+        let barsLength = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: size.x)
         let maxBarHeight = size.y / Float(biggestValueRange)
         
         var previousZPosition: Float = 0.0
         
         for series in 0 ..< numberOfSeries {
-            guard let zPosition = self.zPosition(forSeries: series, previousZPosition, seriesSize) else {
-                return
-            }
+            let zPosition = self.zPosition(forSeries: series, previousZPosition, seriesSize)
+            var previousXPosition: Float = 0.0
             
             for index in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: series) {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
-                let barBox = SCNBox(width: CGFloat(seriesSize),
+                let barBox = SCNBox(width: CGFloat(barsLength),
                                     height: CGFloat(barHeight),
-                                    length: CGFloat(barsLength),
+                                    length: CGFloat(seriesSize),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
                 let yPosition = Float(value) * Float(maxBarHeight) / 2.0
-                let xPosition = Float(index) * barsLength
+                let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
                 barNode.position = SCNVector3(x: xPosition, y: yPosition, z: zPosition)
                 
                 let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
                 barNode.geometry?.firstMaterial?.diffuse.contents = barColor
                 
                 self.addChildNode(barNode)
+                previousXPosition = xPosition
             }
             
             previousZPosition = zPosition
@@ -149,7 +149,7 @@ public class ARBarChart: SCNNode {
     /**
      * Calculates the actual size available for one series on the graph.
      * - parameter numberOfSeries: The number of series on the graph.
-     * - parameter availableZSize: The available size on the Z axis for graph.
+     * - parameter availableZSize: The available size on the Z axis of the graph.
      * - returns: The actual size available for one series on the graph.
      */
     private func seriesSize(withNumberOfSeries numberOfSeries: Int, zSizeAvailableForBars availableZSize: Float) -> Float {
@@ -164,14 +164,44 @@ public class ARBarChart: SCNNode {
     }
     
     /**
-     * Calculates the Z position (Series Axis) for a specific series
-     * - parameter series: The series that requires the Z position
+     * Calculates the actual size available for one index on the graph.
+     * - parameter numberOfIndices: The number of indices on the graph.
+     * - parameter availableXSize: The available size on the X axis of the graph.
+     * - returns: The actual size available for one index on the graph.
+     */
+    private func indexSize(withNumberOfIndices numberOfIndices: Int, xSizeAvailableForBars availableXSize: Float) -> Float {
+        var totalGapCoefficient: Float = 0.0
+        if let delegate = self.delegate {
+            totalGapCoefficient = Array(0 ..< numberOfIndices).reduce(0, { (total, current) -> Float in
+                total + delegate.barChart(self, gapSizeAfterIndex: current)
+            })
+        }
+        
+        return availableXSize / (Float(numberOfIndices) + totalGapCoefficient)
+    }
+    
+    /**
+     * Calculates the X position (Series Axis) for a specific index.
+     * - parameter series: The index that requires the X position.
+     * - parameter previousIndexXPosition: The X position of the previous index. This is useful for optimization.
+     * - parameter indexSize: The acutal size available for one index on the graph.
+     * - returns: The X position for a given index.
+     */
+    private func xPosition(forIndex index: Int, _ previousIndexXPosition: Float, _ indexSize: Float) -> Float {
+        let gapSize: Float = index == 0 ? 0.0 : self.delegate?.barChart(self, gapSizeAfterIndex: index - 1) ?? 0.0
+        
+        return previousIndexXPosition + indexSize + indexSize * gapSize
+    }
+    
+    /**
+     * Calculates the Z position (Series Axis) for a specific series.
+     * - parameter series: The series that requires the Z position.
      * - parameter previousSeriesZPosition: The Z position of the previous series. This is useful for optimization.
      * - parameter seriesSize: The acutal size available for one series on the graph.
      * - returns: The Z position for a given series.
      */
-    private func zPosition(forSeries series: Int, _ previousSeriesZPosition: Float, _ seriesSize: Float) -> Float? {
-        let gapSize: Float = series == 0 ? 0.0 : self.delegate?.barChart(self, gapAfterSeries: series - 1) ?? 0.0
+    private func zPosition(forSeries series: Int, _ previousSeriesZPosition: Float, _ seriesSize: Float) -> Float {
+        let gapSize: Float = series == 0 ? 0.0 : self.delegate?.barChart(self, gapSizeAfterSeries: series - 1) ?? 0.0
         
         return previousSeriesZPosition + seriesSize + seriesSize * gapSize
     }
