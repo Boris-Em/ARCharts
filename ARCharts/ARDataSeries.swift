@@ -16,12 +16,19 @@ import UIKit
 public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     private let values: [[Double]]
+    private let labels: [[String]]?
     public var barColor = UIColor.cyan
     
     // MARK - ARBarChartDataSource
     
     public required init(withValues values: [[Double]]) {
         self.values = values
+        self.labels = nil
+    }
+    
+    public init(withValues values: [[Double]], labels: [[String]]) {
+        self.values = values
+        self.labels = labels
     }
     
     public func numberOfSeries(in barChart: ARBarChart) -> Int {

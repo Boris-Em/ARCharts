@@ -16,14 +16,14 @@ public protocol ARBarChartDataSource: class {
     
     /**
      *  Asks the data source to return the number of series (rows on the Y axis) in the bar chart.
-     * - parameter barChart: The `ARBarCharNode` object requesting the number of series (Y axis).
+     * - parameter barChart: The `ARBarChart` object requesting the number of series (Y axis).
      * - returns: The number of series (Y axis) in the bar chart.
      */
     func numberOfSeries(in barChart: ARBarChart) -> Int
     
     /**
-     *  Asks the data source to return the number of values (indeces on the X axis) for a specific series (rows on the Y axis) in the bar chart.
-     * - parameter barChart: The `ARBarCharNode` object requesting the number of values.
+     *  Asks the data source to return the number of values (indices on the X axis) for a specific series (rows on the Y axis) in the bar chart.
+     * - parameter barChart: The `ARBarChart` object requesting the number of values.
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
      * - returns: The number of values (X axis) for a specific series (Y axis) in the bar chart.
      */
@@ -32,7 +32,7 @@ public protocol ARBarChartDataSource: class {
     
     /**
      *  Asks the data source to return the value (vertical position, Z axis) for a bar, at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
-     * - parameter barChart: The `ARBarCharNode` object requesting the number of values.
+     * - parameter barChart: The `ARBarChart` object requesting the value.
      * - parameter index: The index number identifying an index in the bar chart (X axis).
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
      * - returns: The Z axis value for a given series (Y axis) at a particular index (X axis).
@@ -40,14 +40,45 @@ public protocol ARBarChartDataSource: class {
     func barChart(_ barChart: ARBarChart,
                   valueAtIndex index: Int,
                   forSeries series: Int) -> Double
+    
+    /**
+     *  Asks the data source to return the label for a specific series (Y axis).
+     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     * - parameter series: The index number identifying a series in the bar chart (Y axis).
+     * - returns: The label for a given series (Y axis), or `nil` if the series has no label.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  labelForSeries series: Int) -> String?
+    
+    /**
+     *  Asks the data source to return the label for values at a specific index (X axis) in all series.
+     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     * - parameter index: The index number identifying an index in the bar chart (X axis).
+     * - returns: The label for a given index (X axis), or `nil` if the values at this index have no label.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  labelForValuesAtIndex index: Int) -> String?
         
+}
+
+// Make it optional for an `ARBarChartDataSource` to provide labels.
+extension ARBarChartDataSource {
+    
+    public func barChart(_ barChart: ARBarChart, labelForSeries series: Int) -> String? {
+        return nil
+    }
+    
+    public func barChart(_ barChart: ARBarChart, labelForValuesAtIndex index: Int) -> String? {
+        return nil
+    }
+    
 }
 
 public protocol ARBarChartDelegate: class {
     
     /**
      *  Asks the data source to return the color for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
-     * - parameter barChart: The `ARBarCharNode` object requesting the number of values.
+     * - parameter barChart: The `ARBarChart` object requesting the number of values.
      * - parameter index: The index number identifying an index in the bar chart (X axis).
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
      * - returns: The color to use for the bar corresponding to the given index and series.
