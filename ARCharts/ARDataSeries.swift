@@ -21,6 +21,16 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     public var barColor = UIColor.cyan
     public var seriesGap: Float = 0.5
     
+    private let arKitColors = [
+        UIColor(colorLiteralRed: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 70.0  / 255.0, green: 150.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 134.0 / 255.0, green: 218.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 237.0 / 255.0, green: 231.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 0.0   / 255.0, green: 110.0 / 255.0, blue: 235.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 193.0 / 255.0, green: 193.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 84.0  / 255.0, green: 204.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0)
+    ]
+    
     // MARK - ARBarChartDataSource
     
     public required init(withValues values: [[Double]]) {
@@ -29,7 +39,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
         self.indexLabels = nil
     }
     
-    public init(withValues values: [[Double]], seriesLabels: [String], indexLabels: [String]) {
+    public init(withValues values: [[Double]], seriesLabels: [String]?, indexLabels: [String]?) {
         self.values = values
         self.seriesLabels = seriesLabels
         self.indexLabels = indexLabels
@@ -48,7 +58,9 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     }
     
     public func barChart(_ barChart: ARBarChart, labelForSeries series: Int) -> String? {
-        return seriesLabels?[series]
+        let label = seriesLabels?[series]
+        
+        return label
     }
     
     public func barChart(_ barChart: ARBarChart, labelForValuesAtIndex index: Int) -> String? {
@@ -58,7 +70,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     // MARK - ARBarChartDelegate
     
     public func barChart(_ barChart: ARBarChart, colorForBarAtIndex index: Int, forSeries series: Int) -> UIColor {
-        return barColor
+        return arKitColors[(series * values[series].count + index) % arKitColors.count]
     }
     
     public func barChart(_ barChart: ARBarChart, gapSizeAfterSeries series: Int) -> Float {

@@ -99,26 +99,42 @@ public class ARBarChart: SCNNode {
             let delegate = delegate,
             let numberOfSeries = self.numberOfSeries,
             let maxNumberOfIndices = self.maxNumberOfIndices else {
-                // TODO: Print or assert
-                return
+                fatalError("Could not find values for dataSource, delegate, numberOfSeries, and maxNumberOfIndices.")
         }
         
         guard let minValue = self.minValue ?? self.minAndMaxChartValues?.minValue,
             let maxValue = self.maxValue ?? self.minAndMaxChartValues?.maxValue,
             minValue < maxValue else {
-                // TODO: Print or assert
-                return
+                fatalError("Invalid chart values detected (minValue >= maxValue)")
         }
         
-        let biggestValueRange = maxValue - minValue
-        let seriesSize = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: size.z)
-        let barsLength = size.x / Float(maxNumberOfIndices)
-        let maxBarHeight = size.y / Float(biggestValueRange)
+        let spaceForSeriesLabels = delegate.spaceForSeriesLabels(in: self)
+        guard spaceForSeriesLabels >= 0.0 && spaceForSeriesLabels <= 1.0 else {
+            fatalError("ARBarChartDelegate method spaceForSeriesLabels must return a value between 0.0 and 1.0")
+        }
+        let spaceForIndexLabels = delegate.spaceForIndexLabels(in: self)
+        guard spaceForIndexLabels >= 0.0 && spaceForIndexLabels <= 1.0 else {
+            fatalError("ARBarChartDelegate method spaceForIndexLabels must return a value between 0.0 and 1.0")
+        }
         
+        
+        
+        let sizeAvailableForBars = SCNVector3(x: size.x * (1.0 - delegate.spaceForSeriesLabels(in: self)),
+                                              y: size.y,
+                                              z: size.z * (1.0 - delegate.spaceForIndexLabels(in: self)))
+        let biggestValueRange = maxValue - minValue
+        
+        let barsWidth = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: size.z)
+        let barsLength = sizeAvailableForBars.x / Float(maxNumberOfIndices)
+        let maxBarHeight = sizeAvailableForBars.y / Float(biggestValueRange)
+        
+        let xShift = size.x * (spaceForSeriesLabels - 0.5)
+        let zShift = size.z * (spaceForIndexLabels - 0.5)
         var previousZPosition: Float = 0.0
         
+        
         for series in 0 ..< numberOfSeries {
-            guard let zPosition = self.zPosition(forSeries: series, previousZPosition, seriesSize) else {
+            guard let zPosition = self.zPosition(forSeries: series, previousZPosition, barsWidth) else {
                 return
             }
             
@@ -126,14 +142,14 @@ public class ARBarChart: SCNNode {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
-                let barBox = SCNBox(width: CGFloat(seriesSize),
+                let barBox = SCNBox(width: CGFloat(barsWidth),
                                     height: CGFloat(barHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
+                let xPosition = Float(index) * barsLength + xShift
                 let yPosition = Float(value) * Float(maxBarHeight) / 2.0
-                let xPosition = Float(index) * barsLength
                 barNode.position = SCNVector3(x: xPosition, y: yPosition, z: zPosition)
                 
                 let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
@@ -143,6 +159,28 @@ public class ARBarChart: SCNNode {
             }
             
             previousZPosition = zPosition
+            
+            if let seriesLabelText = dataSource.barChart(self, labelForSeries: series) {
+                let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.0)
+                seriesLabel.truncationMode = kCATruncationEnd
+                seriesLabel.alignmentMode = kCAAlignmentLeft
+                
+                seriesLabel.font = UIFont.systemFont(ofSize: 10.0)
+                seriesLabel.firstMaterial!.isDoubleSided = true
+                seriesLabel.firstMaterial!.diffuse.contents = UIColor.white
+                let seriesLabelNode = SCNNode(geometry: seriesLabel)
+                
+                seriesLabelNode.scale = SCNVector3(0.002, 0.002, 0.002)
+                let position = SCNVector3(x: -size.x,
+                                          y: 0.0,
+                                          z: Float(series) * barsWidth + zShift + (barsWidth / 2.0))
+                seriesLabelNode.position = position
+                seriesLabelNode.geometry?.firstMaterial?.isDoubleSided = true
+                seriesLabelNode.eulerAngles = SCNVector3(-Float.pi / 2.0, 0.0, 0.0)
+                
+                self.addChildNode(seriesLabelNode)
+            }
+            
         }
     }
     
@@ -171,8 +209,8 @@ public class ARBarChart: SCNNode {
      * - returns: The Z position for a given series.
      */
     private func zPosition(forSeries series: Int, _ previousSeriesZPosition: Float, _ seriesSize: Float) -> Float? {
-        let gapSize: Float = series == 0 ? 0.0 : self.delegate?.barChart(self, gapAfterSeries: series - 1) ?? 0.0
-        
+        let gapSize: Float = series == 0 ? 0.0 : self.delegate?.barChart(self, gapSizeAfterSeries: series - 1) ?? 0.0
+
         return previousSeriesZPosition + seriesSize + seriesSize * gapSize
     }
 }
