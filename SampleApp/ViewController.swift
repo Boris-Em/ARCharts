@@ -35,8 +35,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.viewDidLoad()
         
         sceneView.delegate = self
-        sceneView.showsStatistics = true
         sceneView.scene = SCNScene()
+        sceneView.showsStatistics = true
+        sceneView.antialiasingMode = .multisampling4X
+        sceneView.automaticallyUpdatesLighting = false
+        sceneView.contentScaleFactor = 1.0
+        sceneView.preferredFramesPerSecond = 60
+        DispatchQueue.main.async {
+            self.screenCenter = self.sceneView.bounds.mid
+        }
+        
+        if let camera = sceneView.pointOfView?.camera {
+            camera.wantsHDR = true
+            camera.wantsExposureAdaptation = true
+            camera.exposureOffset = -1
+            camera.minimumExposure = -1
+        }
         
         setupFocusSquare()
     }
