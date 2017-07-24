@@ -119,9 +119,9 @@ public class ARBarChart: SCNNode {
         
         
         
-        let sizeAvailableForBars = SCNVector3(x: size.x * (1.0 - delegate.spaceForSeriesLabels(in: self)),
+        let sizeAvailableForBars = SCNVector3(x: size.x * (1.0 - spaceForSeriesLabels),
                                               y: size.y,
-                                              z: size.z * (1.0 - delegate.spaceForIndexLabels(in: self)))
+                                              z: size.z * (1.0 - spaceForIndexLabels))
         let biggestValueRange = maxValue - minValue
         
         let barsLength = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: sizeAvailableForBars.z)
@@ -140,15 +140,14 @@ public class ARBarChart: SCNNode {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
-                let barBox = SCNBox(width: CGFloat(barsWidth),
-                                    height: CGFloat(barHeight),
-                                    length: CGFloat(barsLength),
+                let barBox = SCNBox(width: CGFloat(barsWidth),   // X axis
+                                    height: CGFloat(barHeight),  // Y axis
+                                    length: CGFloat(barsLength), // Z axis
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
                 let yPosition = Float(value) * Float(maxBarHeight) / 2.0
                 let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
-                
                 barNode.position = SCNVector3(x: xPosition + xShift, y: yPosition, z: zPosition + zShift)
 
                 let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
@@ -162,12 +161,11 @@ public class ARBarChart: SCNNode {
             
             if let seriesLabelText = dataSource.barChart(self, labelForSeries: series) {
                 let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.0)
-                seriesLabel.truncationMode = kCATruncationEnd
-                seriesLabel.alignmentMode = kCAAlignmentLeft
-                
+                seriesLabel.truncationMode = kCATruncationNone
+                seriesLabel.alignmentMode = kCAAlignmentCenter
                 seriesLabel.font = UIFont.systemFont(ofSize: 10.0)
                 seriesLabel.firstMaterial!.isDoubleSided = true
-                seriesLabel.firstMaterial!.diffuse.contents = UIColor.white
+                seriesLabel.firstMaterial!.diffuse.contents = delegate.barChart(self, colorForLabelForSeries: series)
                 let seriesLabelNode = SCNNode(geometry: seriesLabel)
                 
                 let scale = size.x * spaceForSeriesLabels / (seriesLabelNode.boundingBox.max.x - seriesLabelNode.boundingBox.min.x)
@@ -175,7 +173,7 @@ public class ARBarChart: SCNNode {
                 let position = SCNVector3(x: -size.x / 2.0, y: 0.0, z: zPosition + zShift + barsLength)
                 seriesLabelNode.position = position
                 seriesLabelNode.geometry?.firstMaterial?.isDoubleSided = true
-                seriesLabelNode.eulerAngles = SCNVector3(-Float.pi / 2.0, 0.0, 0.0)
+                seriesLabelNode.eulerAngles = SCNVector3(-Float.pi * 0.5, 0.0, 0.0)
                 
                 self.addChildNode(seriesLabelNode)
             }
@@ -235,6 +233,7 @@ public class ARBarChart: SCNNode {
      * - parameter series: The series that requires the Z position.
      * - parameter previousSeriesZPosition: The Z position of the previous series. This is useful for optimization.
      * - parameter seriesSize: The acutal size available for one series on the graph.
+     * - parameter zShift: The shift to add to each Z position to center the graph.
      * - returns: The Z position for a given series.
      */
     private func zPosition(forSeries series: Int, _ previousSeriesZPosition: Float, _ seriesSize: Float) -> Float {

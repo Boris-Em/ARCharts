@@ -88,6 +88,24 @@ public protocol ARBarChartDelegate: class {
                   forSeries series: Int) -> UIColor
     
     /**
+     *  Asks the delegate to return the color for a label for a specific series (Z axis).
+     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     * - parameter series: The index number identifying a series in the bar chart (Y axis).
+     * - returns: The color to use for the label corresponding to the given series.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  colorForLabelForSeries series: Int) -> UIColor
+    
+    /**
+     *  Asks the delegate to return the color for a label for a specific index (X axis).
+     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     * - parameter index: The index number identifying an index in the bar chart (X axis).
+     * - returns: The color to use for the label corresponding to the given index.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  colorForLabelForValuesAtIndex index: Int) -> UIColor
+    
+    /**
      * Asks the delegate to return the size of the gap to display after a specific series.
      * - parameter barChart: The `ARBarChart` object requesting the gap size.
      * - parameter series: The series that precedes the gap.
@@ -95,7 +113,7 @@ public protocol ARBarChartDelegate: class {
      * - discussion: The size returned is a percentage of the bars' width. For example, returning 0.5, means that the size of the gap will be 50% of the width of the bars.
      */
     func barChart(_ barChart: ARBarChart,
-                         gapSizeAfterSeries series: Int) -> Float
+                  gapSizeAfterSeries series: Int) -> Float
     
     /**
      * Asks the delegate to return the size of the gap to display after a specific index.
@@ -126,7 +144,7 @@ public protocol ARBarChartDelegate: class {
 extension ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart,
-                  gapSizeAfterSeries series: Int) -> Float {
+                         gapSizeAfterSeries series: Int) -> Float {
         return 0.0
     }
         
@@ -142,6 +160,14 @@ extension ARBarChartDelegate {
     func barChart(_ barChart: ARBarChart,
                   gapSizeAfterIndex index: Int) -> Float {
         return 0.0
+    }
+        
+    public func barChart(_ barChart: ARBarChart, colorForLabelForSeries series: Int) -> UIColor {
+        return UIColor.white
+    }
+    
+    public func barChart(_ barChart: ARBarChart, colorForLabelForValuesAtIndex index: Int) -> UIColor {
+        return UIColor.white
     }
     
 }

@@ -89,9 +89,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-        let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
+        let values = generateNumbers(fromDataSampleWithIndex: 1)!
         
-        let labels = Array(1 ... values.count).map({ "Series \($0)" })
+        let labels = ["Apples", "Bananas and Cereal", "Pears", "Oranges", "Lemons", "Apples", "Bananas", "Pears", "Oranges", "Lemons"]
         let dataSeries = ARDataSeries(withValues: values, seriesLabels: labels, indexLabels: nil)
         self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.2, 0.2, 0.2))
         self.barChart.position = position
