@@ -101,8 +101,8 @@ public protocol ARBarChartDelegate: class {
 
 extension ARBarChartDelegate {
     
-    public func barChart(_ barChart: ARBarChart,
-                  gapAfterSeries series: Int) -> Float {
+    func barChart(_ barChart: ARBarChart,
+                  gapSizeAfterSeries series: Int) -> Float {
         return 0.0
     }
     
