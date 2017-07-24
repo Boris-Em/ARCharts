@@ -107,12 +107,34 @@ public protocol ARBarChartDelegate: class {
     func barChart(_ barChart: ARBarChart,
                   gapSizeAfterIndex index: Int) -> Float
     
+    /**
+     *  Asks the delegate to return the space available for index labels, as a ratio of the total available space for the Z axis (between 0 and 1).
+     * - parameter barChart: The `ARBarChart` object requesting the spacing for index labels.
+     * - returns: The ratio of Z-axis space to use for index labels, as a `Double` between 0 and 1.
+     */
+    func spaceForIndexLabels(in barChart: ARBarChart) -> Float
+    
+    /**
+     *  Asks the delegate to return the space available for series labels, as a ratio of the total available space for the X axis (between 0 and 1).
+     * - parameter barChart: The `ARBarChart` object requesting the spacing for series labels.
+     * - returns: The ratio of X-axis space to use for series labels, as a `Double` between 0 and 1.
+     */
+    func spaceForSeriesLabels(in barChart: ARBarChart) -> Float
+    
 }
 
 extension ARBarChartDelegate {
     
-    func barChart(_ barChart: ARBarChart,
+    public func barChart(_ barChart: ARBarChart,
                   gapSizeAfterSeries series: Int) -> Float {
+        return 0.0
+    }
+        
+    public func spaceForIndexLabels(in barChart: ARBarChart) -> Float {
+        return 0.0
+    }
+    
+    public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
         return 0.0
     }
     
