@@ -76,4 +76,12 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     public func barChart(_ barChart: ARBarChart, gapSizeAfterSeries series: Int) -> Float {
         return seriesGap
     }
+    
+    public func spaceForIndexLabels(in barChart: ARBarChart) -> Float {
+        return 0.0
+    }
+    
+    public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
+        return 0.3
+    }
 }
