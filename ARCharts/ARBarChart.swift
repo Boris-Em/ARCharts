@@ -111,24 +111,29 @@ public class ARBarChart: SCNNode {
         }
         
         let biggestValueRange = maxValue - minValue
-        let barsWidth = size.x / Float(numberOfSeries)
-        let barsLength = size.y / Float(maxNumberOfIndices)
-        let maxBarHeight = size.z / Float(biggestValueRange)
+        let seriesSize = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: size.z)
+        let barsLength = size.x / Float(maxNumberOfIndices)
+        let maxBarHeight = size.y / Float(biggestValueRange)
+        
+        var previousZPosition: Float = 0.0
         
         for series in 0 ..< numberOfSeries {
+            guard let zPosition = self.zPosition(forSeries: series, previousZPosition, seriesSize) else {
+                return
+            }
+            
             for index in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: series) {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
-                let barBox = SCNBox(width: CGFloat(barsWidth),
+                let barBox = SCNBox(width: CGFloat(seriesSize),
                                     height: CGFloat(barHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
-                let xPosition = Float(series) * barsWidth
                 let yPosition = Float(value) * Float(maxBarHeight) / 2.0
-                let zPosition = Float(index) * barsLength
+                let xPosition = Float(index) * barsLength
                 barNode.position = SCNVector3(x: xPosition, y: yPosition, z: zPosition)
                 
                 let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
@@ -137,16 +142,37 @@ public class ARBarChart: SCNNode {
                 self.addChildNode(barNode)
             }
             
-            if let seriesLabelText = dataSource.barChart(self, labelForSeries: series) {
-                // TODO: Try extrusionDepth == 0.0
-                let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.1)
-                seriesLabel.truncationMode = kCATruncationEnd
-                seriesLabel.alignmentMode = kCAAlignmentCenter
-                seriesLabel.font = UIFont.systemFont(ofSize: 20.0)
-                
-                let seriesLabelNode = SCNNode(geometry: seriesLabel)
-                seriesLabel.position = 
-            }
+            previousZPosition = zPosition
         }
+    }
+    
+    /**
+     * Calculates the actual size available for one series on the graph.
+     * - parameter numberOfSeries: The number of series on the graph.
+     * - parameter availableZSize: The available size on the Z axis for graph.
+     * - returns: The actual size available for one series on the graph.
+     */
+    private func seriesSize(withNumberOfSeries numberOfSeries: Int, zSizeAvailableForBars availableZSize: Float) -> Float {
+        var totalGapCoefficient: Float = 0.0
+        if let delegate = self.delegate {
+            totalGapCoefficient = Array(0 ..< numberOfSeries).reduce(0, { (total, current) -> Float in
+                total + delegate.barChart(self, gapAfterSeries: current)
+            })
+        }
+        
+        return availableZSize / (Float(numberOfSeries) + totalGapCoefficient)
+    }
+    
+    /**
+     * Calculates the Z position (Series Axis) for a specific series
+     * - parameter series: The series that requires the Z position
+     * - parameter previousSeriesZPosition: The Z position of the previous series. This is useful for optimization.
+     * - parameter seriesSize: The acutal size available for one series on the graph.
+     * - returns: The Z position for a given series.
+     */
+    private func zPosition(forSeries series: Int, _ previousSeriesZPosition: Float, _ seriesSize: Float) -> Float? {
+        let gapSize: Float = series == 0 ? 0.0 : self.delegate?.barChart(self, gapAfterSeries: series - 1) ?? 0.0
+        
+        return previousSeriesZPosition + seriesSize + seriesSize * gapSize
     }
 }
