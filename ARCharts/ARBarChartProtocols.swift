@@ -91,11 +91,21 @@ public protocol ARBarChartDelegate: class {
      * Asks the delegate to return the size of the gap to display after a specific series.
      * - parameter barChart: The `ARBarChart` object requesting the gap size.
      * - parameter series: The series that precedes the gap.
-     * - returns: The size, as a percentage of the available space for each series, of the gap to display after a given series.
-     * - discussion: The size returned is a percentage of the available space for one series. For example, returning 0.5, means that the size of the gap will be 50% of the width of the bars.
+     * - returns: The size, as a percentage of bars' width, of the gap to display after a given series.
+     * - discussion: The size returned is a percentage of the bars' width. For example, returning 0.5, means that the size of the gap will be 50% of the width of the bars.
      */
     func barChart(_ barChart: ARBarChart,
                          gapSizeAfterSeries series: Int) -> Float
+    
+    /**
+     * Asks the delegate to return the size of the gap to display after a specific index.
+     * - parameter barChart: The `ARBarChart` object requesting the gap size.
+     * - parameter index: The index that precedes the gap.
+     * - returns: The size, as a percentage of the bars' length, of the gap to display after a given index.
+     * - discussion: The size returned is a percentage of the bars' length. For example, returning 0.5, means that the size of the gap will be 50% of the length of the bars.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  gapSizeAfterIndex index: Int) -> Float
     
 }
 
@@ -103,6 +113,12 @@ extension ARBarChartDelegate {
     
     func barChart(_ barChart: ARBarChart,
                   gapSizeAfterSeries series: Int) -> Float {
+        return 0.0
+    }
+    
+    
+    func barChart(_ barChart: ARBarChart,
+                  gapSizeAfterIndex index: Int) -> Float {
         return 0.0
     }
     
