@@ -16,19 +16,22 @@ import UIKit
 public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     private let values: [[Double]]
-    private let labels: [[String]]?
+    private let seriesLabels: [String]?
+    private let indexLabels: [String]?
     public var barColor = UIColor.cyan
     
     // MARK - ARBarChartDataSource
     
     public required init(withValues values: [[Double]]) {
         self.values = values
-        self.labels = nil
+        self.seriesLabels = nil
+        self.indexLabels = nil
     }
     
-    public init(withValues values: [[Double]], labels: [[String]]) {
+    public init(withValues values: [[Double]], seriesLabels: [String], indexLabels: [String]) {
         self.values = values
-        self.labels = labels
+        self.seriesLabels = seriesLabels
+        self.indexLabels = indexLabels
     }
     
     public func numberOfSeries(in barChart: ARBarChart) -> Int {
@@ -41,6 +44,14 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart, valueAtIndex index: Int, forSeries series: Int) -> Double {
         return values[series][index]
+    }
+    
+    public func barChart(_ barChart: ARBarChart, labelForSeries series: Int) -> String? {
+        return seriesLabels?[series]
+    }
+    
+    public func barChart(_ barChart: ARBarChart, labelForValuesAtIndex index: Int) -> String? {
+        return indexLabels?[index]
     }
     
     // MARK - ARBarChartDelegate

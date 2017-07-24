@@ -8,6 +8,8 @@
 
 import Foundation
 import SceneKit
+import SpriteKit
+
 
 public class ARBarChart: SCNNode {
     
@@ -134,6 +136,17 @@ public class ARBarChart: SCNNode {
                 
                 self.addChildNode(barNode)
             }
+            
+            if let seriesLabelText = dataSource.barChart(self, labelForSeries: series) {
+                // TODO: Try extrusionDepth == 0.0
+                let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.1)
+                seriesLabel.truncationMode = kCATruncationEnd
+                seriesLabel.alignmentMode = kCAAlignmentCenter
+                seriesLabel.font = UIFont.systemFont(ofSize: 20.0)
+                
+                let seriesLabelNode = SCNNode(geometry: seriesLabel)
+                seriesLabel.position = 
+            }
         }
-    }    
+    }
 }
