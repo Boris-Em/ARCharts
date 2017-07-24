@@ -19,7 +19,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     private let seriesLabels: [String]?
     private let indexLabels: [String]?
     public var barColor = UIColor.cyan
-    public var seriesGap: Float = 0.2
+    public var seriesGap: Float = 0.5
     
     // MARK - ARBarChartDataSource
     
@@ -61,7 +61,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
         return barColor
     }
     
-    public func barChart(_ barChart: ARBarChart, gapAfterSeries series: Int) -> Float {
+    public func barChart(_ barChart: ARBarChart, gapSizeAfterSeries series: Int) -> Float {
         return seriesGap
     }
 }

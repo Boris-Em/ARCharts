@@ -156,7 +156,7 @@ public class ARBarChart: SCNNode {
         var totalGapCoefficient: Float = 0.0
         if let delegate = self.delegate {
             totalGapCoefficient = Array(0 ..< numberOfSeries).reduce(0, { (total, current) -> Float in
-                total + delegate.barChart(self, gapAfterSeries: current)
+                total + delegate.barChart(self, gapSizeAfterSeries: current)
             })
         }
         
