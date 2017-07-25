@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     var barChart: ARBarChart!
+    var lightSource: SCNNode!
     
     var session: ARSession {
         get {
@@ -84,8 +85,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         focusSquare.removeFromParentNode()
         sceneView.scene.rootNode.addChildNode(focusSquare)
     }
-
-    func constructBarChart(at position: SCNVector3) {
+    
+    private func constructBarChart(at position: SCNVector3) {
         if barChart != nil {
             barChart.removeFromParentNode()
             barChart = nil
@@ -103,7 +104,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
-    func setupRotationGesture() {
+    private func addLightSource(ofType type: SCNLight.LightType, at position: SCNVector3) {
+        if lightSource != nil {
+            lightSource.removeFromParentNode()
+            lightSource = nil
+        }
+        
+        let light = SCNLight()
+        light.color = UIColor.white
+        light.type = type
+        light.intensity *= 2
+        
+        let lightNode = SCNNode()
+        lightNode.light = light
+        lightNode.position = position
+        
+        lightSource = lightNode
+        self.sceneView.scene.rootNode.addChildNode(lightNode)
+    }
+    
+    private func setupRotationGesture() {
         let rotationGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(handleRotation))
         self.view.addGestureRecognizer(rotationGestureRecognizer)
     }

@@ -72,7 +72,7 @@ public class ARBarChart: SCNNode {
                 return nil
             }
             
-            return Array(0 ..< numberOfSeries).map({ dataSource.barChart(self, numberOfValuesInSeries: $0) }).max()
+            return Array(0..<numberOfSeries).map({ dataSource.barChart(self, numberOfValuesInSeries: $0) }).max()
         }
     }
     
@@ -247,7 +247,6 @@ public class ARBarChart: SCNNode {
         return previousSeriesZPosition + seriesSize + seriesSize * gapSize
     }
     
-    
     /**
      * Add a series label to the Z axis for a given series and at a given Z position.
      * - parameter series: The series to be labeled.
@@ -262,8 +261,6 @@ public class ARBarChart: SCNNode {
             seriesLabel.firstMaterial!.isDoubleSided = true
             seriesLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForSeries: series)
             let seriesLabelNode = SCNNode(geometry: seriesLabel)
-            // seriesLabelNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-            
             
             let unscaledLabelWidth = seriesLabelNode.boundingBox.max.x - seriesLabelNode.boundingBox.min.x
             let desiredLabelWidth = size.x * delegate!.spaceForSeriesLabels(in: self)
