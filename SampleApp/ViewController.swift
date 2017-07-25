@@ -17,7 +17,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     var barChart: ARBarChart!
-    var lightSource: SCNNode!
     
     var session: ARSession {
         get {
@@ -52,6 +51,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         setupFocusSquare()
         setupRotationGesture()
+        addLightSource(ofType: .omni)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,23 +104,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
-    private func addLightSource(ofType type: SCNLight.LightType, at position: SCNVector3) {
-        if lightSource != nil {
-            lightSource.removeFromParentNode()
-            lightSource = nil
-        }
-        
+    private func addLightSource(ofType type: SCNLight.LightType, at position: SCNVector3? = nil) {
         let light = SCNLight()
         light.color = UIColor.white
         light.type = type
-        light.intensity *= 2
+        light.intensity *= 1.3
         
         let lightNode = SCNNode()
         lightNode.light = light
-        lightNode.position = position
-        
-        lightSource = lightNode
-        self.sceneView.scene.rootNode.addChildNode(lightNode)
+        if let lightPosition = position {
+            // Fix the light source in one location
+            lightNode.position = lightPosition
+            self.sceneView.scene.rootNode.addChildNode(lightNode)
+        } else {
+            // Make the light source follow the camera position
+            self.sceneView.pointOfView?.addChildNode(lightNode)
+        }
     }
     
     private func setupRotationGesture() {
