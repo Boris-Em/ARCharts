@@ -117,8 +117,6 @@ public class ARBarChart: SCNNode {
             fatalError("ARBarChartDelegate method spaceForIndexLabels must return a value between 0.0 and 1.0")
         }
         
-        
-        
         let sizeAvailableForBars = SCNVector3(x: size.x * (1.0 - spaceForSeriesLabels),
                                               y: size.y,
                                               z: size.z * (1.0 - spaceForIndexLabels))
@@ -233,7 +231,6 @@ public class ARBarChart: SCNNode {
      * - parameter series: The series that requires the Z position.
      * - parameter previousSeriesZPosition: The Z position of the previous series. This is useful for optimization.
      * - parameter seriesSize: The acutal size available for one series on the graph.
-     * - parameter zShift: The shift to add to each Z position to center the graph.
      * - returns: The Z position for a given series.
      */
     private func zPosition(forSeries series: Int, _ previousSeriesZPosition: Float, _ seriesSize: Float) -> Float {

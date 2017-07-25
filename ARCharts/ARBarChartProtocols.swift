@@ -78,7 +78,7 @@ public protocol ARBarChartDelegate: class {
     
     /**
      *  Asks the delegate to return the color for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
-     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     * - parameter barChart: The `ARBarChart` object requesting the color for a bar.
      * - parameter index: The index number identifying an index in the bar chart (X axis).
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
      * - returns: The color to use for the bar corresponding to the given index and series.
@@ -88,8 +88,8 @@ public protocol ARBarChartDelegate: class {
                   forSeries series: Int) -> UIColor
     
     /**
-     *  Asks the delegate to return the color for a label for a specific series (Z axis).
-     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     *  Asks the delegate to return the color for the text of a label for a specific series (Z axis).
+     * - parameter barChart: The `ARBarChart` object requesting the color for the text of a series label.
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
      * - returns: The color to use for the label corresponding to the given series.
      */
@@ -97,8 +97,8 @@ public protocol ARBarChartDelegate: class {
                   colorForLabelForSeries series: Int) -> UIColor
     
     /**
-     *  Asks the delegate to return the color for a label for a specific index (X axis).
-     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     *  Asks the delegate to return the color for the text of a label for a specific index (X axis).
+     * - parameter barChart: The `ARBarChart` object requesting the color for the text of a label.
      * - parameter index: The index number identifying an index in the bar chart (X axis).
      * - returns: The color to use for the label corresponding to the given index.
      */
@@ -155,7 +155,6 @@ extension ARBarChartDelegate {
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
         return 0.0
     }
-    
     
     func barChart(_ barChart: ARBarChart,
                   gapSizeAfterIndex index: Int) -> Float {
