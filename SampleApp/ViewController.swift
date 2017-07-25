@@ -50,6 +50,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         setupFocusSquare()
+        setupRotationGesture()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,10 +102,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
+    func setupRotationGesture() {
+        let rotationGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(handleRotation))
+        self.view.addGestureRecognizer(rotationGestureRecognizer)
+    }
+    
     // MARK: - ARSCNViewDelegate
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        
         DispatchQueue.main.async {
             self.updateFocusSquare()
         }
@@ -139,6 +144,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         self.constructBarChart(at: lastPosition)
+    }
+    
+    private var startingRotation: Float = 0.0
+    
+    @objc func handleRotation(rotationGestureRecognizer: UIRotationGestureRecognizer) {
+        guard let barChart = barChart,
+            let pointOfView = sceneView.pointOfView,
+            sceneView.isNode(barChart, insideFrustumOf: pointOfView) == true else {
+            return
+        }
+        
+        if rotationGestureRecognizer.state == .began {
+            startingRotation = self.barChart.eulerAngles.y
+        } else if rotationGestureRecognizer.state == .changed {
+            self.barChart.eulerAngles.y = startingRotation - Float(rotationGestureRecognizer.rotation)
+        }
     }
     
     // MARK: - Helper Functions
