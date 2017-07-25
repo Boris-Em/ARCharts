@@ -135,7 +135,9 @@ public class ARBarChart: SCNNode {
                                     length: CGFloat(seriesSize),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
-                barNode.opacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : 1.0
+                let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
+                let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
+                barNode.opacity = CGFloat(startingOpacity)
                 
                 let yPosition = Float(value) * Float(maxBarHeight) / 2
                 let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
@@ -148,16 +150,9 @@ public class ARBarChart: SCNNode {
                 self.addChildNode(barNode)
                 previousXPosition = xPosition
                 
-                if animationType == .grow || animationType == .progressiveGrow {
-                    let delay = animationType == .progressiveGrow ? Double(index) * animationDuration / 10.0 : nil
-                    let heightAnim = heightAnimation(withToValue: barHeight, duration: animationDuration, delay: delay)
-                    let yPositionAnim = yPositionAnimation(withToValue: yPosition, duration: animationDuration, delay: delay)
-                    barBox.addAnimation(heightAnim, forKey: "height")
-                    barNode.addAnimation(yPositionAnim, forKey: "position.y")
-                } else if animationType == .fadeIn || animationType == .progressiveFadeIn {
-                    let delay = animationType == .progressiveFadeIn ? Double(index) * animationDuration / 10.0 : nil
-                    let fadeInAnim = fadeInAnimation(withToValue: 1.0, duration: animationDuration, delay: delay)
-                    barNode.addAnimation(fadeInAnim, forKey: "opacity")
+                if let animationType = animationType {
+                    let animationManager = AnimationManager(animationType: animationType, animationDuration: animationDuration)
+                    animationManager.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, yPosition, opacity)
                 }
             }
             

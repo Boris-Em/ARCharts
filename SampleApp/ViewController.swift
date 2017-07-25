@@ -98,7 +98,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let dataSeries = ARDataSeries(withValues: values)
         self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.2, 0.2, 0.2))
         self.barChart.position = position
-        self.barChart.animationType = .grow
+        self.barChart.animationType = .progressiveFadeIn
         self.barChart.drawGraph()
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }

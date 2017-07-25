@@ -78,7 +78,7 @@ public protocol ARBarChartDelegate: class {
     
     /**
      *  Asks the delegate to return the color for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
-     * - parameter barChart: The `ARBarChart` object requesting the number of values.
+     * - parameter barChart: The `ARBarChart` object requesting the color.
      * - parameter index: The index number identifying an index in the bar chart (X axis).
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
      * - returns: The color to use for the bar corresponding to the given index and series.
@@ -86,6 +86,17 @@ public protocol ARBarChartDelegate: class {
     func barChart(_ barChart: ARBarChart,
                   colorForBarAtIndex index: Int,
                   forSeries series: Int) -> UIColor
+    
+    /**
+     *  Asks the delegate to return the opacity for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
+     * - parameter barChart: The `ARBarChart` object requesting the opacity.
+     * - parameter index: The index number identifying an index in the bar chart (X axis).
+     * - parameter series: The index number identifying a series in the bar chart (Y axis).
+     * - returns: The opacity to use for the bar corresponding to the given index and series.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  opacityForBarAtIndex index: Int,
+                  forSeries series: Int) -> Float
     
     /**
      * Asks the delegate to return the size of the gap to display after a specific series.
@@ -107,6 +118,8 @@ public protocol ARBarChartDelegate: class {
     func barChart(_ barChart: ARBarChart,
                   gapSizeAfterIndex index: Int) -> Float
     
+    
+    
 }
 
 extension ARBarChartDelegate {
@@ -120,6 +133,12 @@ extension ARBarChartDelegate {
     func barChart(_ barChart: ARBarChart,
                   gapSizeAfterIndex index: Int) -> Float {
         return 0.0
+    }
+    
+    func barChart(_ barChart: ARBarChart,
+                  opacityForBarAtIndex index: Int,
+                  forSeries series: Int) -> Float {
+        return 1.0
     }
     
 }
