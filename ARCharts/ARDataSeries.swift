@@ -21,6 +21,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     public var barColor = UIColor.cyan
     public var seriesGap: Float = 0.5
     public var indexGap: Float = 0.5
+    public var barOpacity: Float = 1.0
     
     private let arKitColors = [
         UIColor(colorLiteralRed: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
@@ -80,6 +81,10 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart, gapSizeAfterIndex index: Int) -> Float {
         return indexGap
+    }
+    
+    public func barChart(_ barChart: ARBarChart, opacityForBarAtIndex index: Int, forSeries series: Int) -> Float {
+        return barOpacity
     }
     
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
