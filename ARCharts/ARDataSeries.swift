@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 import UIKit
 
 /**
@@ -75,6 +76,21 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
         return arKitColors[(series * values[series].count + index) % arKitColors.count]
     }
     
+    public func barChart(_ barChart: ARBarChart, materialForBarAtIndex index: Int, forSeries series: Int) -> SCNMaterial {
+        let colorIndex = (series * (values.first?.count ?? 0) + index) % arKitColors.count
+        if colorIndex == 0 {
+            let woodMaterial = SCNMaterial()
+            woodMaterial.diffuse.contents = #imageLiteral(resourceName: "WoodGrain")
+            woodMaterial.specular.contents = UIColor.white
+            return woodMaterial
+        } else {
+            let colorMaterial = SCNMaterial()
+            colorMaterial.diffuse.contents = arKitColors[colorIndex]
+            colorMaterial.specular.contents = UIColor.white
+            return colorMaterial
+        }
+    }
+    
     public func barChart(_ barChart: ARBarChart, gapSizeAfterSeries series: Int) -> Float {
         return seriesGap
     }
@@ -88,10 +104,10 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     }
     
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
-        return 0.3
+        return 0.2
     }
     public func spaceForIndexLabels(in barChart: ARBarChart) -> Float {
-        return 0.3
+        return 0.2
     }
     
 }

@@ -58,6 +58,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         let configuration = ARWorldTrackingSessionConfiguration()
         configuration.planeDetection = .horizontal
+        sceneView.session.configuration?.isLightEstimationEnabled = true
         sceneView.session.run(configuration)
         sceneView.delegate = self
         
@@ -83,7 +84,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         focusSquare.removeFromParentNode()
         sceneView.scene.rootNode.addChildNode(focusSquare)
     }
-    
+
     func constructBarChart(at position: SCNVector3) {
         if barChart != nil {
             barChart.removeFromParentNode()
@@ -95,7 +96,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
         let indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
         let dataSeries = ARDataSeries(withValues: values, seriesLabels: seriesLabels, indexLabels: indexLabels)
-        self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.2, 0.2, 0.2))
+        self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.3, 0.3, 0.3))
         self.barChart.position = position
         self.barChart.animationType = .progressiveGrow
         self.barChart.drawGraph()

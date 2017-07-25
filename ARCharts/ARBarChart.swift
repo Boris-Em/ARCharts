@@ -167,13 +167,13 @@ public class ARBarChart: SCNNode {
                 let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
                 barNode.position = SCNVector3(x: xPosition + xShift, y: startingYPosition, z: zPosition + zShift)
 
-                let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
-                barNode.geometry?.firstMaterial?.diffuse.contents = barColor
+                let barMaterial = delegate.barChart(self, materialForBarAtIndex: index, forSeries: series)
+                barNode.geometry?.firstMaterial = barMaterial
                 
                 self.addChildNode(barNode)
                 
                 if series == 0 {
-                    self.addLabel(forIndex: index, atXPosition: xPosition + xShift - 0.5 * barsWidth)
+                    self.addLabel(forIndex: index, atXPosition: xPosition + xShift, withMaxHeight: barsWidth)
                 }
                 previousXPosition = xPosition
                 
@@ -182,7 +182,7 @@ public class ARBarChart: SCNNode {
                 }
             }
             
-            self.addLabel(forSeries: series, atZPosition: zPosition + zShift + 0.5 * barsLength)
+            self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barsLength)
             previousZPosition = zPosition
         }
     }
@@ -253,7 +253,7 @@ public class ARBarChart: SCNNode {
      * - parameter series: The series to be labeled.
      * - parameter zPosition: The Z position of the center of the bars for the specified series.
      */
-    private func addLabel(forSeries series: Int, atZPosition zPosition: Float) {
+    private func addLabel(forSeries series: Int, atZPosition zPosition: Float, withMaxHeight maxHeight: Float) {
         if let seriesLabelText = dataSource!.barChart(self, labelForSeries: series) {
             let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.0)
             seriesLabel.truncationMode = kCATruncationNone
@@ -262,14 +262,19 @@ public class ARBarChart: SCNNode {
             seriesLabel.firstMaterial!.isDoubleSided = true
             seriesLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForSeries: series)
             let seriesLabelNode = SCNNode(geometry: seriesLabel)
+            // seriesLabelNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            
             
             let unscaledLabelWidth = seriesLabelNode.boundingBox.max.x - seriesLabelNode.boundingBox.min.x
             let desiredLabelWidth = size.x * delegate!.spaceForSeriesLabels(in: self)
-            let labelScale = desiredLabelWidth / unscaledLabelWidth
+            let unscaledLabelHeight = seriesLabelNode.boundingBox.max.y - seriesLabelNode.boundingBox.min.y
+            let labelScale = min(desiredLabelWidth / unscaledLabelWidth, maxHeight / unscaledLabelHeight)
             seriesLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
+            
+            let zShift = maxHeight - (maxHeight - labelScale * unscaledLabelHeight)
             let position = SCNVector3(x: -0.5 * size.x,
                                       y: 0.0,
-                                      z: zPosition)
+                                      z: zPosition + zShift)
             seriesLabelNode.position = position
             seriesLabelNode.eulerAngles = SCNVector3(-0.5 * Float.pi, 0.0, 0.0)
             
@@ -282,7 +287,7 @@ public class ARBarChart: SCNNode {
      * - parameter index: The index (X axis) to be labeled.
      * - parameter zPosition: The Z position of the center of the bars for the specified series.
      */
-    private func addLabel(forIndex index: Int, atXPosition xPosition: Float) {
+    private func addLabel(forIndex index: Int, atXPosition xPosition: Float, withMaxHeight maxHeight: Float) {
         if let indexLabelText = dataSource!.barChart(self, labelForValuesAtIndex: index) {
             let indexLabel = SCNText(string: indexLabelText, extrusionDepth: 0.0)
             indexLabel.truncationMode = kCATruncationNone
@@ -294,9 +299,12 @@ public class ARBarChart: SCNNode {
             
             let unscaledLabelWidth = indexLabelNode.boundingBox.max.x - indexLabelNode.boundingBox.min.x
             let desiredLabelWidth = size.z * delegate!.spaceForIndexLabels(in: self)
-            let labelScale = desiredLabelWidth / unscaledLabelWidth
+            let unscaledLabelHeight = indexLabelNode.boundingBox.max.y - indexLabelNode.boundingBox.min.y
+            let labelScale = min(desiredLabelWidth / unscaledLabelWidth, maxHeight / unscaledLabelHeight)
             indexLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
-            let position = SCNVector3(x: xPosition,
+            
+            let xShift = (maxHeight - labelScale * unscaledLabelHeight) - maxHeight
+            let position = SCNVector3(x: xPosition + xShift,
                                       y: 0.0,
                                       z: -0.5 * size.z)
             indexLabelNode.position = position
