@@ -136,8 +136,8 @@ public class ARBarChart: SCNNode {
                                               z: size.z * (1.0 - spaceForIndexLabels))
         let biggestValueRange = maxValue - minValue
         
-        let barsLength = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: sizeAvailableForBars.z)
-        let barsWidth = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: sizeAvailableForBars.x)
+        let barsWidth = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: sizeAvailableForBars.z)
+        let barsLength = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: sizeAvailableForBars.x)
         let maxBarHeight = sizeAvailableForBars.y / Float(biggestValueRange)
         
         let xShift = size.x * (spaceForSeriesLabels - 0.5)
@@ -145,7 +145,7 @@ public class ARBarChart: SCNNode {
         var previousZPosition: Float = 0.0
         
         for series in 0..<numberOfSeries {
-            let zPosition = self.zPosition(forSeries: series, previousZPosition, barsWidth)
+            let zPosition = self.zPosition(forSeries: series, previousZPosition, barsLength)
             var previousXPosition: Float = 0.0
             
             for index in 0..<dataSource.barChart(self, numberOfValuesInSeries: series) {
@@ -164,7 +164,7 @@ public class ARBarChart: SCNNode {
                 
                 let yPosition = 0.5 * Float(value) * Float(maxBarHeight)
                 let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
-                let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
+                let xPosition = self.xPosition(forIndex: index, previousXPosition, barsWidth)
                 barNode.position = SCNVector3(x: xPosition + xShift, y: startingYPosition, z: zPosition + zShift)
 
                 let barMaterial = delegate.barChart(self, materialForBarAtIndex: index, forSeries: series)
