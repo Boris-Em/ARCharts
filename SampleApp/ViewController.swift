@@ -57,6 +57,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         let configuration = ARWorldTrackingSessionConfiguration()
         configuration.planeDetection = .horizontal
+        sceneView.session.configuration?.isLightEstimationEnabled = true
         sceneView.session.run(configuration)
         sceneView.delegate = self
         
@@ -82,7 +83,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         focusSquare.removeFromParentNode()
         sceneView.scene.rootNode.addChildNode(focusSquare)
     }
-    
+
     func constructBarChart(at position: SCNVector3) {
         if barChart != nil {
             barChart.removeFromParentNode()
@@ -104,7 +105,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // MARK: - ARSCNViewDelegate
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        
         DispatchQueue.main.async {
             self.updateFocusSquare()
         }
