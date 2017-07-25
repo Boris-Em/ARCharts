@@ -17,20 +17,14 @@ public class ARBarChart: SCNNode {
     public var delegate: ARBarChartDelegate?
     public var animationType: ARBarChartAnimationType?
     public var animationDuration = 1.0
+    private var size: SCNVector3!
     
     public required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(geometry: SCNGeometry) {
-        super.init()
-        self.geometry = geometry
-    }
-    
-    private var size: SCNVector3?
-    
-    /** Initialize an `ARBarChart` with a dataSource and bounding dimensions.
-     * Dimensions should be read as if you were looking down on the graph from above.
+    /**
+     * Initialize an `ARBarChart` with a dataSource and bounding dimensions.
      * Width and height determine the square in the XY-plane on which the graph lies.
      * Depth is the distance from the planar surface to the top of the bar in the graph.
      *
@@ -103,51 +97,69 @@ public class ARBarChart: SCNNode {
             let numberOfSeries = self.numberOfSeries,
             let maxNumberOfIndices = self.maxNumberOfIndices,
             let size = self.size else {
-                // TODO: Print or assert
-                return
+                fatalError("Could not find values for dataSource, delegate, numberOfSeries, and maxNumberOfIndices.")
         }
         
         guard let minValue = self.minValue ?? self.minAndMaxChartValues?.minValue,
             let maxValue = self.maxValue ?? self.minAndMaxChartValues?.maxValue,
             minValue < maxValue else {
-                // TODO: Print or assert
-                return
+                fatalError("Invalid chart values detected (minValue >= maxValue)")
         }
         
-        let biggestValueRange = maxValue - minValue
-        let seriesSize = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: size.z)
-        let barsLength = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: size.x)
-        let maxBarHeight = size.y / Float(biggestValueRange)
+        guard let spaceForSeriesLabels = self.delegate?.spaceForSeriesLabels(in: self),
+            spaceForSeriesLabels >= 0.0 && spaceForSeriesLabels <= 1.0 else {
+            fatalError("ARBarChartDelegate method spaceForSeriesLabels must return a value between 0.0 and 1.0")
+        }
         
+        guard let spaceForIndexLabels = self.delegate?.spaceForIndexLabels(in: self),
+            spaceForIndexLabels >= 0.0 && spaceForIndexLabels <= 1.0 else {
+            fatalError("ARBarChartDelegate method spaceForIndexLabels must return a value between 0.0 and 1.0")
+        }
+        
+        let sizeAvailableForBars = SCNVector3(x: size.x * (1.0 - spaceForSeriesLabels),
+                                              y: size.y,
+                                              z: size.z * (1.0 - spaceForIndexLabels))
+        let biggestValueRange = maxValue - minValue
+        
+        let barsLength = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: sizeAvailableForBars.z)
+        let barsWidth = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: sizeAvailableForBars.x)
+        let maxBarHeight = sizeAvailableForBars.y / Float(biggestValueRange)
+        
+        let xShift = size.x * (spaceForSeriesLabels - 0.5)
+        let zShift = size.z * (spaceForIndexLabels - 0.5)
         var previousZPosition: Float = 0.0
         
-        for series in 0 ..< numberOfSeries {
-            let zPosition = self.zPosition(forSeries: series, previousZPosition, seriesSize)
+        for series in 0..<numberOfSeries {
+            let zPosition = self.zPosition(forSeries: series, previousZPosition, barsWidth)
             var previousXPosition: Float = 0.0
             
-            for index in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: series) {
+            for index in 0..<dataSource.barChart(self, numberOfValuesInSeries: series) {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
                 let startingBarHeight = animationType == .grow || animationType == .progressiveGrow ? 0.0 : barHeight
-                let barBox = SCNBox(width: CGFloat(barsLength),
+                let barBox = SCNBox(width: CGFloat(barsWidth),
                                     height: CGFloat(startingBarHeight),
-                                    length: CGFloat(seriesSize),
+                                    length: CGFloat(barsLength),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
                 let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
                 barNode.opacity = CGFloat(startingOpacity)
                 
-                let yPosition = Float(value) * Float(maxBarHeight) / 2
+                let yPosition = 0.5 * Float(value) * Float(maxBarHeight)
                 let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
                 let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
-                barNode.position = SCNVector3(x: xPosition, y: startingYPosition, z: zPosition)
-                
+                barNode.position = SCNVector3(x: xPosition + xShift, y: startingYPosition, z: zPosition + zShift)
+
                 let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
                 barNode.geometry?.firstMaterial?.diffuse.contents = barColor
                 
                 self.addChildNode(barNode)
+                
+                if series == 0 {
+                    self.addLabel(forIndex: index, atXPosition: xPosition + xShift - 0.5 * barsWidth)
+                }
                 previousXPosition = xPosition
                 
                 if let animationType = animationType {
@@ -156,6 +168,7 @@ public class ARBarChart: SCNNode {
                 }
             }
             
+            self.addLabel(forSeries: series, atZPosition: zPosition + zShift + 0.5 * barsLength)
             previousZPosition = zPosition
         }
     }
@@ -219,4 +232,64 @@ public class ARBarChart: SCNNode {
         
         return previousSeriesZPosition + seriesSize + seriesSize * gapSize
     }
+    
+    
+    /**
+     * Add a series label to the Z axis for a given series and at a given Z position.
+     * - parameter series: The series to be labeled.
+     * - parameter zPosition: The Z position of the center of the bars for the specified series.
+     */
+    private func addLabel(forSeries series: Int, atZPosition zPosition: Float) {
+        if let seriesLabelText = dataSource!.barChart(self, labelForSeries: series) {
+            let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.0)
+            seriesLabel.truncationMode = kCATruncationNone
+            seriesLabel.alignmentMode = kCAAlignmentCenter
+            seriesLabel.font = UIFont.systemFont(ofSize: 10.0)
+            seriesLabel.firstMaterial!.isDoubleSided = true
+            seriesLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForSeries: series)
+            let seriesLabelNode = SCNNode(geometry: seriesLabel)
+            
+            let unscaledLabelWidth = seriesLabelNode.boundingBox.max.x - seriesLabelNode.boundingBox.min.x
+            let desiredLabelWidth = size.x * delegate!.spaceForSeriesLabels(in: self)
+            let labelScale = desiredLabelWidth / unscaledLabelWidth
+            seriesLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
+            let position = SCNVector3(x: -0.5 * size.x,
+                                      y: 0.0,
+                                      z: zPosition)
+            seriesLabelNode.position = position
+            seriesLabelNode.eulerAngles = SCNVector3(-0.5 * Float.pi, 0.0, 0.0)
+            
+            self.addChildNode(seriesLabelNode)
+        }
+    }
+    
+    /**
+     * Add an index label to the X axis for a given index and at a given X position.
+     * - parameter index: The index (X axis) to be labeled.
+     * - parameter zPosition: The Z position of the center of the bars for the specified series.
+     */
+    private func addLabel(forIndex index: Int, atXPosition xPosition: Float) {
+        if let indexLabelText = dataSource!.barChart(self, labelForValuesAtIndex: index) {
+            let indexLabel = SCNText(string: indexLabelText, extrusionDepth: 0.0)
+            indexLabel.truncationMode = kCATruncationNone
+            indexLabel.alignmentMode = kCAAlignmentCenter
+            indexLabel.font = UIFont.systemFont(ofSize: 10.0)
+            indexLabel.firstMaterial!.isDoubleSided = true
+            indexLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForValuesAtIndex: index)
+            let indexLabelNode = SCNNode(geometry: indexLabel)
+            
+            let unscaledLabelWidth = indexLabelNode.boundingBox.max.x - indexLabelNode.boundingBox.min.x
+            let desiredLabelWidth = size.z * delegate!.spaceForIndexLabels(in: self)
+            let labelScale = desiredLabelWidth / unscaledLabelWidth
+            indexLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
+            let position = SCNVector3(x: xPosition,
+                                      y: 0.0,
+                                      z: -0.5 * size.z)
+            indexLabelNode.position = position
+            indexLabelNode.eulerAngles = SCNVector3(-0.5 * Float.pi, -0.5 * Float.pi, 0.0)
+            
+            self.addChildNode(indexLabelNode)
+        }
+    }
+    
 }

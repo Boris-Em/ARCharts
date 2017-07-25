@@ -17,9 +17,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     var barChart: ARBarChart!
-    var data: [[Double]]!
-    var rowLabels: [String]!
-    var columnLabels: [String]!
     
     var session: ARSession {
         get {
@@ -92,13 +89,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-//        let values = generateRandomNumbers(withRange: 0..<50, numberOfRows: 50, numberOfColumns: 50)
-        let values = generateNumbers(fromDataSampleWithIndex: 1)!
+        let values = generateRandomNumbers(withRange: 0..<5, numberOfRows: 10, numberOfColumns: 10)
         
-        let dataSeries = ARDataSeries(withValues: values)
+        let seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
+        let indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+        let dataSeries = ARDataSeries(withValues: values, seriesLabels: seriesLabels, indexLabels: indexLabels)
         self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.2, 0.2, 0.2))
         self.barChart.position = position
-        self.barChart.animationType = .progressiveFadeIn
+        self.barChart.animationType = .progressiveGrow
         self.barChart.drawGraph()
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
