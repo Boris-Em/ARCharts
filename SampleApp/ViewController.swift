@@ -92,11 +92,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-        let values = generateRandomNumbers(withRange: 0..<50, numberOfRows: 50, numberOfColumns: 50)
-            
+//        let values = generateRandomNumbers(withRange: 0..<50, numberOfRows: 50, numberOfColumns: 50)
+        let values = generateNumbers(fromDataSampleWithIndex: 1)!
+        
         let dataSeries = ARDataSeries(withValues: values)
         self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.2, 0.2, 0.2))
         self.barChart.position = position
+        self.barChart.animationType = .grow
+        self.barChart.drawGraph()
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
@@ -107,7 +110,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         DispatchQueue.main.async {
             self.updateFocusSquare()
         }
-        
     }
     
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {

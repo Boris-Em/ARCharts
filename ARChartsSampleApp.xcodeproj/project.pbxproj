@@ -24,6 +24,7 @@
 		C3C2EC691F1BD6C3001EC280 /* ARDataSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */; };
 		C3C2EC6B1F2543D2001EC280 /* DataSample_1.csv in Resources */ = {isa = PBXBuildFile; fileRef = C3C2EC6A1F2543D2001EC280 /* DataSample_1.csv */; };
 		C3D4C4531F174B29001116AC /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4C4521F174A97001116AC /* FocusSquare.swift */; };
+		FCE582F61F2720F3002D469B /* ARAnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE582F51F27206F002D469B /* ARAnimationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDataSeries.swift; sourceTree = "<group>"; };
 		C3C2EC6A1F2543D2001EC280 /* DataSample_1.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataSample_1.csv; sourceTree = "<group>"; };
 		C3D4C4521F174A97001116AC /* FocusSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
+		FCE582F51F27206F002D469B /* ARAnimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAnimationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 				C3C2EC461F1A83B3001EC280 /* Info.plist */,
 				C3C2EC641F1A8B94001EC280 /* ARBarChart.swift */,
 				C3C2EC611F1A8467001EC280 /* ARBarChartProtocols.swift */,
+				FCE582F51F27206F002D469B /* ARAnimationManager.swift */,
 				C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */,
 			);
 			path = ARCharts;
@@ -339,6 +342,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCE582F61F2720F3002D469B /* ARAnimationManager.swift in Sources */,
 				C3C2EC691F1BD6C3001EC280 /* ARDataSeries.swift in Sources */,
 				C3C2EC651F1A8B94001EC280 /* ARBarChart.swift in Sources */,
 				C3C2EC631F1A853C001EC280 /* ARBarChartProtocols.swift in Sources */,
@@ -505,7 +509,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 67V847367C;
+                DEVELOPMENT_TEAM = 67V847367C;
 				INFOPLIST_FILE = SampleApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARChartsSampleApp;
@@ -524,7 +528,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 67V847367C;
+                DEVELOPMENT_TEAM = 67V847367C;
 				INFOPLIST_FILE = SampleApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARChartsSampleApp;

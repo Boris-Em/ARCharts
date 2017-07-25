@@ -15,6 +15,8 @@ public class ARBarChart: SCNNode {
     
     public var dataSource: ARBarChartDataSource?
     public var delegate: ARBarChartDelegate?
+    public var animationType: ARBarChartAnimationType?
+    public var animationDuration = 1.0
     
     public required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -24,6 +26,8 @@ public class ARBarChart: SCNNode {
         super.init()
         self.geometry = geometry
     }
+    
+    private var size: SCNVector3?
     
     /** Initialize an `ARBarChart` with a dataSource and bounding dimensions.
      * Dimensions should be read as if you were looking down on the graph from above.
@@ -38,7 +42,7 @@ public class ARBarChart: SCNNode {
         
         self.dataSource = dataSource
         self.delegate = delegate
-        drawGraph(withSize: size)
+        self.size = size
     }
     
     public func reloadGraph() {
@@ -72,7 +76,6 @@ public class ARBarChart: SCNNode {
             
             var minValue = Double.greatestFiniteMagnitude
             var maxValue = Double.leastNormalMagnitude
-            
             var didProcessValue = false
             
             for series in 0 ..< dataSource.numberOfSeries(in: self) {
@@ -94,11 +97,12 @@ public class ARBarChart: SCNNode {
     public var minValue: Double?
     public var maxValue: Double?
     
-    private func drawGraph(withSize size: SCNVector3) {
+    public func drawGraph() {
         guard let dataSource = dataSource,
             let delegate = delegate,
             let numberOfSeries = self.numberOfSeries,
-            let maxNumberOfIndices = self.maxNumberOfIndices else {
+            let maxNumberOfIndices = self.maxNumberOfIndices,
+            let size = self.size else {
                 // TODO: Print or assert
                 return
         }
@@ -125,21 +129,36 @@ public class ARBarChart: SCNNode {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
+                let startingBarHeight = animationType == .grow || animationType == .progressiveGrow ? 0.0 : barHeight
                 let barBox = SCNBox(width: CGFloat(barsLength),
-                                    height: CGFloat(barHeight),
+                                    height: CGFloat(startingBarHeight),
                                     length: CGFloat(seriesSize),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
+                barNode.opacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : 1.0
                 
-                let yPosition = Float(value) * Float(maxBarHeight) / 2.0
+                let yPosition = Float(value) * Float(maxBarHeight) / 2
+                let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
                 let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
-                barNode.position = SCNVector3(x: xPosition, y: yPosition, z: zPosition)
+                barNode.position = SCNVector3(x: xPosition, y: startingYPosition, z: zPosition)
                 
                 let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
                 barNode.geometry?.firstMaterial?.diffuse.contents = barColor
                 
                 self.addChildNode(barNode)
                 previousXPosition = xPosition
+                
+                if animationType == .grow || animationType == .progressiveGrow {
+                    let delay = animationType == .progressiveGrow ? Double(index) * animationDuration / 10.0 : nil
+                    let heightAnim = heightAnimation(withToValue: barHeight, duration: animationDuration, delay: delay)
+                    let yPositionAnim = yPositionAnimation(withToValue: yPosition, duration: animationDuration, delay: delay)
+                    barBox.addAnimation(heightAnim, forKey: "height")
+                    barNode.addAnimation(yPositionAnim, forKey: "position.y")
+                } else if animationType == .fadeIn || animationType == .progressiveFadeIn {
+                    let delay = animationType == .progressiveFadeIn ? Double(index) * animationDuration / 10.0 : nil
+                    let fadeInAnim = fadeInAnimation(withToValue: 1.0, duration: animationDuration, delay: delay)
+                    barNode.addAnimation(fadeInAnim, forKey: "opacity")
+                }
             }
             
             previousZPosition = zPosition
