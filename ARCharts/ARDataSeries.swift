@@ -112,6 +112,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
         return spaceForSeriesLabels
     }
+    
     public func spaceForIndexLabels(in barChart: ARBarChart) -> Float {
         return spaceForIndexLabels
     }

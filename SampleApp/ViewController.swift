@@ -119,7 +119,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let light = SCNLight()
         light.color = UIColor.white
         light.type = type
-        light.intensity = 1200 // Default SCNLight intensity is 1000
+        light.intensity = 1500 // Default SCNLight intensity is 1000
         
         let lightNode = SCNNode()
         lightNode.light = light
