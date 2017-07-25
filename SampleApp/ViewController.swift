@@ -89,10 +89,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-        let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
+        let values = generateRandomNumbers(withRange: 0..<5, numberOfRows: 5, numberOfColumns: 5)
         
-        let labels = Array(0..<values.count).map({ "Series \($0)" })
-        let dataSeries = ARDataSeries(withValues: values, seriesLabels: labels, indexLabels: nil)
+        let seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
+        let indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+        let dataSeries = ARDataSeries(withValues: values, seriesLabels: seriesLabels, indexLabels: indexLabels)
         self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.2, 0.2, 0.2))
         self.barChart.position = position
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
