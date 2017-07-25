@@ -83,10 +83,10 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     }
     
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
-        return 0.3
+        return 0.2
     }
     public func spaceForIndexLabels(in barChart: ARBarChart) -> Float {
-        return 0.3
+        return 0.2
     }
     
 }

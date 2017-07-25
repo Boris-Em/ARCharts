@@ -6,7 +6,9 @@
 //  Copyright © 2017 Boris Emorine. All rights reserved.
 //
 
+import SceneKit
 import UIKit
+
 
 /**
  * The `ARBarChartDataSource` protocol is adopted by an object that mediates the application's data model for an `ARBarChart` object.
@@ -58,7 +60,7 @@ public protocol ARBarChartDataSource: class {
      */
     func barChart(_ barChart: ARBarChart,
                   labelForValuesAtIndex index: Int) -> String?
-        
+    
 }
 
 // Make it optional for an `ARBarChartDataSource` to provide labels.
@@ -78,6 +80,7 @@ public protocol ARBarChartDelegate: class {
     
     /**
      *  Asks the delegate to return the color for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
+     * - If the delegate implements `barChart(_:materialForBarAtIndex:forSeries:)`, then the value returned by this method will not be used. The material returned by `barChart(_:materialForBarAtIndex:forSeries:)` will be used instead.
      * - parameter barChart: The `ARBarChart` object requesting the color for a bar.
      * - parameter index: The index number identifying an index in the bar chart (X axis).
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
@@ -126,6 +129,18 @@ public protocol ARBarChartDelegate: class {
                   gapSizeAfterIndex index: Int) -> Float
     
     /**
+     * Asks the delegate to return the material to use for the bar at a specific index in a specific series.
+     * If this method is not implemented by the delegate, but `barChart(_:colorForBarAtIndex:forSeries:)` is,
+     * then the `ARBarChart` will construct its own material using flat color for the bars.
+     * - parameter index: The index for the bar that will use the material as its surface.
+     * - parameter series: The series that precedes the gap.
+     * - returns: The material to use for the surface of the specified bar.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  materialForBarAtIndex index: Int,
+                  forSeries series: Int) -> SCNMaterial
+    
+    /**
      *  Asks the delegate to return the space available for index labels, as a ratio of the total available space for the Z axis (between 0 and 1).
      * - parameter barChart: The `ARBarChart` object requesting the spacing for index labels.
      * - returns: The ratio of Z-axis space to use for index labels, as a `Double` between 0 and 1.
@@ -144,6 +159,14 @@ public protocol ARBarChartDelegate: class {
 extension ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart,
+                         materialForBarAtIndex index: Int,
+                         forSeries series: Int) -> SCNMaterial {
+        let colorMaterial = SCNMaterial()
+        colorMaterial.diffuse.contents = self.barChart(barChart, colorForBarAtIndex: index, forSeries: series)
+        return colorMaterial
+    }
+    
+    public func barChart(_ barChart: ARBarChart,
                          gapSizeAfterSeries series: Int) -> Float {
         return 0.0
     }
@@ -156,16 +179,24 @@ extension ARBarChartDelegate {
         return 0.0
     }
     
-    func barChart(_ barChart: ARBarChart,
-                  gapSizeAfterIndex index: Int) -> Float {
+    public func barChart(_ barChart: ARBarChart,
+                         gapSizeAfterIndex index: Int) -> Float {
         return 0.0
     }
+    
+    public func barChart(_ barChart: ARBarChart,
+                         colorForBarAtIndex index: Int,
+                         forSeries series: Int) -> UIColor {
+        return UIColor.white
+    }
         
-    public func barChart(_ barChart: ARBarChart, colorForLabelForSeries series: Int) -> UIColor {
+    public func barChart(_ barChart: ARBarChart,
+                         colorForLabelForSeries series: Int) -> UIColor {
         return UIColor.white
     }
     
-    public func barChart(_ barChart: ARBarChart, colorForLabelForValuesAtIndex index: Int) -> UIColor {
+    public func barChart(_ barChart: ARBarChart,
+                         colorForLabelForValuesAtIndex index: Int) -> UIColor {
         return UIColor.white
     }
     
