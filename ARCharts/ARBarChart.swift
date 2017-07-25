@@ -140,9 +140,9 @@ public class ARBarChart: SCNNode {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
-                let barBox = SCNBox(width: CGFloat(barsWidth),   // X axis
-                                    height: CGFloat(barHeight),  // Y axis
-                                    length: CGFloat(barsLength), // Z axis
+                let barBox = SCNBox(width: CGFloat(barsWidth),
+                                    height: CGFloat(barHeight),
+                                    length: CGFloat(barsLength),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
