@@ -89,11 +89,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-<<<<<<< HEAD
-        let values = generateRandomNumbers(withRange: 0..<15, numberOfRows: 15, numberOfColumns: 15)
-=======
         let values = generateRandomNumbers(withRange: 0..<5, numberOfRows: 10, numberOfColumns: 10)
->>>>>>> 14d83e825cbd4e9cf37ac22837b4a833a3507f09
         
         let seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
         let indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
