@@ -18,15 +18,34 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     private let values: [[Double]]
     
+    /// Labels to use for the series (Z-axis).
     public var seriesLabels: [String]? = nil
+    
+    /// Labels to use for the values at each index (X-axis).
     public var indexLabels: [String]? = nil
+    
+    /// Colors to use for the bars, cycled through based on bar position.
     public var barColors: [UIColor]? = nil
+    
+    /// Materials to use for the bars, cycled through based on bar position.
+    /// If non-nil, `barMaterials` overrides `barColors` to style the bars.
     public var barMaterials: [SCNMaterial]? = nil
+    
+    /// Gap between series, expressed as a ratio of gap to bar width (Z-axis).
     public var seriesGap: Float = 0.5
+    
+    /// Gap between indices, expressed as a ratio of gap to bar length (X-axis).
     public var indexGap: Float = 0.5
-    public var seriesLabelsGap: Float = 0.2
-    public var indexLabelsGap: Float = 0.2
+    
+    /// Space to allow for the series labels, expressed as a ratio of label space to graph width (Z-axis).
+    public var spaceForSeriesLabels: Float = 0.2
+    
+    /// Space to allow for the index labels, expressed as a ratio of label space to graph length (X-axis).
+    public var spaceForIndexLabels: Float = 0.2
+    
+    /// Opacity of each bar in the graph.
     public var barOpacity: Float = 1.0
+    
     
     // MARK - ARBarChartDataSource
     
@@ -91,10 +110,10 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     }
     
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
-        return seriesLabelsGap
+        return spaceForSeriesLabels
     }
     public func spaceForIndexLabels(in barChart: ARBarChart) -> Float {
-        return indexLabelsGap
+        return spaceForIndexLabels
     }
     
 }
