@@ -17,6 +17,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     var barChart: ARBarChart!
+    private let arKitColors = [
+        UIColor(colorLiteralRed: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 70.0  / 255.0, green: 150.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 134.0 / 255.0, green: 218.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 237.0 / 255.0, green: 231.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 0.0   / 255.0, green: 110.0 / 255.0, blue: 235.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 193.0 / 255.0, green: 193.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
+        UIColor(colorLiteralRed: 84.0  / 255.0, green: 204.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0)
+    ]
     
     var session: ARSession {
         get {
@@ -51,6 +60,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         setupFocusSquare()
         setupRotationGesture()
+        addLightSource(ofType: .omni)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,8 +94,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         focusSquare.removeFromParentNode()
         sceneView.scene.rootNode.addChildNode(focusSquare)
     }
-
-    func constructBarChart(at position: SCNVector3) {
+    
+    private func constructBarChart(at position: SCNVector3) {
         if barChart != nil {
             barChart.removeFromParentNode()
             barChart = nil
@@ -93,9 +103,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         let values = generateRandomNumbers(withRange: 0..<5, numberOfRows: 10, numberOfColumns: 10)
         
-        let seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
-        let indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
-        let dataSeries = ARDataSeries(withValues: values, seriesLabels: seriesLabels, indexLabels: indexLabels)
+        let dataSeries = ARDataSeries(withValues: values)
+        dataSeries.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
+        dataSeries.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+        dataSeries.barColors = arKitColors
+        
         self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.3, 0.3, 0.3))
         self.barChart.position = position
         self.barChart.animationType = .progressiveGrow
@@ -103,7 +115,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
-    func setupRotationGesture() {
+    private func addLightSource(ofType type: SCNLight.LightType, at position: SCNVector3? = nil) {
+        let light = SCNLight()
+        light.color = UIColor.white
+        light.type = type
+        light.intensity = 1200 // Default SCNLight intensity is 1000
+        
+        let lightNode = SCNNode()
+        lightNode.light = light
+        if let lightPosition = position {
+            // Fix the light source in one location
+            lightNode.position = lightPosition
+            self.sceneView.scene.rootNode.addChildNode(lightNode)
+        } else {
+            // Make the light source follow the camera position
+            self.sceneView.pointOfView?.addChildNode(lightNode)
+        }
+    }
+    
+    private func setupRotationGesture() {
         let rotationGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(handleRotation))
         self.view.addGestureRecognizer(rotationGestureRecognizer)
     }

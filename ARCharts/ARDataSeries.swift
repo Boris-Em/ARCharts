@@ -17,35 +17,21 @@ import UIKit
 public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     private let values: [[Double]]
-    private let seriesLabels: [String]?
-    private let indexLabels: [String]?
-    public var barColor = UIColor.cyan
+    
+    public var seriesLabels: [String]? = nil
+    public var indexLabels: [String]? = nil
+    public var barColors: [UIColor]? = nil
+    public var barMaterials: [SCNMaterial]? = nil
     public var seriesGap: Float = 0.5
     public var indexGap: Float = 0.5
+    public var seriesLabelsGap: Float = 0.2
+    public var indexLabelsGap: Float = 0.2
     public var barOpacity: Float = 1.0
-    
-    private let arKitColors = [
-        UIColor(colorLiteralRed: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 70.0  / 255.0, green: 150.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 134.0 / 255.0, green: 218.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 237.0 / 255.0, green: 231.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 0.0   / 255.0, green: 110.0 / 255.0, blue: 235.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 193.0 / 255.0, green: 193.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 84.0  / 255.0, green: 204.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0)
-    ]
     
     // MARK - ARBarChartDataSource
     
     public required init(withValues values: [[Double]]) {
         self.values = values
-        self.seriesLabels = nil
-        self.indexLabels = nil
-    }
-    
-    public init(withValues values: [[Double]], seriesLabels: [String]?, indexLabels: [String]?) {
-        self.values = values
-        self.seriesLabels = seriesLabels
-        self.indexLabels = indexLabels
     }
     
     public func numberOfSeries(in barChart: ARBarChart) -> Int {
@@ -73,22 +59,23 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     // MARK - ARBarChartDelegate
     
     public func barChart(_ barChart: ARBarChart, colorForBarAtIndex index: Int, forSeries series: Int) -> UIColor {
-        return arKitColors[(series * values[series].count + index) % arKitColors.count]
+        if let barColors = barColors {
+            return barColors[(series * values[series].count + index) % barColors.count]
+        }
+        
+        return UIColor.white
     }
     
     public func barChart(_ barChart: ARBarChart, materialForBarAtIndex index: Int, forSeries series: Int) -> SCNMaterial {
-        let colorIndex = (series * (values.first?.count ?? 0) + index) % arKitColors.count
-        if colorIndex == 0 {
-            let woodMaterial = SCNMaterial()
-            woodMaterial.diffuse.contents = #imageLiteral(resourceName: "WoodGrain")
-            woodMaterial.specular.contents = UIColor.white
-            return woodMaterial
-        } else {
-            let colorMaterial = SCNMaterial()
-            colorMaterial.diffuse.contents = arKitColors[colorIndex]
-            colorMaterial.specular.contents = UIColor.white
-            return colorMaterial
+        if let barMaterials = barMaterials {
+            return barMaterials[(series * (values.first?.count ?? 0) + index) % barMaterials.count]
         }
+        
+        // If bar materials are not set, default to using colors
+        let colorMaterial = SCNMaterial()
+        colorMaterial.diffuse.contents = self.barChart(barChart, colorForBarAtIndex: index, forSeries: series)
+        colorMaterial.specular.contents = UIColor.white
+        return colorMaterial
     }
     
     public func barChart(_ barChart: ARBarChart, gapSizeAfterSeries series: Int) -> Float {
@@ -104,10 +91,10 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     }
     
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {
-        return 0.2
+        return seriesLabelsGap
     }
     public func spaceForIndexLabels(in barChart: ARBarChart) -> Float {
-        return 0.2
+        return indexLabelsGap
     }
     
 }
