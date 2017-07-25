@@ -15,9 +15,24 @@ public class ARBarChart: SCNNode {
     
     public var dataSource: ARBarChartDataSource?
     public var delegate: ARBarChartDelegate?
-    public var animationType: ARBarChartAnimationType?
-    public var animationDuration = 1.0
+    public var animationType: ARBarChartAnimationType? {
+        didSet {
+            if let animationType = animationType {
+                if self.animationManager != nil {
+                    self.animationManager?.animationType = animationType
+                } else {
+                    self.animationManager = AnimationManager(animationType: animationType, animationDuration: animationDuration)
+                }
+            }
+        }
+    }
+    public var animationDuration = 1.0 {
+        didSet {
+            self.animationManager?.animationDuration = animationDuration
+        }
+    }
     private var size: SCNVector3!
+    private var animationManager: AnimationManager?
     
     public required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -162,8 +177,7 @@ public class ARBarChart: SCNNode {
                 }
                 previousXPosition = xPosition
                 
-                if let animationType = animationType {
-                    let animationManager = AnimationManager(animationType: animationType, animationDuration: animationDuration)
+                if let animationManager = self.animationManager {
                     animationManager.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, yPosition, opacity)
                 }
             }
