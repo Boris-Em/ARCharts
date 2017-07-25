@@ -13,9 +13,26 @@ import SpriteKit
 
 public class ARBarChart: SCNNode {
     
-    private var dataSource: ARBarChartDataSource?
-    private var delegate: ARBarChartDelegate?
+    public var dataSource: ARBarChartDataSource?
+    public var delegate: ARBarChartDelegate?
+    public var animationType: ARBarChartAnimationType? {
+        didSet {
+            if let animationType = animationType {
+                if self.animationManager != nil {
+                    self.animationManager?.animationType = animationType
+                } else {
+                    self.animationManager = AnimationManager(animationType: animationType, animationDuration: animationDuration)
+                }
+            }
+        }
+    }
+    public var animationDuration = 1.0 {
+        didSet {
+            self.animationManager?.animationDuration = animationDuration
+        }
+    }
     private var size: SCNVector3!
+    private var animationManager: AnimationManager?
     
     public required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -35,7 +52,6 @@ public class ARBarChart: SCNNode {
         self.dataSource = dataSource
         self.delegate = delegate
         self.size = size
-        drawGraph(withSize: size)
     }
     
     public func reloadGraph() {
@@ -69,7 +85,6 @@ public class ARBarChart: SCNNode {
             
             var minValue = Double.greatestFiniteMagnitude
             var maxValue = Double.leastNormalMagnitude
-            
             var didProcessValue = false
             
             for series in 0 ..< dataSource.numberOfSeries(in: self) {
@@ -91,11 +106,12 @@ public class ARBarChart: SCNNode {
     public var minValue: Double?
     public var maxValue: Double?
     
-    private func drawGraph(withSize size: SCNVector3) {
+    public func drawGraph() {
         guard let dataSource = dataSource,
             let delegate = delegate,
             let numberOfSeries = self.numberOfSeries,
-            let maxNumberOfIndices = self.maxNumberOfIndices else {
+            let maxNumberOfIndices = self.maxNumberOfIndices,
+            let size = self.size else {
                 fatalError("Could not find values for dataSource, delegate, numberOfSeries, and maxNumberOfIndices.")
         }
         
@@ -136,15 +152,20 @@ public class ARBarChart: SCNNode {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
+                let startingBarHeight = animationType == .grow || animationType == .progressiveGrow ? 0.0 : barHeight
                 let barBox = SCNBox(width: CGFloat(barsWidth),
-                                    height: CGFloat(barHeight),
+                                    height: CGFloat(startingBarHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
+                let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
+                let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
+                barNode.opacity = CGFloat(startingOpacity)
                 
                 let yPosition = 0.5 * Float(value) * Float(maxBarHeight)
+                let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
                 let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
-                barNode.position = SCNVector3(x: xPosition + xShift, y: yPosition, z: zPosition + zShift)
+                barNode.position = SCNVector3(x: xPosition + xShift, y: startingYPosition, z: zPosition + zShift)
 
                 let barMaterial = delegate.barChart(self, materialForBarAtIndex: index, forSeries: series)
                 barNode.geometry?.firstMaterial = barMaterial
@@ -155,6 +176,10 @@ public class ARBarChart: SCNNode {
                     self.addLabel(forIndex: index, atXPosition: xPosition + xShift - barsWidth, withMaxHeight: barsWidth)
                 }
                 previousXPosition = xPosition
+                
+                if let animationManager = self.animationManager {
+                    animationManager.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, yPosition, opacity)
+                }
             }
             
             self.addLabel(forSeries: series, atZPosition: zPosition + zShift + barsLength, withMaxHeight: barsLength)

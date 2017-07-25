@@ -91,6 +91,17 @@ public protocol ARBarChartDelegate: class {
                   forSeries series: Int) -> UIColor
     
     /**
+     *  Asks the delegate to return the opacity for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
+     * - parameter barChart: The `ARBarChart` object requesting the opacity.
+     * - parameter index: The index number identifying an index in the bar chart (X axis).
+     * - parameter series: The index number identifying a series in the bar chart (Y axis).
+     * - returns: The opacity to use for the bar corresponding to the given index and series.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  opacityForBarAtIndex index: Int,
+                  forSeries series: Int) -> Float
+    
+    /**
      *  Asks the delegate to return the color for the text of a label for a specific series (Z axis).
      * - parameter barChart: The `ARBarChart` object requesting the color for the text of a series label.
      * - parameter series: The index number identifying a series in the bar chart (Y axis).
@@ -195,8 +206,13 @@ extension ARBarChartDelegate {
         return UIColor.white
     }
     
-    public func barChart(_ barChart: ARBarChart,
-                         colorForLabelForValuesAtIndex index: Int) -> UIColor {
+    func barChart(_ barChart: ARBarChart,
+                  opacityForBarAtIndex index: Int,
+                  forSeries series: Int) -> Float {
+        return 1.0
+    }
+    
+    public func barChart(_ barChart: ARBarChart, colorForLabelForValuesAtIndex index: Int) -> UIColor {
         return UIColor.white
     }
     
