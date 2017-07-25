@@ -25,8 +25,8 @@ public class ARBarChart: SCNNode {
         self.geometry = geometry
     }
     
-    /** Initialize an `ARBarChart` with a dataSource and bounding dimensions.
-     * Dimensions should be read as if you were looking down on the graph from above.
+    /**
+     * Initialize an `ARBarChart` with a dataSource and bounding dimensions.
      * Width and height determine the square in the XY-plane on which the graph lies.
      * Depth is the distance from the planar surface to the top of the bar in the graph.
      *
@@ -99,42 +99,55 @@ public class ARBarChart: SCNNode {
             let delegate = delegate,
             let numberOfSeries = self.numberOfSeries,
             let maxNumberOfIndices = self.maxNumberOfIndices else {
-                // TODO: Print or assert
-                return
+                fatalError("Could not find values for dataSource, delegate, numberOfSeries, and maxNumberOfIndices.")
         }
         
         guard let minValue = self.minValue ?? self.minAndMaxChartValues?.minValue,
             let maxValue = self.maxValue ?? self.minAndMaxChartValues?.maxValue,
             minValue < maxValue else {
-                // TODO: Print or assert
-                return
+                fatalError("Invalid chart values detected (minValue >= maxValue)")
         }
         
-        let biggestValueRange = maxValue - minValue
-        let seriesSize = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: size.z)
-        let barsLength = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: size.x)
-        let maxBarHeight = size.y / Float(biggestValueRange)
+        let spaceForSeriesLabels = delegate.spaceForSeriesLabels(in: self)
+        guard spaceForSeriesLabels >= 0.0 && spaceForSeriesLabels <= 1.0 else {
+            fatalError("ARBarChartDelegate method spaceForSeriesLabels must return a value between 0.0 and 1.0")
+        }
+        let spaceForIndexLabels = delegate.spaceForIndexLabels(in: self)
+        guard spaceForIndexLabels >= 0.0 && spaceForIndexLabels <= 1.0 else {
+            fatalError("ARBarChartDelegate method spaceForIndexLabels must return a value between 0.0 and 1.0")
+        }
         
+        let sizeAvailableForBars = SCNVector3(x: size.x * (1.0 - spaceForSeriesLabels),
+                                              y: size.y,
+                                              z: size.z * (1.0 - spaceForIndexLabels))
+        let biggestValueRange = maxValue - minValue
+        
+        let barsLength = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: sizeAvailableForBars.z)
+        let barsWidth = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: sizeAvailableForBars.x)
+        let maxBarHeight = sizeAvailableForBars.y / Float(biggestValueRange)
+        
+        let xShift = size.x * (spaceForSeriesLabels - 0.5)
+        let zShift = size.z * (spaceForIndexLabels - 0.5)
         var previousZPosition: Float = 0.0
         
-        for series in 0 ..< numberOfSeries {
-            let zPosition = self.zPosition(forSeries: series, previousZPosition, seriesSize)
+        for series in 0..<numberOfSeries {
+            let zPosition = self.zPosition(forSeries: series, previousZPosition, barsWidth)
             var previousXPosition: Float = 0.0
             
-            for index in 0 ..< dataSource.barChart(self, numberOfValuesInSeries: series) {
+            for index in 0..<dataSource.barChart(self, numberOfValuesInSeries: series) {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
                 
                 let barHeight = Float(value) * maxBarHeight
-                let barBox = SCNBox(width: CGFloat(barsLength),
+                let barBox = SCNBox(width: CGFloat(barsWidth),
                                     height: CGFloat(barHeight),
-                                    length: CGFloat(seriesSize),
+                                    length: CGFloat(barsLength),
                                     chamferRadius: 0)
                 let barNode = SCNNode(geometry: barBox)
                 
                 let yPosition = Float(value) * Float(maxBarHeight) / 2.0
                 let xPosition = self.xPosition(forIndex: index, previousXPosition, barsLength)
-                barNode.position = SCNVector3(x: xPosition, y: yPosition, z: zPosition)
-                
+                barNode.position = SCNVector3(x: xPosition + xShift, y: yPosition, z: zPosition + zShift)
+
                 let barColor = delegate.barChart(self, colorForBarAtIndex: index, forSeries: series)
                 barNode.geometry?.firstMaterial?.diffuse.contents = barColor
                 
@@ -143,6 +156,26 @@ public class ARBarChart: SCNNode {
             }
             
             previousZPosition = zPosition
+            
+            if let seriesLabelText = dataSource.barChart(self, labelForSeries: series) {
+                let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.0)
+                seriesLabel.truncationMode = kCATruncationNone
+                seriesLabel.alignmentMode = kCAAlignmentCenter
+                seriesLabel.font = UIFont.systemFont(ofSize: 10.0)
+                seriesLabel.firstMaterial!.isDoubleSided = true
+                seriesLabel.firstMaterial!.diffuse.contents = delegate.barChart(self, colorForLabelForSeries: series)
+                let seriesLabelNode = SCNNode(geometry: seriesLabel)
+                
+                let scale = size.x * spaceForSeriesLabels / (seriesLabelNode.boundingBox.max.x - seriesLabelNode.boundingBox.min.x)
+                seriesLabelNode.scale = SCNVector3(scale, scale, scale)
+                let position = SCNVector3(x: -size.x / 2.0, y: 0.0, z: zPosition + zShift + barsLength)
+                seriesLabelNode.position = position
+                seriesLabelNode.geometry?.firstMaterial?.isDoubleSided = true
+                seriesLabelNode.eulerAngles = SCNVector3(-Float.pi * 0.5, 0.0, 0.0)
+                
+                self.addChildNode(seriesLabelNode)
+            }
+            
         }
     }
     
