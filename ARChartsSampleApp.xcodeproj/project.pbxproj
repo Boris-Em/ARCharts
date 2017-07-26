@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		20D557D31F1C0E0800924685 /* DataSample_0.csv in Resources */ = {isa = PBXBuildFile; fileRef = 20D557D01F1C0C3D00924685 /* DataSample_0.csv */; };
+		20E02D151F281686009DE002 /* ARBarChartBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E02D141F281686009DE002 /* ARBarChartBar.swift */; };
+		20E02D171F282D0C009DE002 /* ARChartHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E02D161F282D0C009DE002 /* ARChartHighlighter.swift */; };
+		20E02D191F283C6C009DE002 /* CABasicAnimation+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E02D181F283C6C009DE002 /* CABasicAnimation+Utilities.swift */; };
 		C36287461F0E084800B6598D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36287451F0E084800B6598D /* AppDelegate.swift */; };
 		C362874A1F0E084800B6598D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36287491F0E084800B6598D /* ViewController.swift */; };
 		C362874D1F0E084800B6598D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C362874B1F0E084800B6598D /* Main.storyboard */; };
@@ -26,6 +29,7 @@
 		C3D4C4531F174B29001116AC /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4C4521F174A97001116AC /* FocusSquare.swift */; };
 		FC4628171F2868920037FB5B /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4628161F28688E0037FB5B /* SettingsTableViewController.swift */; };
 		FCE582F61F2720F3002D469B /* ARAnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE582F51F27206F002D469B /* ARAnimationManager.swift */; };
+		FCE582F61F2720F3002D469B /* ARChartAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE582F51F27206F002D469B /* ARChartAnimator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +72,9 @@
 
 /* Begin PBXFileReference section */
 		20D557D01F1C0C3D00924685 /* DataSample_0.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DataSample_0.csv; sourceTree = "<group>"; };
+		20E02D141F281686009DE002 /* ARBarChartBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBarChartBar.swift; sourceTree = "<group>"; };
+		20E02D161F282D0C009DE002 /* ARChartHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARChartHighlighter.swift; sourceTree = "<group>"; };
+		20E02D181F283C6C009DE002 /* CABasicAnimation+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CABasicAnimation+Utilities.swift"; sourceTree = "<group>"; };
 		C36287421F0E084800B6598D /* ARChartsSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARChartsSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C36287451F0E084800B6598D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C36287491F0E084800B6598D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +96,7 @@
 		C3D4C4521F174A97001116AC /* FocusSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
 		FC4628161F28688E0037FB5B /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		FCE582F51F27206F002D469B /* ARAnimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAnimationManager.swift; sourceTree = "<group>"; };
+		FCE582F51F27206F002D469B /* ARChartAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARChartAnimator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +126,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		203377051F283E2A00E78317 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				20E02D181F283C6C009DE002 /* CABasicAnimation+Utilities.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		20D557CF1F1C0C3D00924685 /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,10 +185,13 @@
 			children = (
 				C3C2EC451F1A83B3001EC280 /* ARCharts.h */,
 				C3C2EC461F1A83B3001EC280 /* Info.plist */,
+				FCE582F51F27206F002D469B /* ARChartAnimator.swift */,
+				20E02D161F282D0C009DE002 /* ARChartHighlighter.swift */,
 				C3C2EC641F1A8B94001EC280 /* ARBarChart.swift */,
+				20E02D141F281686009DE002 /* ARBarChartBar.swift */,
 				C3C2EC611F1A8467001EC280 /* ARBarChartProtocols.swift */,
-				FCE582F51F27206F002D469B /* ARAnimationManager.swift */,
 				C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */,
+				203377051F283E2A00E78317 /* Extensions */,
 			);
 			path = ARCharts;
 			sourceTree = "<group>";
@@ -346,10 +365,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FCE582F61F2720F3002D469B /* ARAnimationManager.swift in Sources */,
+				FCE582F61F2720F3002D469B /* ARChartAnimator.swift in Sources */,
+				20E02D171F282D0C009DE002 /* ARChartHighlighter.swift in Sources */,
 				C3C2EC691F1BD6C3001EC280 /* ARDataSeries.swift in Sources */,
+				20E02D191F283C6C009DE002 /* CABasicAnimation+Utilities.swift in Sources */,
 				C3C2EC651F1A8B94001EC280 /* ARBarChart.swift in Sources */,
 				C3C2EC631F1A853C001EC280 /* ARBarChartProtocols.swift in Sources */,
+				20E02D151F281686009DE002 /* ARBarChartBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
