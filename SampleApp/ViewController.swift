@@ -15,6 +15,7 @@ import UIKit
 class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var chartButton: UIButton!
+    @IBOutlet weak var settingsButton: UIButton!
     @IBOutlet var sceneView: ARSCNView!
     
     var barChart: ARBarChart?
@@ -61,6 +62,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
         
         chartButton.layer.cornerRadius = 5.0
         chartButton.clipsToBounds = true
+        settingsButton.layer.cornerRadius = 5.0
+        settingsButton.clipsToBounds = true
         
         setupFocusSquare()
         setupRotationGesture()

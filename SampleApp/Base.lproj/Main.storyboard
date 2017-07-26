@@ -26,7 +26,7 @@
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JxE-aX-TkR">
                                 <rect key="frame" x="37.5" y="567" width="300" height="55"/>
-                                <color key="backgroundColor" red="0.99993634220000005" green="1" blue="0.96078038219999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="2vo-3d-y7O"/>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="300" id="ENU-TK-9o5"/>
@@ -40,8 +40,15 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4zr-Va-MAu" userLabel="Settings">
-                                <rect key="frame" x="24" y="28" width="57" height="30"/>
-                                <state key="normal" title="Settings"/>
+                                <rect key="frame" x="24" y="28" width="80" height="35"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="KCv-ce-YJC"/>
+                                    <constraint firstAttribute="height" constant="35" id="lsN-Ao-6Tc"/>
+                                </constraints>
+                                <state key="normal" title="Settings">
+                                    <color key="titleColor" red="0.16028749942779541" green="0.5866771936416626" blue="0.86923080682754517" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <segue destination="sn0-rI-P0p" kind="popoverPresentation" identifier="toSettingsViewController" popoverAnchorView="4zr-Va-MAu" id="B8y-1h-oLH">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -66,6 +73,7 @@
                     <connections>
                         <outlet property="chartButton" destination="JxE-aX-TkR" id="TEG-zr-cyQ"/>
                         <outlet property="sceneView" destination="Qpt-h8-HES" id="bHd-bW-PbX"/>
+                        <outlet property="settingsButton" destination="4zr-Va-MAu" id="Scf-f0-uqB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
