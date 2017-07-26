@@ -32,7 +32,7 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     public var barMaterials: [SCNMaterial]? = nil
     
     /// Chamfer radius to use for the bars.
-    public var chamferRadius: Float = 0.1
+    public var chamferRadius: Float = 0.0
     
     /// Gap between series, expressed as a ratio of gap to bar width (Z-axis).
     public var seriesGap: Float = 0.5

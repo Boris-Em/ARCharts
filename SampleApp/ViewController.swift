@@ -100,7 +100,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     private func addBarChart(at position: SCNVector3) {
-        let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
+        let values = generateRandomNumbers(withRange: 0..<100, numberOfRows: 30, numberOfColumns: 5)
         
         let dataSeries = ARDataSeries(withValues: values)
         dataSeries.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
