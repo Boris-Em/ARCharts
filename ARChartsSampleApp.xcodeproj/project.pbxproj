@@ -28,6 +28,9 @@
 		C3C2EC691F1BD6C3001EC280 /* ARDataSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */; };
 		C3C2EC6B1F2543D2001EC280 /* DataSample_1.csv in Resources */ = {isa = PBXBuildFile; fileRef = C3C2EC6A1F2543D2001EC280 /* DataSample_1.csv */; };
 		C3D4C4531F174B29001116AC /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4C4521F174A97001116AC /* FocusSquare.swift */; };
+		FC4628171F2868920037FB5B /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4628161F28688E0037FB5B /* SettingsTableViewController.swift */; };
+		FC4628191F28EF090037FB5B /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4628181F28EF040037FB5B /* Settings.swift */; };
+		FCE582F61F2720F3002D469B /* ARChartAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE582F51F27206F002D469B /* ARChartAnimator.swift */; };
 		FCE582F61F2720F3002D469B /* ARChartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE582F51F27206F002D469B /* ARChartPresenter.swift */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +97,9 @@
 		C3C2EC681F1BD6C3001EC280 /* ARDataSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDataSeries.swift; sourceTree = "<group>"; };
 		C3C2EC6A1F2543D2001EC280 /* DataSample_1.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataSample_1.csv; sourceTree = "<group>"; };
 		C3D4C4521F174A97001116AC /* FocusSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
+		FC4628161F28688E0037FB5B /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		FC4628181F28EF040037FB5B /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		FCE582F51F27206F002D469B /* ARChartAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARChartAnimator.swift; sourceTree = "<group>"; };
 		FCE582F51F27206F002D469B /* ARChartPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARChartPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -167,6 +173,8 @@
 				20D557CF1F1C0C3D00924685 /* Data */,
 				C36287451F0E084800B6598D /* AppDelegate.swift */,
 				C36287491F0E084800B6598D /* ViewController.swift */,
+				FC4628161F28688E0037FB5B /* SettingsTableViewController.swift */,
+				FC4628181F28EF040037FB5B /* Settings.swift */,
 				C362874B1F0E084800B6598D /* Main.storyboard */,
 				C3BD6FB11F1346820042479D /* Utilities.swift */,
 				C3D4C4521F174A97001116AC /* FocusSquare.swift */,
@@ -351,7 +359,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC4628191F28EF090037FB5B /* Settings.swift in Sources */,
 				C3BD6FB21F13470E0042479D /* Utilities.swift in Sources */,
+				FC4628171F2868920037FB5B /* SettingsTableViewController.swift in Sources */,
 				C3D4C4531F174B29001116AC /* FocusSquare.swift in Sources */,
 				C362874A1F0E084800B6598D /* ViewController.swift in Sources */,
 				C36287461F0E084800B6598D /* AppDelegate.swift in Sources */,
@@ -533,7 +543,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LFVYJRDCNE;
+				DEVELOPMENT_TEAM = UBF8T346G9;
 				INFOPLIST_FILE = SampleApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARChartsSampleApp;
@@ -552,7 +562,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LFVYJRDCNE;
+				DEVELOPMENT_TEAM = UBF8T346G9;
 				INFOPLIST_FILE = SampleApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = BEM.ARChartsSampleApp;
