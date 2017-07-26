@@ -35,6 +35,8 @@ public class ARChartHighlighter {
      * - parameter series: The series of the bar to highlight.
      */
     public func highlightBar(in barChart: ARBarChart, atIndex index: Int, forSeries series: Int) {
+        guard highlightedIndex == nil && highlightedSeries == nil else { return }
+        
         addAnimations(to: barChart, highlightIndex: index, forSeries: series, isHighlighting: true)
         
         self.highlightedIndex = index

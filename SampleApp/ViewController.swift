@@ -60,8 +60,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         setupFocusSquare()
         setupRotationGesture()
-        setupTapGesture()
-        // TODO: setupLongPressGesture()
+        setupHighlightGesture()
         
         addLightSource(ofType: .omni)
     }
@@ -141,7 +140,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addGestureRecognizer(rotationGestureRecognizer)
     }
     
-    private func setupTapGesture() {
+    private func setupHighlightGesture() {
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         self.view.addGestureRecognizer(longPressRecognizer)
     }
