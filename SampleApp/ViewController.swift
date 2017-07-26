@@ -28,9 +28,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     ]
     
     var session: ARSession {
-        get {
-            return sceneView.session
-        }
+        return sceneView.session
     }
     
     var screenCenter: CGPoint?
@@ -246,8 +244,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             return
         }
         
-        focusSquare.isHidden = false
-        focusSquare.unhide()
+        if barChart != nil {
+            focusSquare.isHidden = true
+            focusSquare.hide()
+        } else {
+            focusSquare.isHidden = false
+            focusSquare.unhide()
+        }
+        
         let (worldPos, planeAnchor, _) = worldPositionFromScreenPosition(screenCenter, objectPos: focusSquare.position)
         if let worldPos = worldPos {
             focusSquare.update(for: worldPos, planeAnchor: planeAnchor, camera: self.session.currentFrame?.camera)

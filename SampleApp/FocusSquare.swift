@@ -68,13 +68,13 @@ class FocusSquare: SCNNode {
 	
 	func hide() {
 		if self.opacity == 1.0 {
-			self.runAction(SCNAction.fadeOut(duration: 0.5))
+			self.runAction(SCNAction.fadeOut(duration: 0.3))
 		}
 	}
 	
 	func unhide() {
 		if self.opacity == 0.0 {
-			self.runAction(SCNAction.fadeIn(duration: 0.5))
+			self.runAction(SCNAction.fadeIn(duration: 0.3))
 		}
 	}
 	
