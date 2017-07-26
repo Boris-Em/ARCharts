@@ -16,10 +16,10 @@ public class ARBarChart: SCNNode {
     public var dataSource: ARBarChartDataSource?
     public var delegate: ARBarChartDelegate?
     public var size: SCNVector3!
-    public var animationType: ARChartAnimator.AnimationType? { didSet { updateAnimator() } }
-    public var animationDuration = 1.0 { didSet { updateAnimator() } }
+    public var animationType: ARChartPresenter.AnimationType? { didSet { updatePresenter() } }
+    public var animationDuration = 1.0 { didSet { updatePresenter() } }
     
-    private var animator: ARChartAnimator!
+    private var presenter: ARChartPresenter!
     private var highlighter: ARChartHighlighter!
     
     public required init(coder aDecoder: NSCoder) {
@@ -82,7 +82,10 @@ public class ARBarChart: SCNNode {
     public var minValue: Double?
     public var maxValue: Double?
     
-    public func drawGraph() {
+    /**
+     * Render the chart in the `SCNView`.
+     */
+    public func draw() {
         guard let dataSource = dataSource,
             let delegate = delegate,
             let numberOfSeries = self.numberOfSeries,
@@ -126,17 +129,22 @@ public class ARBarChart: SCNNode {
             
             for index in 0..<dataSource.barChart(self, numberOfValuesInSeries: series) {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
-                
                 let barHeight = Float(value) * maxBarHeight
                 let startingBarHeight = animationType == .grow || animationType == .progressiveGrow ? 0.0 : barHeight
+                let barOpacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
+                let startingBarOpacity = animationType == .fade || animationType == .progressiveFade ? 0.0 : opacity
+                
                 let barBox = SCNBox(width: CGFloat(barsWidth),
                                     height: CGFloat(startingBarHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
-                let barNode = ARBarChartBar(geometry: barBox, index: index, series: series, value: value, finalHeight: barHeight)
-                let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
-                let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
-                barNode.opacity = CGFloat(startingOpacity)
+                let barNode = ARBarChartBar(geometry: barBox,
+                                            index: index,
+                                            series: series,
+                                            value: value,
+                                            finalHeight: barHeight,
+                                            finalOpacity: barOpacity)
+                barNode.opacity = CGFloat(startingBarOpacity)
 
                 let yPosition = 0.5 * Float(value) * Float(maxBarHeight)
                 let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
@@ -153,7 +161,7 @@ public class ARBarChart: SCNNode {
                 }
                 previousXPosition = xPosition
                 
-                animator?.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, opacity)
+                presenter?.addAnimation(to: barNode)
             }
             
             self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barsLength)
@@ -161,6 +169,16 @@ public class ARBarChart: SCNNode {
         }
     }
     
+    
+    /**
+     * Highlight a bar at a specific index within a specific series.
+     * - parameter index: The index location (X axis) of the bar to highlight.
+     * - parameter series: The series location (Z axis) of the bar to highlight.
+     * - parameter animationStyle: Style of animation to use during highlighting.
+     *   This same animation style will be used to reverse the highlighting.
+     * - parameter animationDuration: Duration of highlighting animation.
+     *   This same duration will also be used to reverse the highlighting
+     */
     public func highlightBar(atIndex index: Int,
                              forSeries series: Int,
                              withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
@@ -168,27 +186,64 @@ public class ARBarChart: SCNNode {
         guard highlighter == nil else { return }
             
         highlighter = ARChartHighlighter(animationStyle: animationStyle, animationDuration: animationDuration)
-        highlighter.highlightBar(in: self, atIndex: index, forSeries: series)
+        highlighter.highlight(self, atIndex: index, forSeries: series)
     }
     
-    public func unhighlight() {
-        guard let highlighter = self.highlighter else { return }
+    /**
+     * Highlight all bars in a specific series.
+     * - parameter series: The series location (Z axis) of the bars to highlight.
+     * - parameter animationStyle: Style of animation to use during highlighting.
+     *   This same animation style will be used to reverse the highlighting.
+     * - parameter animationDuration: Duration of highlighting animation.
+     *   This same duration will also be used to reverse the highlighting.
+     */
+    public func highlightSeries(_ series: Int,
+                                withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
+                                withAnimationDuration animationDuration: TimeInterval) {
+        guard highlighter == nil else { return }
         
-        highlighter.unhighlightBar(in: self)
+        highlighter = ARChartHighlighter(animationStyle: animationStyle, animationDuration: animationDuration)
+        highlighter.highlight(self, atIndex: nil, forSeries: series)
+    }
+    
+    /**
+     * Highlight all bars at a specific index.
+     * - parameter series: The series location (Z axis) of the bars to highlight.
+     * - parameter animationStyle: Style of animation to use during highlighting.
+     *   This same animation style will be used to reverse the highlighting.
+     * - parameter animationDuration: Duration of highlighting animation.
+     *   This same duration will also be used to reverse the highlighting.
+     */
+    public func highlightIndex(_ index: Int,
+                               withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
+                               withAnimationDuration animationDuration: TimeInterval) {
+        guard highlighter == nil else { return }
+        
+        highlighter = ARChartHighlighter(animationStyle: animationStyle, animationDuration: animationDuration)
+        highlighter.highlight(self, atIndex: index, forSeries: nil)
+    }
+    
+    /**
+     * Remove any highlighting currently active on this chart.
+     */
+    public func unhighlight() {
+        guard self.highlighter != nil else { return }
+        
+        self.highlighter.unhighlight(self)
         
         self.highlighter = nil
     }
     
     /**
-     * Update the animator to use the new animation type. Called on `didSet` for member `animationType`.
+     * Update the presenter to use the new animation type. Called on `didSet` for member `animationType`.
      */
-    private func updateAnimator() {
+    private func updatePresenter() {
         if let animationType = self.animationType {
-            if self.animator != nil {
-                self.animator.animationType = animationType
-                self.animator.animationDuration = animationDuration
+            if presenter != nil {
+                presenter.animationType = animationType
+                presenter.animationDuration = animationDuration
             } else {
-                self.animator = ARChartAnimator(animationType: animationType, animationDuration: animationDuration)
+                presenter = ARChartPresenter(animationType: animationType, animationDuration: animationDuration)
             }
         }
     }
@@ -266,7 +321,9 @@ public class ARBarChart: SCNNode {
             seriesLabel.font = UIFont.systemFont(ofSize: 10.0)
             seriesLabel.firstMaterial!.isDoubleSided = true
             seriesLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForSeries: series)
-            let seriesLabelNode = SCNNode(geometry: seriesLabel)
+            
+            let backgroundColor = delegate!.barChart(self, backgroundColorForLabelForSeries: series)
+            let seriesLabelNode = ARChartLabel(text: seriesLabel, type: .series, id: series, backgroundColor: backgroundColor)
             
             let unscaledLabelWidth = seriesLabelNode.boundingBox.max.x - seriesLabelNode.boundingBox.min.x
             let desiredLabelWidth = size.x * delegate!.spaceForSeriesLabels(in: self)
@@ -274,7 +331,7 @@ public class ARBarChart: SCNNode {
             let labelScale = min(desiredLabelWidth / unscaledLabelWidth, maxHeight / unscaledLabelHeight)
             seriesLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
             
-            let zShift = maxHeight - (maxHeight - labelScale * unscaledLabelHeight)
+            let zShift = 0.5 * maxHeight - (maxHeight - labelScale * unscaledLabelHeight)
             let position = SCNVector3(x: -0.5 * size.x,
                                       y: 0.0,
                                       z: zPosition + zShift)
@@ -298,7 +355,9 @@ public class ARBarChart: SCNNode {
             indexLabel.font = UIFont.systemFont(ofSize: 10.0)
             indexLabel.firstMaterial!.isDoubleSided = true
             indexLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForValuesAtIndex: index)
-            let indexLabelNode = SCNNode(geometry: indexLabel)
+            
+            let backgroundColor = delegate!.barChart(self, backgroundColorForLabelForValuesAtIndex: index)
+            let indexLabelNode = ARChartLabel(text: indexLabel, type: .index, id: index, backgroundColor: backgroundColor)
             
             let unscaledLabelWidth = indexLabelNode.boundingBox.max.x - indexLabelNode.boundingBox.min.x
             let desiredLabelWidth = size.z * delegate!.spaceForIndexLabels(in: self)
@@ -306,7 +365,7 @@ public class ARBarChart: SCNNode {
             let labelScale = min(desiredLabelWidth / unscaledLabelWidth, maxHeight / unscaledLabelHeight)
             indexLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
             
-            let xShift = (maxHeight - labelScale * unscaledLabelHeight) - maxHeight
+            let xShift = (maxHeight - labelScale * unscaledLabelHeight) - 0.5 * maxHeight
             let position = SCNVector3(x: xPosition + xShift,
                                       y: 0.0,
                                       z: -0.5 * size.z)

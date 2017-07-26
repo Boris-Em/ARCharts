@@ -116,7 +116,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.barChart.size = SCNVector3(0.3, 0.3, 0.3)
         self.barChart.position = position
         self.barChart.animationType = .progressiveGrow
-        self.barChart.drawGraph()
+        self.barChart.draw()
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
@@ -205,14 +205,33 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @objc func handleLongPress(_ gestureRecognizer: UITapGestureRecognizer) {
         guard gestureRecognizer.state == .began else { return }
+        var labelToHighlight: ARChartLabel?
         
+        let animationStyle = ARChartHighlighter.AnimationStyle.shrink
+        let animationDuration = 0.3
         let longPressLocation = gestureRecognizer.location(in: self.view)
-        if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBarChartBar {
-            barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: .fade, withAnimationDuration: 0.3)
-            
-            let tapToUnhighlight = UITapGestureRecognizer(target: self, action: #selector(handleTapToUnhighlight(_:)))
-            self.view.addGestureRecognizer(tapToUnhighlight)
+        let selectedNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node
+        if let barNode = selectedNode as? ARBarChartBar {
+            barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: animationStyle, withAnimationDuration: animationDuration)
+        } else if let labelNode = selectedNode as? ARChartLabel {
+            // Detect long press on label text
+            labelToHighlight = labelNode
+        } else if let labelNode = selectedNode?.parent as? ARChartLabel {
+            // Detect long press on label background
+            labelToHighlight = labelNode
         }
+        
+        if let labelNode = labelToHighlight {
+            switch labelNode.type {
+            case .index:
+                barChart.highlightIndex(labelNode.id, withAnimationStyle: animationStyle, withAnimationDuration: animationDuration)
+            case .series:
+                barChart.highlightSeries(labelNode.id, withAnimationStyle: animationStyle, withAnimationDuration: animationDuration)
+            }
+        }
+        
+        let tapToUnhighlight = UITapGestureRecognizer(target: self, action: #selector(handleTapToUnhighlight(_:)))
+        self.view.addGestureRecognizer(tapToUnhighlight)
     }
     
     @objc func handleTapToUnhighlight(_ gestureRecognizer: UITapGestureRecognizer) {
