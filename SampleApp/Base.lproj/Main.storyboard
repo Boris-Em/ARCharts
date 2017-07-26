@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARBarChart" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARChartsSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pMZ-aP-02b"/>
                         <viewControllerLayoutGuide type="bottom" id="ftf-bb-77o"/>
@@ -35,6 +36,15 @@
                                     <action selector="handleTapAddButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="lb3-Wy-Vnf"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4zr-Va-MAu" userLabel="Settings">
+                                <rect key="frame" x="24" y="28" width="57" height="30"/>
+                                <state key="normal" title="Settings"/>
+                                <connections>
+                                    <segue destination="gzb-DA-RSG" kind="popoverPresentation" popoverAnchorView="4zr-Va-MAu" id="GSx-us-MJR">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -44,6 +54,8 @@
                             <constraint firstItem="Qpt-h8-HES" firstAttribute="height" secondItem="Woi-8b-Xcb" secondAttribute="height" id="bzk-B2-Kq8"/>
                             <constraint firstItem="ftf-bb-77o" firstAttribute="top" secondItem="blP-Rf-Drw" secondAttribute="bottom" constant="20" id="gMc-q4-UHw"/>
                             <constraint firstItem="Qpt-h8-HES" firstAttribute="width" secondItem="Woi-8b-Xcb" secondAttribute="width" id="h3h-vj-3WK"/>
+                            <constraint firstItem="4zr-Va-MAu" firstAttribute="top" secondItem="pMZ-aP-02b" secondAttribute="bottom" constant="8" id="uhs-7r-d5S"/>
+                            <constraint firstItem="4zr-Va-MAu" firstAttribute="leading" secondItem="Woi-8b-Xcb" secondAttribute="leadingMargin" constant="8" id="xta-5Q-GF4"/>
                         </constraints>
                     </view>
                     <connections>
@@ -52,6 +64,82 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Settings Table View Controller-->
+        <scene sceneID="oll-T4-Iug">
+            <objects>
+                <tableViewController id="gzb-DA-RSG" customClass="SettingsTableViewController" customModule="ARChartsSampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="NTh-P1-9KE">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection id="C22-DE-903">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="100" id="b3B-KD-bQ9">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b3B-KD-bQ9" id="Mn8-If-pqh">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Entrance Animation Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YXv-zv-zzg">
+                                                    <rect key="frame" x="8" y="8" width="191" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jDg-rG-Umm">
+                                                    <rect key="frame" x="8" y="54" width="359" height="29"/>
+                                                    <segments>
+                                                        <segment title="FadeIn"/>
+                                                        <segment title="PFadeIn"/>
+                                                        <segment title="Grow"/>
+                                                        <segment title="PGrow"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="YXv-zv-zzg" firstAttribute="leading" secondItem="Mn8-If-pqh" secondAttribute="leadingMargin" id="EkA-fn-uN3"/>
+                                                <constraint firstItem="YXv-zv-zzg" firstAttribute="top" secondItem="Mn8-If-pqh" secondAttribute="topMargin" id="Hhj-95-3RT"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="jDg-rG-Umm" secondAttribute="bottom" constant="9.5" id="JjS-QU-rXy"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="jDg-rG-Umm" secondAttribute="trailing" id="Vv5-fo-JqN"/>
+                                                <constraint firstItem="jDg-rG-Umm" firstAttribute="leading" secondItem="Mn8-If-pqh" secondAttribute="leadingMargin" id="tkh-Px-sc5"/>
+                                                <constraint firstItem="jDg-rG-Umm" firstAttribute="top" secondItem="YXv-zv-zzg" secondAttribute="bottom" constant="25" id="tqG-Xl-NCb"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="4ne-Od-5pe">
+                                        <rect key="frame" x="0.0" y="100" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4ne-Od-5pe" id="TLI-Xp-WAp">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="VvC-lC-S5t">
+                                        <rect key="frame" x="0.0" y="144" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VvC-lC-S5t" id="eSB-7w-rvg">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="gzb-DA-RSG" id="9lH-yD-9hV"/>
+                            <outlet property="delegate" destination="gzb-DA-RSG" id="llh-OK-oDM"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="entranceAnimationSegmentedControl" destination="jDg-rG-Umm" id="TN2-yU-DRl"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nlb-w9-QKV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="848.79999999999995" y="36.431784107946029"/>
         </scene>
     </scenes>
 </document>
