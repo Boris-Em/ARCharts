@@ -117,11 +117,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         }
         self.dismiss(animated: true, completion: nil)
     }
-    
-    @IBAction func handleTapCancel(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
+        
     // MARK: UITextFieldDelegate
     
     let textFieldMaxValue = 500

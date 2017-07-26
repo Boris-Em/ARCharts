@@ -31,6 +31,9 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     /// If non-nil, `barMaterials` overrides `barColors` to style the bars.
     public var barMaterials: [SCNMaterial]? = nil
     
+    /// Chamfer radius to use for the bars.
+    public var chamferRadius: Float = 0.0
+    
     /// Gap between series, expressed as a ratio of gap to bar width (Z-axis).
     public var seriesGap: Float = 0.5
     
@@ -107,6 +110,10 @@ public class ARDataSeries: ARBarChartDataSource, ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart, opacityForBarAtIndex index: Int, forSeries series: Int) -> Float {
         return barOpacity
+    }
+    
+    public func barChart(_ barChart: ARBarChart, chamferRadiusForBarAtIndex index: Int, forSeries series: Int) -> Float {
+        return chamferRadius
     }
     
     public func spaceForSeriesLabels(in barChart: ARBarChart) -> Float {

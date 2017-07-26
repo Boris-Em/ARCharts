@@ -170,6 +170,17 @@ public protocol ARBarChartDelegate: class {
                   forSeries series: Int) -> SCNMaterial
     
     /**
+     * Asks the delegate to return the chamfer radius for the bar at the specific index and series.
+     * The actual chamfer radius of the bar will be a percentage of the minimum of the bar's width and length.
+     * - parameter index: The index location of the bar whose chamfer radius is being specified.
+     * - parameter series: The series location of the bar whose chamfer radius is being specified.
+     * - returns: The ratio of the chamfer radius to the minimum of the width and length of the bar.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  chamferRadiusForBarAtIndex index: Int,
+                  forSeries series: Int) -> Float
+    
+    /**
      *  Asks the delegate to return the space available for index labels, as a ratio of the total available space for the Z axis (between 0 and 1).
      * - parameter barChart: The `ARBarChart` object requesting the spacing for index labels.
      * - returns: The ratio of Z-axis space to use for index labels, as a `Double` between 0 and 1.
@@ -193,6 +204,12 @@ extension ARBarChartDelegate {
         let colorMaterial = SCNMaterial()
         colorMaterial.diffuse.contents = self.barChart(barChart, colorForBarAtIndex: index, forSeries: series)
         return colorMaterial
+    }
+    
+    func barChart(_ barChart: ARBarChart,
+                  chamferRadiusForBarAtIndex index: Int,
+                  forSeries series: Int) -> Float {
+        return 0.0
     }
     
     public func barChart(_ barChart: ARBarChart,
@@ -241,5 +258,7 @@ extension ARBarChartDelegate {
     public func barChart(_ barChart: ARBarChart, backgroundColorForLabelForSeries series: Int) -> UIColor {
         return UIColor.clear
     }
+    
+    
     
 }

@@ -14,6 +14,7 @@ import UIKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIPopoverPresentationControllerDelegate {
     
+    @IBOutlet weak var chartButton: UIButton!
     @IBOutlet var sceneView: ARSCNView!
     
     var barChart: ARBarChart?
@@ -28,9 +29,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
     ]
     
     var session: ARSession {
-        get {
-            return sceneView.session
-        }
+        return sceneView.session
     }
     
     var screenCenter: CGPoint?
@@ -44,7 +43,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
         
         sceneView.delegate = self
         sceneView.scene = SCNScene()
-        sceneView.showsStatistics = true
+        sceneView.showsStatistics = false
         sceneView.antialiasingMode = .multisampling4X
         sceneView.automaticallyUpdatesLighting = false
         sceneView.contentScaleFactor = 1.0
@@ -59,6 +58,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
             camera.exposureOffset = -1
             camera.minimumExposure = -1
         }
+        
+        chartButton.layer.cornerRadius = 5.0
+        chartButton.clipsToBounds = true
         
         setupFocusSquare()
         setupRotationGesture()
@@ -99,7 +101,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
         sceneView.scene.rootNode.addChildNode(focusSquare)
     }
     
-    private func constructBarChart(at position: SCNVector3) {
+    private func addBarChart(at position: SCNVector3) {
         if barChart != nil {
             barChart?.removeFromParentNode()
             barChart = nil
@@ -194,12 +196,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
     
     // MARK: - Actions
     
-    @IBAction func handleTapAddButton(_ sender: Any) {
+    @IBAction func handleTapChartButton(_ sender: UIButton) {
         guard let lastPosition = focusSquare.lastPosition else {
             return
         }
         
-        self.constructBarChart(at: lastPosition)
+        if self.barChart != nil {
+            self.barChart?.removeFromParentNode()
+            self.barChart = nil
+            chartButton.setTitle("Add Chart", for: .normal)
+        } else {
+            self.addBarChart(at: lastPosition)
+            chartButton.setTitle("Remove Chart", for: .normal)
+        }
     }
     
     private var startingRotation: Float = 0.0
@@ -261,8 +270,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
             return
         }
         
-        focusSquare.isHidden = false
-        focusSquare.unhide()
+        if barChart != nil {
+            focusSquare.isHidden = true
+            focusSquare.hide()
+        } else {
+            focusSquare.isHidden = false
+            focusSquare.unhide()
+        }
+        
         let (worldPos, planeAnchor, _) = worldPositionFromScreenPosition(screenCenter, objectPos: focusSquare.position)
         if let worldPos = worldPos {
             focusSquare.update(for: worldPos, planeAnchor: planeAnchor, camera: self.session.currentFrame?.camera)
