@@ -38,12 +38,12 @@ public struct ARChartAnimator {
         }
         
         if animationType == .grow || animationType == .progressiveGrow {
-            let heightAnimation = CABasicAnimation.heightAnimation(from: 0.0, to: barHeight, duration: animationDuration, delay: delay)
-            let yPositionAnimation = CABasicAnimation.yPositionAnimation(from: 0.0, to: 0.5 * barHeight, duration: animationDuration, delay: delay)
+            let heightAnimation = CABasicAnimation.animation(forKey: "height", from: 0.0, to: barHeight, duration: animationDuration, delay: delay)
+            let yPositionAnimation = CABasicAnimation.animation(forKey: "position.y", from: 0.0, to: 0.5 * barHeight, duration: animationDuration, delay: delay)
             barBox.addAnimation(heightAnimation, forKey: "height")
             barNode.addAnimation(yPositionAnimation, forKey: "position.y")
         } else if animationType == .fadeIn || animationType == .progressiveFadeIn {
-            let fadeInAnimation = CABasicAnimation.opacityAnimation(from: 0.0, to: opacity, duration: animationDuration, delay: delay)
+            let fadeInAnimation = CABasicAnimation.animation(forKey: "opacity", from: 0.0, to: opacity, duration: animationDuration, delay: delay)
             barNode.addAnimation(fadeInAnimation, forKey: "opacity")
         }
     }

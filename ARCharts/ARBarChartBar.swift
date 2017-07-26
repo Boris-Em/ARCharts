@@ -10,10 +10,10 @@ import SceneKit
 import UIKit
 
 public class ARBarChartBar: SCNNode {
+    
     public let series: Int
     public let index: Int
     public let value: Double
-    // Need to save the final bar height for highlighting animations
     public let finalHeight: Float
     
     public override var description: String {

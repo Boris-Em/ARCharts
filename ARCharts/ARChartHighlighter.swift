@@ -81,14 +81,14 @@ public struct ARChartHighlighter {
             let startingHeight = isHighlighting ? barNode.finalHeight : 0.0
             let finalHeight = isHighlighting ? 0.0 : barNode.finalHeight
             animations = [
-                CABasicAnimation.heightAnimation(from: startingHeight, to: finalHeight, duration: animationDuration, delay: nil),
-                CABasicAnimation.yPositionAnimation(from: 0.5 * startingHeight, to: 0.5 * finalHeight, duration: animationDuration, delay: nil)
+                CABasicAnimation.animation(forKey: "height", from: startingHeight, to: finalHeight, duration: animationDuration, delay: nil),
+                CABasicAnimation.animation(forKey: "position.y", from: 0.5 * startingHeight, to: 0.5 * finalHeight, duration: animationDuration, delay: nil)
             ]
             animatedAttributeKeys = ["height", "position.y"]
         case .fade:
             let startingOpacity: Float = isHighlighting ? 1.0 : 0.2
             let finalOpacity: Float = isHighlighting ? 0.2 : 1.0
-            animations = [CABasicAnimation.opacityAnimation(from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)]
+            animations = [CABasicAnimation.animation(forKey: "opacity", from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)]
             animatedAttributeKeys = ["opacity"]
         }
         
