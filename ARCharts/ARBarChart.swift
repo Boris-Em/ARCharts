@@ -15,24 +15,30 @@ public class ARBarChart: SCNNode {
     
     public var dataSource: ARBarChartDataSource?
     public var delegate: ARBarChartDelegate?
-    public var animationType: ARBarChartAnimationType? {
+    public var animationType: ARChartAnimator.AnimationType? {
         didSet {
             if let animationType = animationType {
-                if self.animationManager != nil {
-                    self.animationManager?.animationType = animationType
+                if self.animator != nil {
+                    self.animator?.animationType = animationType
                 } else {
-                    self.animationManager = AnimationManager(animationType: animationType, animationDuration: animationDuration)
+                    self.animator = ARChartAnimator(animationType: animationType, animationDuration: animationDuration)
                 }
             }
         }
     }
     public var animationDuration = 1.0 {
         didSet {
-            self.animationManager?.animationDuration = animationDuration
+            self.animator?.animationDuration = animationDuration
         }
     }
+    
+    public var bars: [ARBar] {
+        return childNodes.filter({ $0 is ARBar }).map({ $0 as! ARBar })
+    }
+    
     private var size: SCNVector3!
-    private var animationManager: AnimationManager?
+    private var animator: ARChartAnimator?
+    private var highlighter: ARChartHighlighter!
     
     public required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -44,11 +50,13 @@ public class ARBarChart: SCNNode {
      * Depth is the distance from the planar surface to the top of the bar in the graph.
      *
      *  - parameter dataSource: Provides data to the chart.
+     *  - parameter delegate: Provides customization for the chart.
      *  - parameter size: The size of the graph.
      */
     public init(dataSource: ARBarChartDataSource, delegate: ARBarChartDelegate, size: SCNVector3) {
         super.init()
         
+        // TODO: Should we get rid of this constructor, and just have the user set the dataSource/delegate/size as members?
         self.dataSource = dataSource
         self.delegate = delegate
         self.size = size
@@ -157,11 +165,11 @@ public class ARBarChart: SCNNode {
                                     height: CGFloat(startingBarHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
-                let barNode = SCNNode(geometry: barBox)
+                let barNode = ARBar(geometry: barBox, index: index, series: series, value: value)
                 let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
                 let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
                 barNode.opacity = CGFloat(startingOpacity)
-                
+
                 let yPosition = 0.5 * Float(value) * Float(maxBarHeight)
                 let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
                 let xPosition = self.xPosition(forIndex: index, previousXPosition, barsWidth)
@@ -177,14 +185,30 @@ public class ARBarChart: SCNNode {
                 }
                 previousXPosition = xPosition
                 
-                if let animationManager = self.animationManager {
-                    animationManager.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, yPosition, opacity)
-                }
+                animator?.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, yPosition, opacity)
             }
             
             self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barsLength)
             previousZPosition = zPosition
         }
+    }
+    
+    public func highlightBar(atIndex index: Int,
+                             forSeries series: Int,
+                             withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
+                             withAnimationDuration animationDuration: TimeInterval) {
+        guard highlighter == nil else { return }
+            
+        highlighter = ARChartHighlighter(animationStyle: animationStyle, animationDuration: animationDuration)
+        highlighter.highlightBar(in: self, atIndex: index, forSeries: series)
+    }
+    
+    public func unhighlight() {
+        guard let highlighter = highlighter else { return }
+        
+        highlighter.unhighlightBar(in: self)
+        
+        self.highlighter = nil
     }
     
     /**

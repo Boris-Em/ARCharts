@@ -60,6 +60,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         setupFocusSquare()
         setupRotationGesture()
+        setupTapGesture()
+        // TODO: setupLongPressGesture()
+        
         addLightSource(ofType: .omni)
     }
     
@@ -138,6 +141,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.view.addGestureRecognizer(rotationGestureRecognizer)
     }
     
+    private func setupTapGesture() {
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        self.view.addGestureRecognizer(longPressRecognizer)
+    }
+    
     // MARK: - ARSCNViewDelegate
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -190,6 +198,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             startingRotation = self.barChart.eulerAngles.y
         } else if rotationGestureRecognizer.state == .changed {
             self.barChart.eulerAngles.y = startingRotation - Float(rotationGestureRecognizer.rotation)
+        }
+    }
+    
+    @objc func handleLongPress(_ gestureRecognizer: UITapGestureRecognizer) {
+        guard gestureRecognizer.state == .began else { return }
+        
+        let longPressLocation = gestureRecognizer.location(in: self.view)
+        if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBar {
+            print("Did long-press on bar: \(barNode)")
+            
+            
         }
     }
     
