@@ -205,7 +205,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard gestureRecognizer.state == .began else { return }
         
         let longPressLocation = gestureRecognizer.location(in: self.view)
-        if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBar {
+        if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBarChart.Bar {
             barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: .dropAway, withAnimationDuration: 0.3)
             
             let tapToUnhighlight = UITapGestureRecognizer(target: self, action: #selector(handleTapToUnhighlight(_:)))

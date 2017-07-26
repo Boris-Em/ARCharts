@@ -32,10 +32,6 @@ public class ARBarChart: SCNNode {
         }
     }
     
-    public var bars: [ARBar] {
-        return childNodes.filter({ $0 is ARBar }).map({ $0 as! ARBar })
-    }
-    
     private var size: SCNVector3!
     private var animator: ARChartAnimator?
     private var highlighter: ARChartHighlighter!
@@ -165,7 +161,7 @@ public class ARBarChart: SCNNode {
                                     height: CGFloat(startingBarHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
-                let barNode = ARBar(geometry: barBox, index: index, series: series, value: value, finalHeight: barHeight)
+                let barNode = ARBarChart.Bar(geometry: barBox, index: index, series: series, value: value, finalHeight: barHeight)
                 let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
                 let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
                 barNode.opacity = CGFloat(startingOpacity)

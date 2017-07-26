@@ -55,7 +55,7 @@ public class ARChartHighlighter {
     
     private func addAnimations(to barChart: ARBarChart, highlightIndex index: Int, forSeries series: Int, isHighlighting: Bool) {
         for node in barChart.childNodes {
-            if let barNode = node as? ARBar, let barBox = barNode.geometry as? SCNBox {
+            if let barNode = node as? ARBarChart.Bar, let barBox = barNode.geometry as? SCNBox {
                 if barNode.series != series || barNode.index != index {
                     let animationsAndAttributeKeys = getAnimations(for: barNode, isHighlighting: isHighlighting)
                     for (animation, animatedAttributeKey) in animationsAndAttributeKeys {
@@ -70,7 +70,7 @@ public class ARChartHighlighter {
         }
     }
     
-    private func getAnimations(for barNode: ARBar, isHighlighting: Bool) -> Zip2Sequence<[CABasicAnimation], [String]> {
+    private func getAnimations(for barNode: ARBarChart.Bar, isHighlighting: Bool) -> Zip2Sequence<[CABasicAnimation], [String]> {
         var animations: [CABasicAnimation]
         var animatedAttributeKeys: [String]
         
