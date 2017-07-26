@@ -134,10 +134,11 @@ public class ARBarChart: SCNNode {
                 let barOpacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
                 let startingBarOpacity = animationType == .fade || animationType == .progressiveFade ? 0.0 : opacity
                 
+                let barChamferRadius = min(barsWidth, barsLength) * delegate.barChart(self, chamferRadiusForBarAtIndex: index, forSeries: series)
                 let barBox = SCNBox(width: CGFloat(barsWidth),
                                     height: CGFloat(startingBarHeight),
                                     length: CGFloat(barsLength),
-                                    chamferRadius: 0)
+                                    chamferRadius: CGFloat(barChamferRadius))
                 let barNode = ARBarChartBar(geometry: barBox,
                                             index: index,
                                             series: series,
