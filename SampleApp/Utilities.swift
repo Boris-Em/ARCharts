@@ -660,7 +660,7 @@ func generateNumbers(fromDataSampleWithIndex index: Int) -> [[Double]]? {
     let resourceName = String(format: "DataSample_%i", index)
     
     guard let dataPath = Bundle.main.path(forResource: resourceName, ofType: "csv") else {
-        print("Could Not Load Data Sample File")
+        print(String(format: "Could Not Load Data Sample File %@", resourceName))
         return nil
     }
     

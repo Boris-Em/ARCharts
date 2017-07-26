@@ -105,7 +105,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
             barChart = nil
         }
         
-        let values = generateRandomNumbers(withRange: 0..<50, numberOfRows: 10, numberOfColumns: 10)
+        var values = generateRandomNumbers(withRange: 0..<50, numberOfRows: settings.numberOfSeries, numberOfColumns: settings.numberOfIndices)
+        
+        if settings.dataSet > 0 {
+            values = generateNumbers(fromDataSampleWithIndex: settings.dataSet - 1) ?? values
+        }
         
         dataSeries = ARDataSeries(withValues: values)
         if settings.labels {
@@ -125,7 +129,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
             barChart.dataSource = dataSeries
             barChart.delegate = dataSeries
             setupGraph()
-            barChart.size = SCNVector3(0.3, 0.3, 0.3)
             barChart.position = position
             barChart.draw()
             sceneView.scene.rootNode.addChildNode(barChart)
@@ -317,6 +320,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
     
     private func setupGraph() {
         barChart?.animationType = settings.animationType
+        barChart?.size = SCNVector3(settings.graphWidth, settings.graphHeight, settings.graphLength)
     }
     
     // MARK: Navigation

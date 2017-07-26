@@ -25,6 +25,14 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var labelSwitch: UISwitch!
     @IBOutlet weak var seriesTextField: UITextField!
     @IBOutlet weak var indicesTextField: UITextField!
+    @IBOutlet weak var widthLabel: UILabel!
+    @IBOutlet weak var heightLabel: UILabel!
+    @IBOutlet weak var lengthLabel: UILabel!
+    @IBOutlet weak var widthSlider: UISlider!
+    @IBOutlet weak var heightSlider: UISlider!
+    @IBOutlet weak var lengthSlider: UISlider!
+    @IBOutlet weak var randomDataSetCell: UITableViewCell!
+    @IBOutlet weak var dataSetSegmentedControl: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +54,18 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         labelSwitch.isOn = settings.labels
         seriesTextField.text = String(settings.numberOfSeries)
         indicesTextField.text = String(settings.numberOfIndices)
+        widthSlider.value = settings.graphWidth
+        heightSlider.value = settings.graphHeight
+        lengthSlider.value = settings.graphLength
+        widthLabel.text = String(format: "Width: %.1f", settings.graphWidth)
+        heightLabel.text = String(format: "Height: %.1f", settings.graphHeight)
+        lengthLabel.text = String(format: "Length: %.1f", settings.graphLength)
+        dataSetSegmentedControl.selectedSegmentIndex = settings.dataSet
+        if dataSetSegmentedControl.selectedSegmentIndex != 0 {
+            randomDataSetCell.isHidden = true
+        } else {
+            randomDataSetCell.isHidden = false
+        }
     }
     
     // MARK: Actions
@@ -65,6 +85,30 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     @IBAction func handleSwitchValueChange(_ sender: UISwitch) {
         settings?.labels = sender.isOn
+    }
+    
+    @IBAction func handleDataSetValueChange(_ sender: UISegmentedControl) {
+        settings?.dataSet = sender.selectedSegmentIndex
+        if sender.selectedSegmentIndex == 0 {
+            randomDataSetCell.isHidden = false
+        } else {
+            randomDataSetCell.isHidden = true
+        }
+    }
+        
+    @IBAction func handleWidthSliderValueChange(_ sender: UISlider) {
+        widthLabel.text = String(format: "Width: %.1f", sender.value)
+        settings?.graphWidth = sender.value
+    }
+    
+    @IBAction func handleHeightSliderValueChange(_ sender: UISlider) {
+        heightLabel.text = String(format: "Height: %.1f", sender.value)
+        settings?.graphHeight = sender.value
+    }
+    
+    @IBAction func handleLengthSliderValueChange(_ sender: UISlider) {
+        lengthLabel.text = String(format: "Length: %.1f", sender.value)
+        settings?.graphLength = sender.value
     }
     
     @IBAction func handleTapSave(_ sender: Any) {
