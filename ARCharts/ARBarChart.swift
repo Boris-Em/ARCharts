@@ -82,7 +82,10 @@ public class ARBarChart: SCNNode {
     public var minValue: Double?
     public var maxValue: Double?
     
-    public func drawGraph() {
+    /**
+     * Render the chart in the `SCNView`.
+     */
+    public func draw() {
         guard let dataSource = dataSource,
             let delegate = delegate,
             let numberOfSeries = self.numberOfSeries,
@@ -166,6 +169,16 @@ public class ARBarChart: SCNNode {
         }
     }
     
+    
+    /**
+     * Highlight a bar at a specific index within a specific series.
+     * - parameter index: The index location (X axis) of the bar to highlight.
+     * - parameter series: The series location (Z axis) of the bar to highlight.
+     * - parameter animationStyle: Style of animation to use during highlighting.
+     *   This same animation style will be used to reverse the highlighting.
+     * - parameter animationDuration: Duration of highlighting animation.
+     *   This same duration will also be used to reverse the highlighting
+     */
     public func highlightBar(atIndex index: Int,
                              forSeries series: Int,
                              withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
@@ -176,6 +189,14 @@ public class ARBarChart: SCNNode {
         highlighter.highlight(self, atIndex: index, forSeries: series)
     }
     
+    /**
+     * Highlight all bars in a specific series.
+     * - parameter series: The series location (Z axis) of the bars to highlight.
+     * - parameter animationStyle: Style of animation to use during highlighting.
+     *   This same animation style will be used to reverse the highlighting.
+     * - parameter animationDuration: Duration of highlighting animation.
+     *   This same duration will also be used to reverse the highlighting.
+     */
     public func highlightSeries(_ series: Int,
                                 withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
                                 withAnimationDuration animationDuration: TimeInterval) {
@@ -185,6 +206,14 @@ public class ARBarChart: SCNNode {
         highlighter.highlight(self, atIndex: nil, forSeries: series)
     }
     
+    /**
+     * Highlight all bars at a specific index.
+     * - parameter series: The series location (Z axis) of the bars to highlight.
+     * - parameter animationStyle: Style of animation to use during highlighting.
+     *   This same animation style will be used to reverse the highlighting.
+     * - parameter animationDuration: Duration of highlighting animation.
+     *   This same duration will also be used to reverse the highlighting.
+     */
     public func highlightIndex(_ index: Int,
                                withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
                                withAnimationDuration animationDuration: TimeInterval) {
@@ -194,6 +223,9 @@ public class ARBarChart: SCNNode {
         highlighter.highlight(self, atIndex: index, forSeries: nil)
     }
     
+    /**
+     * Remove any highlighting currently active on this chart.
+     */
     public func unhighlight() {
         guard self.highlighter != nil else { return }
         

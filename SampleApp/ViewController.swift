@@ -116,7 +116,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.barChart.size = SCNVector3(0.3, 0.3, 0.3)
         self.barChart.position = position
         self.barChart.animationType = .progressiveGrow
-        self.barChart.drawGraph()
+        self.barChart.draw()
         self.sceneView.scene.rootNode.addChildNode(self.barChart)
     }
     
@@ -205,6 +205,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @objc func handleLongPress(_ gestureRecognizer: UITapGestureRecognizer) {
         guard gestureRecognizer.state == .began else { return }
+        var labelToHighlight: ARChartLabel?
         
         let animationStyle = ARChartHighlighter.AnimationStyle.shrink
         let animationDuration = 0.3
@@ -213,6 +214,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let barNode = selectedNode as? ARBarChartBar {
             barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: animationStyle, withAnimationDuration: animationDuration)
         } else if let labelNode = selectedNode as? ARChartLabel {
+            // Detect long press on label text
+            labelToHighlight = labelNode
+        } else if let labelNode = selectedNode?.parent as? ARChartLabel {
+            // Detect long press on label background
+            labelToHighlight = labelNode
+        }
+        
+        if let labelNode = labelToHighlight {
             switch labelNode.type {
             case .index:
                 barChart.highlightIndex(labelNode.id, withAnimationStyle: animationStyle, withAnimationDuration: animationDuration)
