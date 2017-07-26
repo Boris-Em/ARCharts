@@ -9,11 +9,11 @@
 import SceneKit
 import Foundation
 
-public class ARChartHighlighter {
+public struct ARChartHighlighter {
     
     public enum AnimationStyle {
-        case dropAway
-        case fadeOut
+        case shrink
+        case fade
     }
     
     public let animationStyle: AnimationStyle
@@ -34,7 +34,7 @@ public class ARChartHighlighter {
      * - parameter index: The index of the bar to highlight.
      * - parameter series: The series of the bar to highlight.
      */
-    public func highlightBar(in barChart: ARBarChart, atIndex index: Int, forSeries series: Int) {
+    public mutating func highlightBar(in barChart: ARBarChart, atIndex index: Int, forSeries series: Int) {
         guard highlightedIndex == nil && highlightedSeries == nil else { return }
         
         addAnimations(to: barChart, highlightIndex: index, forSeries: series, isHighlighting: true)
@@ -57,7 +57,7 @@ public class ARChartHighlighter {
     
     private func addAnimations(to barChart: ARBarChart, highlightIndex index: Int, forSeries series: Int, isHighlighting: Bool) {
         for node in barChart.childNodes {
-            if let barNode = node as? ARBarChart.Bar, let barBox = barNode.geometry as? SCNBox {
+            if let barNode = node as? ARBarChartBar, let barBox = barNode.geometry as? SCNBox {
                 if barNode.series != series || barNode.index != index {
                     let animationsAndAttributeKeys = getAnimations(for: barNode, isHighlighting: isHighlighting)
                     for (animation, animatedAttributeKey) in animationsAndAttributeKeys {
@@ -72,12 +72,12 @@ public class ARChartHighlighter {
         }
     }
     
-    private func getAnimations(for barNode: ARBarChart.Bar, isHighlighting: Bool) -> Zip2Sequence<[CABasicAnimation], [String]> {
+    private func getAnimations(for barNode: ARBarChartBar, isHighlighting: Bool) -> Zip2Sequence<[CABasicAnimation], [String]> {
         var animations: [CABasicAnimation]
         var animatedAttributeKeys: [String]
         
         switch animationStyle {
-        case .dropAway:
+        case .shrink:
             let startingHeight = isHighlighting ? barNode.finalHeight : 0.0
             let finalHeight = isHighlighting ? 0.0 : barNode.finalHeight
             animations = [
@@ -85,7 +85,7 @@ public class ARChartHighlighter {
                 CABasicAnimation.yPositionAnimation(from: 0.5 * startingHeight, to: 0.5 * finalHeight, duration: animationDuration, delay: nil)
             ]
             animatedAttributeKeys = ["height", "position.y"]
-        case .fadeOut:
+        case .fade:
             let startingOpacity: Float = isHighlighting ? 1.0 : 0.2
             let finalOpacity: Float = isHighlighting ? 0.2 : 1.0
             animations = [CABasicAnimation.opacityAnimation(from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)]

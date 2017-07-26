@@ -235,8 +235,8 @@ class FocusSquare: SCNNode {
 		if flash {
 			let waitAction = SCNAction.wait(duration: animationDuration * 0.75)
 			let fadeInAction = SCNAction.fadeOpacity(to: 0.25, duration: animationDuration * 0.125)
-			let fadeOutAction = SCNAction.fadeOpacity(to: 0.0, duration: animationDuration * 0.125)
-			fillPlane?.runAction(SCNAction.sequence([waitAction, fadeInAction, fadeOutAction]))
+			let fadeAction = SCNAction.fadeOpacity(to: 0.0, duration: animationDuration * 0.125)
+			fillPlane?.runAction(SCNAction.sequence([waitAction, fadeInAction, fadeAction]))
 			
 			let flashSquareAction = flashAnimation(duration: animationDuration * 0.25)
 			segments?[0].runAction(SCNAction.sequence([waitAction, flashSquareAction]))

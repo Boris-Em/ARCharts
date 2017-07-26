@@ -110,7 +110,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         dataSeries.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
         dataSeries.barColors = arKitColors
         
-        self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.3, 0.3, 0.3))
+        self.barChart = ARBarChart()
+        self.barChart.dataSource = dataSeries
+        self.barChart.delegate = dataSeries
+        self.barChart.size = SCNVector3(0.3, 0.3, 0.3)
         self.barChart.position = position
         self.barChart.animationType = .progressiveGrow
         self.barChart.drawGraph()
@@ -204,8 +207,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard gestureRecognizer.state == .began else { return }
         
         let longPressLocation = gestureRecognizer.location(in: self.view)
-        if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBarChart.Bar {
-            barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: .dropAway, withAnimationDuration: 0.3)
+        if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBarChartBar {
+            barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: .fade, withAnimationDuration: 0.3)
             
             let tapToUnhighlight = UITapGestureRecognizer(target: self, action: #selector(handleTapToUnhighlight(_:)))
             self.view.addGestureRecognizer(tapToUnhighlight)
