@@ -108,8 +108,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
         let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
         
         dataSeries = ARDataSeries(withValues: values)
-        dataSeries?.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
-        dataSeries?.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+        if settings.labels {
+            dataSeries?.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
+            dataSeries?.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+            dataSeries?.spaceForIndexLabels = 0.2
+            dataSeries?.spaceForIndexLabels = 0.2
+        } else {
+            dataSeries?.spaceForIndexLabels = 0.0
+            dataSeries?.spaceForIndexLabels = 0.0
+        }
         dataSeries?.barColors = arKitColors
         dataSeries?.barOpacity = settings.barOpacity
         
@@ -118,7 +125,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
             barChart.dataSource = dataSeries
             barChart.delegate = dataSeries
             setupGraph()
-            barChart.size = SCNVector3(2.0, 0.3, 2.0)
+            barChart.size = SCNVector3(0.3, 0.3, 0.3)
             barChart.position = position
             barChart.draw()
             sceneView.scene.rootNode.addChildNode(barChart)

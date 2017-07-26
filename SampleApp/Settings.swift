@@ -14,6 +14,7 @@ struct Settings {
     var animationType: ARChartPresenter.AnimationType = .fade
     var longPressAnimationType : ARChartHighlighter.AnimationStyle = .shrink
     var barOpacity: Float = 1.0
+    var labels = true
     
     public func index(forEntranceAnimationType animationType: ARChartPresenter.AnimationType?) -> Int {
         guard let animationType = animationType else {

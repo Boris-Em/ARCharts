@@ -205,16 +205,36 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="100" id="4ne-Od-5pe">
-                                        <rect key="frame" x="0.0" y="300" width="375" height="100"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="4ne-Od-5pe">
+                                        <rect key="frame" x="0.0" y="300" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4ne-Od-5pe" id="TLI-Xp-WAp">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kwP-LI-jwK">
+                                                    <rect key="frame" x="318" y="6.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="handleSwitchValueChange:" destination="gzb-DA-RSG" eventType="valueChanged" id="pZR-Es-AsV"/>
+                                                    </connections>
+                                                </switch>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labels" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aUc-hQ-22i">
+                                                    <rect key="frame" x="8" y="11.5" width="50.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="kwP-LI-jwK" firstAttribute="centerY" secondItem="aUc-hQ-22i" secondAttribute="centerY" id="AIr-88-CKJ"/>
+                                                <constraint firstItem="aUc-hQ-22i" firstAttribute="centerY" secondItem="TLI-Xp-WAp" secondAttribute="centerY" id="G6u-oe-oRA"/>
+                                                <constraint firstItem="kwP-LI-jwK" firstAttribute="trailing" secondItem="TLI-Xp-WAp" secondAttribute="trailingMargin" id="WVB-AW-o8X"/>
+                                                <constraint firstItem="aUc-hQ-22i" firstAttribute="leading" secondItem="TLI-Xp-WAp" secondAttribute="leadingMargin" id="c9k-2X-Hbd"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="VvC-lC-S5t">
-                                        <rect key="frame" x="0.0" y="400" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="344" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VvC-lC-S5t" id="eSB-7w-rvg">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -255,6 +275,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="entranceAnimationSegmentedControl" destination="jDg-rG-Umm" id="TN2-yU-DRl"/>
+                        <outlet property="labelSwitch" destination="kwP-LI-jwK" id="Xsj-Lr-xPI"/>
                         <outlet property="longPressAnimationSegmentedControl" destination="iT3-KU-26z" id="nSS-dn-iCC"/>
                         <outlet property="opacityLabel" destination="gU3-lc-jtq" id="H8D-an-vcR"/>
                         <outlet property="opacitySlider" destination="SsV-qc-dbl" id="TnS-ME-IAc"/>
