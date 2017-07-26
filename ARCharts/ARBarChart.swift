@@ -165,7 +165,7 @@ public class ARBarChart: SCNNode {
                                     height: CGFloat(startingBarHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
-                let barNode = ARBar(geometry: barBox, index: index, series: series, value: value)
+                let barNode = ARBar(geometry: barBox, index: index, series: series, value: value, finalHeight: barHeight)
                 let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
                 let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
                 barNode.opacity = CGFloat(startingOpacity)
@@ -185,7 +185,7 @@ public class ARBarChart: SCNNode {
                 }
                 previousXPosition = xPosition
                 
-                animator?.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, yPosition, opacity)
+                animator?.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, opacity)
             }
             
             self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barsLength)
@@ -204,7 +204,7 @@ public class ARBarChart: SCNNode {
     }
     
     public func unhighlight() {
-        guard let highlighter = highlighter else { return }
+        guard let highlighter = self.highlighter else { return }
         
         highlighter.unhighlightBar(in: self)
         

@@ -10,11 +10,11 @@ import Foundation
 
 
 extension CABasicAnimation {
-    static func heightAnimation(withToValue toValue: Float, duration: Double, delay: Double?) -> CABasicAnimation {
+    static func heightAnimation(from fromValue: Float, to toValue: Float, duration: Double, delay: Double?) -> CABasicAnimation {
         let heightAnimation = CABasicAnimation(keyPath: "height")
         heightAnimation.beginTime = delay != nil ? CACurrentMediaTime() + delay! : 0.0
         heightAnimation.duration = duration
-        heightAnimation.fromValue = 0.0
+        heightAnimation.fromValue = fromValue
         heightAnimation.toValue = toValue
         heightAnimation.isRemovedOnCompletion = false
         heightAnimation.fillMode = kCAFillModeForwards
@@ -23,11 +23,11 @@ extension CABasicAnimation {
         return heightAnimation
     }
     
-    static func yPositionAnimation(withToValue toValue: Float, duration: Double, delay: Double?) -> CABasicAnimation {
+    static func yPositionAnimation(from fromValue: Float, to toValue: Float, duration: Double, delay: Double?) -> CABasicAnimation {
         let yPositionAnimation = CABasicAnimation(keyPath: "position.y")
         yPositionAnimation.beginTime = delay != nil ? CACurrentMediaTime() + delay! : 0.0
         yPositionAnimation.duration = duration
-        yPositionAnimation.fromValue = 0.0
+        yPositionAnimation.fromValue = fromValue
         yPositionAnimation.toValue = toValue
         yPositionAnimation.isRemovedOnCompletion = false
         yPositionAnimation.fillMode = kCAFillModeForwards
@@ -36,11 +36,11 @@ extension CABasicAnimation {
         return yPositionAnimation
     }
     
-    static func opacityAnimation(withToValue toValue: Float, duration: Double, delay: Double?) -> CABasicAnimation {
+    static func opacityAnimation(from fromValue: Float, to toValue: Float, duration: Double, delay: Double?) -> CABasicAnimation {
         let opacityAnimation = CABasicAnimation(keyPath: "opacity")
         opacityAnimation.beginTime = delay != nil ? CACurrentMediaTime() + delay! : 0.0
         opacityAnimation.duration = duration
-        opacityAnimation.fromValue = 0.0
+        opacityAnimation.fromValue = fromValue
         opacityAnimation.toValue = toValue
         opacityAnimation.isRemovedOnCompletion = false
         opacityAnimation.fillMode = kCAFillModeForwards

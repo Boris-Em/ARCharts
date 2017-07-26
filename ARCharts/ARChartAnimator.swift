@@ -27,7 +27,7 @@ public struct ARChartAnimator {
         self.animationDuration = animationDuration
     }
     
-    func addAnimation(toBarNode barNode: SCNNode, atIndex index: Int, withBarHeight barHeight: Float, _ yPosition: Float, _ opacity: Float) {
+    func addAnimation(toBarNode barNode: SCNNode, atIndex index: Int, withBarHeight barHeight: Float, _ opacity: Float) {
         guard let barBox = barNode.geometry else  {
             return
         }
@@ -38,19 +38,13 @@ public struct ARChartAnimator {
         }
         
         if animationType == .grow || animationType == .progressiveGrow {
-            let heightAnimation = CABasicAnimation.heightAnimation(withToValue: barHeight,
-                                                                   duration: animationDuration,
-                                                                   delay: delay)
-            let yPositionAnimation = CABasicAnimation.yPositionAnimation(withToValue: yPosition,
-                                                                         duration: animationDuration,
-                                                                         delay: delay)
+            let heightAnimation = CABasicAnimation.heightAnimation(from: 0.0, to: barHeight, duration: animationDuration, delay: delay)
+            let yPositionAnimation = CABasicAnimation.yPositionAnimation(from: 0.0, to: 0.5 * barHeight, duration: animationDuration, delay: delay)
             barBox.addAnimation(heightAnimation, forKey: "height")
             barNode.addAnimation(yPositionAnimation, forKey: "position.y")
         } else if animationType == .fadeIn || animationType == .progressiveFadeIn {
-            let fadeInAnim = CABasicAnimation.opacityAnimation(withToValue: opacity,
-                                                               duration: animationDuration,
-                                                               delay: delay)
-            barNode.addAnimation(fadeInAnim, forKey: "opacity")
+            let fadeInAnimation = CABasicAnimation.opacityAnimation(from: 0.0, to: opacity, duration: animationDuration, delay: delay)
+            barNode.addAnimation(fadeInAnimation, forKey: "opacity")
         }
     }
     

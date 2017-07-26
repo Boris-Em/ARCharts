@@ -104,7 +104,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-        let values = generateRandomNumbers(withRange: 0..<5, numberOfRows: 10, numberOfColumns: 10)
+        let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
         
         let dataSeries = ARDataSeries(withValues: values)
         dataSeries.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
@@ -206,10 +206,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         let longPressLocation = gestureRecognizer.location(in: self.view)
         if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBar {
-            print("Did long-press on bar: \(barNode)")
+            barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: .dropAway, withAnimationDuration: 0.3)
             
-            
+            let tapToUnhighlight = UITapGestureRecognizer(target: self, action: #selector(handleTapToUnhighlight(_:)))
+            self.view.addGestureRecognizer(tapToUnhighlight)
         }
+    }
+    
+    @objc func handleTapToUnhighlight(_ gestureRecognizer: UITapGestureRecognizer) {
+        barChart.unhighlight()
+        self.view.removeGestureRecognizer(gestureRecognizer)
     }
     
     // MARK: - Helper Functions
