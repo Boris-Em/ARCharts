@@ -43,7 +43,7 @@ class SettingsTableViewController: UITableViewController {
     // MARK: Actions
     
     @IBAction func handleEntranceAnimationSegmentControlValueChange(_ sender: UISegmentedControl) {
-        settings?.animationType = settings?.entranceAnimationType(forIndex: sender.selectedSegmentIndex) ?? .fadeIn
+        settings?.animationType = settings?.entranceAnimationType(forIndex: sender.selectedSegmentIndex) ?? .fade
     }
     
     @IBAction func handleLongPressAnimationSegmentControlValueChange(_ sender: UISegmentedControl) {

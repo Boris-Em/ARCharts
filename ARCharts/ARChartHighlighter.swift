@@ -21,6 +21,8 @@ public struct ARChartHighlighter {
     public var highlightedSeries: Int?
     public var highlightedIndex: Int?
     
+    private let defaultFadedOpacity: Float = 0.15
+    
     public init(animationStyle: AnimationStyle, animationDuration: TimeInterval) {
         self.animationStyle = animationStyle
         self.animationDuration = animationDuration
@@ -30,14 +32,15 @@ public struct ARChartHighlighter {
     
     /**
      * Add highlighting animations on all bars except the one that is being highlighted.
+     * - At least one of `index` or `series` must be non-nil.
      * - parameter barChart: The `ARBarChart` to which to add highlighting animations.
-     * - parameter index: The index of the bar to highlight.
-     * - parameter series: The series of the bar to highlight.
+     * - parameter index: The index of the bar to highlight. If `nil`, highlight all indices.
+     * - parameter series: The series of the bar to highlight. If `nil`, highlight all series.
      */
-    public mutating func highlightBar(in barChart: ARBarChart, atIndex index: Int, forSeries series: Int) {
+    public mutating func highlight(_ barChart: ARBarChart, atIndex index: Int?, forSeries series: Int?) {
         guard highlightedIndex == nil && highlightedSeries == nil else { return }
         
-        addAnimations(to: barChart, highlightIndex: index, forSeries: series, isHighlighting: true)
+        addAnimations(to: barChart, highlightIndex: index, highlightSeries: series, isHighlighting: true)
         
         self.highlightedIndex = index
         self.highlightedSeries = series
@@ -47,18 +50,25 @@ public struct ARChartHighlighter {
      * Reverse highlighting animations on all bars except the one that was highlighted.
      * - parameter barChart: The `ARBarChart` from which to remove highlighting.
      */
-    public func unhighlightBar(in barChart: ARBarChart) {
-        guard let index = self.highlightedIndex, let series = self.highlightedSeries else {
-            return
-        }
+    public mutating func unhighlight(_ barChart: ARBarChart) {
+        addAnimations(to: barChart, highlightIndex: highlightedIndex, highlightSeries: highlightedSeries, isHighlighting: false)
         
-        addAnimations(to: barChart, highlightIndex: index, forSeries: series, isHighlighting: false)
+        self.highlightedIndex = nil
+        self.highlightedSeries = nil
     }
     
-    private func addAnimations(to barChart: ARBarChart, highlightIndex index: Int, forSeries series: Int, isHighlighting: Bool) {
+    private func addAnimations(to barChart: ARBarChart,
+                               highlightIndex index: Int?,
+                               highlightSeries series: Int?,
+                               isHighlighting: Bool) {
+        guard series != nil || index != nil else {
+            fatalError("ARChartHighlighter.highlight(_:index:series) requires at least one non-nil parameter.")
+        }
+        
         for node in barChart.childNodes {
             if let barNode = node as? ARBarChartBar, let barBox = barNode.geometry as? SCNBox {
-                if barNode.series != series || barNode.index != index {
+                if (series != nil && barNode.series != series!)
+                    || (index != nil && barNode.index != index!) {
                     let animationsAndAttributeKeys = getAnimations(for: barNode, isHighlighting: isHighlighting)
                     for (animation, animatedAttributeKey) in animationsAndAttributeKeys {
                         if animatedAttributeKey == "height" {
@@ -68,11 +78,20 @@ public struct ARChartHighlighter {
                         }
                     }
                 }
+            } else if let labelNode = node as? ARChartLabel {
+                if (series != nil && labelNode.type == .series && labelNode.id != series!)
+                    || (index != nil && labelNode.type == .index && labelNode.id != index!) {
+                    let startingOpacity: Float = isHighlighting ? 1.0 : defaultFadedOpacity
+                    let finalOpacity: Float = isHighlighting ? defaultFadedOpacity : 1.0
+                    let opacityAnimation = CABasicAnimation.animation(forKey: "opacity", from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)
+                    labelNode.addAnimation(opacityAnimation, forKey: "opacity")
+                }
             }
         }
     }
     
-    private func getAnimations(for barNode: ARBarChartBar, isHighlighting: Bool) -> Zip2Sequence<[CABasicAnimation], [String]> {
+    private func getAnimations(for barNode: ARBarChartBar,
+                               isHighlighting: Bool) -> Zip2Sequence<[CABasicAnimation], [String]> {
         var animations: [CABasicAnimation]
         var animatedAttributeKeys: [String]
         
@@ -81,14 +100,15 @@ public struct ARChartHighlighter {
             let startingHeight = isHighlighting ? barNode.finalHeight : 0.0
             let finalHeight = isHighlighting ? 0.0 : barNode.finalHeight
             animations = [
-                CABasicAnimation.heightAnimation(from: startingHeight, to: finalHeight, duration: animationDuration, delay: nil),
-                CABasicAnimation.yPositionAnimation(from: 0.5 * startingHeight, to: 0.5 * finalHeight, duration: animationDuration, delay: nil)
+                CABasicAnimation.animation(forKey: "height", from: startingHeight, to: finalHeight, duration: animationDuration, delay: nil),
+                CABasicAnimation.animation(forKey: "position.y", from: 0.5 * startingHeight, to: 0.5 * finalHeight, duration: animationDuration, delay: nil)
             ]
             animatedAttributeKeys = ["height", "position.y"]
         case .fade:
-            let startingOpacity: Float = isHighlighting ? 1.0 : 0.2
-            let finalOpacity: Float = isHighlighting ? 0.2 : 1.0
-            animations = [CABasicAnimation.opacityAnimation(from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)]
+            let fadedOpacity: Float = (barNode.finalOpacity <= 0.3) ? 0.0 : defaultFadedOpacity
+            let startingOpacity: Float = isHighlighting ? barNode.finalOpacity : fadedOpacity
+            let finalOpacity: Float = isHighlighting ? fadedOpacity : barNode.finalOpacity
+            animations = [CABasicAnimation.animation(forKey: "opacity", from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)]
             animatedAttributeKeys = ["opacity"]
         }
         

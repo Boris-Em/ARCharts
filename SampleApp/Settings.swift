@@ -7,23 +7,23 @@
 //
 
 import Foundation
-import  ARCharts
+import ARCharts
 
 struct Settings {
     
-    var animationType: ARChartAnimator.AnimationType = .fadeIn
+    var animationType: ARChartPresenter.AnimationType = .fade
     var longPressAnimationType : ARChartHighlighter.AnimationStyle = .shrink
     var barOpacity: Float = 1.0
     
-    public func index(forEntranceAnimationType animationType: ARChartAnimator.AnimationType?) -> Int {
+    public func index(forEntranceAnimationType animationType: ARChartPresenter.AnimationType?) -> Int {
         guard let animationType = animationType else {
             return 0
         }
         
         switch animationType {
-        case .fadeIn:
+        case .fade:
             return 0
-        case .progressiveFadeIn:
+        case .progressiveFade:
             return 1
         case .grow:
             return 2
@@ -32,18 +32,18 @@ struct Settings {
         }
     }
     
-    public func entranceAnimationType(forIndex index: Int) -> ARChartAnimator.AnimationType? {
+    public func entranceAnimationType(forIndex index: Int) -> ARChartPresenter.AnimationType? {
         switch index {
         case 0:
-            return .fadeIn
+            return .fade
         case 1:
-            return .progressiveFadeIn
+            return .progressiveFade
         case 2:
             return .grow
         case 3:
             return .progressiveGrow
         default:
-            return .fadeIn
+            return .fade
         }
     }
     
