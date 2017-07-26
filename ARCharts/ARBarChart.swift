@@ -31,7 +31,7 @@ public class ARBarChart: SCNNode {
     }
     
     public func reloadGraph() {
-        // TODO: Implement
+        drawGraph()
     }
     
     // TODO: Cache (with lazy?)

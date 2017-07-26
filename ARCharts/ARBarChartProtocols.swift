@@ -209,7 +209,7 @@ extension ARBarChartDelegate {
     func barChart(_ barChart: ARBarChart,
                   opacityForBarAtIndex index: Int,
                   forSeries series: Int) -> Float {
-        return 1.0
+        return 0.5
     }
     
     public func barChart(_ barChart: ARBarChart, colorForLabelForValuesAtIndex index: Int) -> UIColor {

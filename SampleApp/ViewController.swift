@@ -12,11 +12,11 @@ import SceneKit
 import UIKit
 
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet var sceneView: ARSCNView!
     
-    var barChart: ARBarChart!
+    var barChart: ARBarChart?
     private let arKitColors = [
         UIColor(colorLiteralRed: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
         UIColor(colorLiteralRed: 70.0  / 255.0, green: 150.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
@@ -34,6 +34,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     var screenCenter: CGPoint?
+    var settings = Settings()
+    var dataSeries: ARDataSeries?
     
     // MARK: - Life Cycle
     
@@ -99,25 +101,28 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     private func constructBarChart(at position: SCNVector3) {
         if barChart != nil {
-            barChart.removeFromParentNode()
+            barChart?.removeFromParentNode()
             barChart = nil
         }
         
         let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
         
-        let dataSeries = ARDataSeries(withValues: values)
-        dataSeries.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
-        dataSeries.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
-        dataSeries.barColors = arKitColors
+        dataSeries = ARDataSeries(withValues: values)
+        dataSeries?.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
+        dataSeries?.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+        dataSeries?.barColors = arKitColors
+        dataSeries?.barOpacity = settings.barOpacity
         
-        self.barChart = ARBarChart()
-        self.barChart.dataSource = dataSeries
-        self.barChart.delegate = dataSeries
-        self.barChart.size = SCNVector3(0.3, 0.3, 0.3)
-        self.barChart.position = position
-        self.barChart.animationType = .progressiveGrow
-        self.barChart.drawGraph()
-        self.sceneView.scene.rootNode.addChildNode(self.barChart)
+        barChart = ARBarChart()
+        if let barChart = barChart {
+            barChart.dataSource = dataSeries
+            barChart.delegate = dataSeries
+            setupGraph()
+            barChart.size = SCNVector3(2.0, 0.3, 2.0)
+            barChart.position = position
+            barChart.drawGraph()
+            sceneView.scene.rootNode.addChildNode(barChart)
+        }
     }
     
     private func addLightSource(ofType type: SCNLight.LightType, at position: SCNVector3? = nil) {
@@ -197,9 +202,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         if rotationGestureRecognizer.state == .began {
-            startingRotation = self.barChart.eulerAngles.y
+            startingRotation = barChart.eulerAngles.y
         } else if rotationGestureRecognizer.state == .changed {
-            self.barChart.eulerAngles.y = startingRotation - Float(rotationGestureRecognizer.rotation)
+            self.barChart?.eulerAngles.y = startingRotation - Float(rotationGestureRecognizer.rotation)
         }
     }
     
@@ -208,7 +213,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         let longPressLocation = gestureRecognizer.location(in: self.view)
         if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBarChartBar {
-            barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: .fade, withAnimationDuration: 0.3)
+            barChart?.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: settings.longPressAnimationType, withAnimationDuration: 0.3)
             
             let tapToUnhighlight = UITapGestureRecognizer(target: self, action: #selector(handleTapToUnhighlight(_:)))
             self.view.addGestureRecognizer(tapToUnhighlight)
@@ -216,7 +221,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func handleTapToUnhighlight(_ gestureRecognizer: UITapGestureRecognizer) {
-        barChart.unhighlight()
+        barChart?.unhighlight()
         self.view.removeGestureRecognizer(gestureRecognizer)
     }
     
@@ -283,5 +288,39 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         return (nil, nil, false)
     }
+    
+    private func setupGraph() {
+        barChart?.animationType = settings.animationType
+    }
+    
+    // MARK: Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toSettingsViewController" {
+            guard let navVC = segue.destination as? UINavigationController,
+            let settingsVC = navVC.viewControllers.first as? SettingsTableViewController else {
+                return
+            }
+            
+            navVC.modalPresentationStyle = UIModalPresentationStyle.popover
+            navVC.popoverPresentationController!.delegate = self
+            
+            settingsVC.delegate = self
+            settingsVC.settings = self.settings
+        }
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+    // MARK: SettingsDelegate
+    
+    func didUpdateSettings(_ settings: Settings) {
+        self.settings = settings
+        barChart?.removeFromParentNode()
+        barChart = nil
+    }
+    
     
 }
