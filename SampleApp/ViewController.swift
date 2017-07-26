@@ -60,6 +60,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         setupFocusSquare()
         setupRotationGesture()
+        setupHighlightGesture()
+        
         addLightSource(ofType: .omni)
     }
     
@@ -101,14 +103,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             barChart = nil
         }
         
-        let values = generateRandomNumbers(withRange: 0..<5, numberOfRows: 10, numberOfColumns: 10)
+        let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
         
         let dataSeries = ARDataSeries(withValues: values)
         dataSeries.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
         dataSeries.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
         dataSeries.barColors = arKitColors
         
-        self.barChart = ARBarChart(dataSource: dataSeries, delegate: dataSeries, size: SCNVector3(0.3, 0.3, 0.3))
+        self.barChart = ARBarChart()
+        self.barChart.dataSource = dataSeries
+        self.barChart.delegate = dataSeries
+        self.barChart.size = SCNVector3(0.3, 0.3, 0.3)
         self.barChart.position = position
         self.barChart.animationType = .progressiveGrow
         self.barChart.drawGraph()
@@ -119,7 +124,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let light = SCNLight()
         light.color = UIColor.white
         light.type = type
-        light.intensity = 1200 // Default SCNLight intensity is 1000
+        light.intensity = 1500 // Default SCNLight intensity is 1000
         
         let lightNode = SCNNode()
         lightNode.light = light
@@ -136,6 +141,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     private func setupRotationGesture() {
         let rotationGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(handleRotation))
         self.view.addGestureRecognizer(rotationGestureRecognizer)
+    }
+    
+    private func setupHighlightGesture() {
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        self.view.addGestureRecognizer(longPressRecognizer)
     }
     
     // MARK: - ARSCNViewDelegate
@@ -191,6 +201,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         } else if rotationGestureRecognizer.state == .changed {
             self.barChart.eulerAngles.y = startingRotation - Float(rotationGestureRecognizer.rotation)
         }
+    }
+    
+    @objc func handleLongPress(_ gestureRecognizer: UITapGestureRecognizer) {
+        guard gestureRecognizer.state == .began else { return }
+        
+        let longPressLocation = gestureRecognizer.location(in: self.view)
+        if let barNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node as? ARBarChartBar {
+            barChart.highlightBar(atIndex: barNode.index, forSeries: barNode.series, withAnimationStyle: .fade, withAnimationDuration: 0.3)
+            
+            let tapToUnhighlight = UITapGestureRecognizer(target: self, action: #selector(handleTapToUnhighlight(_:)))
+            self.view.addGestureRecognizer(tapToUnhighlight)
+        }
+    }
+    
+    @objc func handleTapToUnhighlight(_ gestureRecognizer: UITapGestureRecognizer) {
+        barChart.unhighlight()
+        self.view.removeGestureRecognizer(gestureRecognizer)
     }
     
     // MARK: - Helper Functions
