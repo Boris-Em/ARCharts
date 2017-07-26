@@ -115,8 +115,8 @@ public class ARBarChart: SCNNode {
                                               z: size.z * (1.0 - spaceForIndexLabels))
         let biggestValueRange = maxValue - minValue
         
-        let barsWidth = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: sizeAvailableForBars.z)
-        let barsLength = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: sizeAvailableForBars.x)
+        let barLength = self.seriesSize(withNumberOfSeries: numberOfSeries, zSizeAvailableForBars: sizeAvailableForBars.z)
+        let barWidth = self.indexSize(withNumberOfIndices: maxNumberOfIndices, xSizeAvailableForBars: sizeAvailableForBars.x)
         let maxBarHeight = sizeAvailableForBars.y / Float(biggestValueRange)
         
         let xShift = size.x * (spaceForSeriesLabels - 0.5)
@@ -124,7 +124,7 @@ public class ARBarChart: SCNNode {
         var previousZPosition: Float = 0.0
         
         for series in 0..<numberOfSeries {
-            let zPosition = self.zPosition(forSeries: series, previousZPosition, barsLength)
+            let zPosition = self.zPosition(forSeries: series, previousZPosition, barLength)
             var previousXPosition: Float = 0.0
             
             for index in 0..<dataSource.barChart(self, numberOfValuesInSeries: series) {
@@ -134,10 +134,10 @@ public class ARBarChart: SCNNode {
                 let barOpacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
                 let startingBarOpacity = animationType == .fade || animationType == .progressiveFade ? 0.0 : opacity
                 
-                let barChamferRadius = min(barsWidth, barsLength) * delegate.barChart(self, chamferRadiusForBarAtIndex: index, forSeries: series)
-                let barBox = SCNBox(width: CGFloat(barsWidth),
+                let barChamferRadius = min(barLength, barWidth) * delegate.barChart(self, chamferRadiusForBarAtIndex: index, forSeries: series)
+                let barBox = SCNBox(width: CGFloat(barWidth),
                                     height: CGFloat(startingBarHeight),
-                                    length: CGFloat(barsLength),
+                                    length: CGFloat(barLength),
                                     chamferRadius: CGFloat(barChamferRadius))
                 let barNode = ARBarChartBar(geometry: barBox,
                                             index: index,
@@ -148,8 +148,8 @@ public class ARBarChart: SCNNode {
                 barNode.opacity = CGFloat(startingBarOpacity)
 
                 let yPosition = 0.5 * Float(value) * Float(maxBarHeight)
-                let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
-                let xPosition = self.xPosition(forIndex: index, previousXPosition, barsWidth)
+                let startingYPosition = (animationType == .grow || animationType == .progressiveGrow) ? 0.0 : yPosition
+                let xPosition = self.xPosition(forIndex: index, previousXPosition, barWidth)
                 barNode.position = SCNVector3(x: xPosition + xShift, y: startingYPosition, z: zPosition + zShift)
 
                 let barMaterial = delegate.barChart(self, materialForBarAtIndex: index, forSeries: series)
@@ -158,14 +158,14 @@ public class ARBarChart: SCNNode {
                 self.addChildNode(barNode)
                 
                 if series == 0 {
-                    self.addLabel(forIndex: index, atXPosition: xPosition + xShift, withMaxHeight: barsWidth)
+                    self.addLabel(forIndex: index, atXPosition: xPosition + xShift, withMaxHeight: barWidth)
                 }
                 previousXPosition = xPosition
                 
-                presenter?.addAnimation(to: barNode)
+                presenter?.addAnimation(to: barNode, in: self)
             }
             
-            self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barsLength)
+            self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barLength)
             previousZPosition = zPosition
         }
     }

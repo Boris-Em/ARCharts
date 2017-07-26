@@ -27,14 +27,15 @@ public struct ARChartPresenter {
         self.animationDuration = animationDuration
     }
     
-    func addAnimation(to barNode: ARBarChartBar) {
+    func addAnimation(to barNode: ARBarChartBar, in barChart: ARBarChart) {
         guard let barBox = barNode.geometry else  {
             return
         }
         
         var delay: Double?
         if animationType == .progressiveGrow || animationType == .progressiveFade {
-            delay = 0.1 * Double(barNode.index) * animationDuration
+            let numberOfIndices = barChart.dataSource!.barChart(barChart, numberOfValuesInSeries: barNode.series)
+            delay = animationDuration * Double(barNode.index) / Double(numberOfIndices)
         }
         
         if animationType == .grow || animationType == .progressiveGrow {
