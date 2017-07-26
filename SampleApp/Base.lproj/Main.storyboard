@@ -86,7 +86,6 @@
         <!--Settings-->
         <scene sceneID="oll-T4-Iug">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Nlb-w9-QKV" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="gzb-DA-RSG" customClass="SettingsTableViewController" customModule="ARChartsSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="NTh-P1-9KE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -233,12 +232,54 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="VvC-lC-S5t">
-                                        <rect key="frame" x="0.0" y="344" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="100" id="VvC-lC-S5t">
+                                        <rect key="frame" x="0.0" y="344" width="375" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VvC-lC-S5t" id="eSB-7w-rvg">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WCs-VC-lFH">
+                                                    <rect key="frame" x="292" y="15.5" width="75" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="75" id="huF-fa-Soq"/>
+                                                    </constraints>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                </textField>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of Series" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zfN-JZ-GNp">
+                                                    <rect key="frame" x="8" y="20" width="133.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of Indices" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w45-ox-8Z6">
+                                                    <rect key="frame" x="8" y="58.5" width="140.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BzF-ag-No9">
+                                                    <rect key="frame" x="292" y="54" width="75" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="75" id="UAG-8G-PjT"/>
+                                                    </constraints>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="w45-ox-8Z6" secondAttribute="bottom" constant="12" id="CIZ-CC-LxC"/>
+                                                <constraint firstItem="zfN-JZ-GNp" firstAttribute="leading" secondItem="eSB-7w-rvg" secondAttribute="leadingMargin" id="DsB-Gf-pSX"/>
+                                                <constraint firstItem="w45-ox-8Z6" firstAttribute="leading" secondItem="eSB-7w-rvg" secondAttribute="leadingMargin" id="Tle-DG-Du3"/>
+                                                <constraint firstItem="BzF-ag-No9" firstAttribute="trailing" secondItem="eSB-7w-rvg" secondAttribute="trailingMargin" id="Wsy-ki-cPd"/>
+                                                <constraint firstItem="zfN-JZ-GNp" firstAttribute="top" secondItem="eSB-7w-rvg" secondAttribute="topMargin" constant="12" id="iSK-gY-Trd"/>
+                                                <constraint firstItem="BzF-ag-No9" firstAttribute="centerY" secondItem="w45-ox-8Z6" secondAttribute="centerY" id="q9u-lf-tdd"/>
+                                                <constraint firstItem="WCs-VC-lFH" firstAttribute="centerY" secondItem="zfN-JZ-GNp" secondAttribute="centerY" id="qsQ-n9-8hk"/>
+                                                <constraint firstItem="WCs-VC-lFH" firstAttribute="trailing" secondItem="eSB-7w-rvg" secondAttribute="trailingMargin" id="uc0-av-eaw"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -275,12 +316,15 @@
                     </navigationItem>
                     <connections>
                         <outlet property="entranceAnimationSegmentedControl" destination="jDg-rG-Umm" id="TN2-yU-DRl"/>
+                        <outlet property="indicesTextField" destination="BzF-ag-No9" id="ibD-sz-lzf"/>
                         <outlet property="labelSwitch" destination="kwP-LI-jwK" id="Xsj-Lr-xPI"/>
                         <outlet property="longPressAnimationSegmentedControl" destination="iT3-KU-26z" id="nSS-dn-iCC"/>
                         <outlet property="opacityLabel" destination="gU3-lc-jtq" id="H8D-an-vcR"/>
                         <outlet property="opacitySlider" destination="SsV-qc-dbl" id="TnS-ME-IAc"/>
+                        <outlet property="seriesTextField" destination="WCs-VC-lFH" id="QoZ-R0-NkI"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nlb-w9-QKV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1761" y="36"/>
         </scene>

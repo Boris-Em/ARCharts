@@ -13,7 +13,7 @@ protocol SettingsDelegate {
     func didUpdateSettings(_ settings: Settings)
 }
 
-class SettingsTableViewController: UITableViewController {
+class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     var settings: Settings?
     var delegate: SettingsDelegate?
@@ -23,9 +23,13 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var opacitySlider: UISlider!
     @IBOutlet weak var opacityLabel: UILabel!
     @IBOutlet weak var labelSwitch: UISwitch!
+    @IBOutlet weak var seriesTextField: UITextField!
+    @IBOutlet weak var indicesTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        seriesTextField.delegate = self
+        indicesTextField.delegate = self
         
         setupControlsState()
     }
@@ -40,6 +44,8 @@ class SettingsTableViewController: UITableViewController {
         opacitySlider.value = settings.barOpacity
         opacityLabel.text = String(format: "%.1f", arguments: [opacitySlider.value])
         labelSwitch.isOn = settings.labels
+        seriesTextField.text = String(settings.numberOfSeries)
+        indicesTextField.text = String(settings.numberOfIndices)
     }
     
     // MARK: Actions
@@ -70,6 +76,38 @@ class SettingsTableViewController: UITableViewController {
     
     @IBAction func handleTapCancel(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: UITextFieldDelegate
+    
+    let textFieldMaxValue = 500
+    let textFieldMinValue = 1
+    let textFieldDefaultValue = 10
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard let text = textField.text else {
+            if textField == seriesTextField {
+                settings?.numberOfSeries = textFieldDefaultValue
+            } else {
+                settings?.numberOfIndices = textFieldDefaultValue
+            }
+            textField.text = String(textFieldDefaultValue)
+            
+            return true
+        }
+        
+        var value = Int(text) ?? textFieldDefaultValue
+        value = max(textFieldMinValue, min(textFieldMaxValue, value))
+        if textField == seriesTextField {
+            settings?.numberOfSeries = value
+        } else {
+            settings?.numberOfIndices = value
+        }
+        
+        textField.text = String(value)
+        textField.resignFirstResponder()
+        
+        return true
     }
     
 }

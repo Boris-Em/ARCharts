@@ -105,7 +105,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
             barChart = nil
         }
         
-        let values = generateRandomNumbers(withRange: 0..<10, numberOfRows: 10, numberOfColumns: 10)
+        let values = generateRandomNumbers(withRange: 0..<50, numberOfRows: 10, numberOfColumns: 10)
         
         dataSeries = ARDataSeries(withValues: values)
         if settings.labels {
