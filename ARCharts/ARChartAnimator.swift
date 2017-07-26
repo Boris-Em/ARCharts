@@ -27,7 +27,7 @@ public struct ARChartAnimator {
         self.animationDuration = animationDuration
     }
     
-    func addAnimation(toBarNode barNode: SCNNode, atIndex index: Int, withBarHeight barHeight: Float, _ opacity: Float) {
+    func addAnimation(to barNode: ARBarChartBar, atIndex index: Int, finalHeight: Float, finalOpacity: Float) {
         guard let barBox = barNode.geometry else  {
             return
         }
@@ -38,12 +38,12 @@ public struct ARChartAnimator {
         }
         
         if animationType == .grow || animationType == .progressiveGrow {
-            let heightAnimation = CABasicAnimation.animation(forKey: "height", from: 0.0, to: barHeight, duration: animationDuration, delay: delay)
-            let yPositionAnimation = CABasicAnimation.animation(forKey: "position.y", from: 0.0, to: 0.5 * barHeight, duration: animationDuration, delay: delay)
+            let heightAnimation = CABasicAnimation.animation(forKey: "height", from: 0.0, to: finalHeight, duration: animationDuration, delay: delay)
+            let yPositionAnimation = CABasicAnimation.animation(forKey: "position.y", from: 0.0, to: 0.5 * finalHeight, duration: animationDuration, delay: delay)
             barBox.addAnimation(heightAnimation, forKey: "height")
             barNode.addAnimation(yPositionAnimation, forKey: "position.y")
         } else if animationType == .fadeIn || animationType == .progressiveFadeIn {
-            let fadeInAnimation = CABasicAnimation.animation(forKey: "opacity", from: 0.0, to: opacity, duration: animationDuration, delay: delay)
+            let fadeInAnimation = CABasicAnimation.animation(forKey: "opacity", from: 0.0, to: finalOpacity, duration: animationDuration, delay: delay)
             barNode.addAnimation(fadeInAnimation, forKey: "opacity")
         }
     }

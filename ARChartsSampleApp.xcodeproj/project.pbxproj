@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2097B7FE1F2901DA00E06831 /* ARChartLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2097B7FD1F2901DA00E06831 /* ARChartLabel.swift */; };
 		20D557D31F1C0E0800924685 /* DataSample_0.csv in Resources */ = {isa = PBXBuildFile; fileRef = 20D557D01F1C0C3D00924685 /* DataSample_0.csv */; };
 		20E02D151F281686009DE002 /* ARBarChartBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E02D141F281686009DE002 /* ARBarChartBar.swift */; };
 		20E02D171F282D0C009DE002 /* ARChartHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E02D161F282D0C009DE002 /* ARChartHighlighter.swift */; };
@@ -69,6 +70,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2097B7FD1F2901DA00E06831 /* ARChartLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARChartLabel.swift; sourceTree = "<group>"; };
 		20D557D01F1C0C3D00924685 /* DataSample_0.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DataSample_0.csv; sourceTree = "<group>"; };
 		20E02D141F281686009DE002 /* ARBarChartBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBarChartBar.swift; sourceTree = "<group>"; };
 		20E02D161F282D0C009DE002 /* ARChartHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARChartHighlighter.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				C3C2EC461F1A83B3001EC280 /* Info.plist */,
 				FCE582F51F27206F002D469B /* ARChartAnimator.swift */,
 				20E02D161F282D0C009DE002 /* ARChartHighlighter.swift */,
+				2097B7FD1F2901DA00E06831 /* ARChartLabel.swift */,
 				C3C2EC641F1A8B94001EC280 /* ARBarChart.swift */,
 				20E02D141F281686009DE002 /* ARBarChartBar.swift */,
 				C3C2EC611F1A8467001EC280 /* ARBarChartProtocols.swift */,
@@ -361,6 +364,7 @@
 			files = (
 				FCE582F61F2720F3002D469B /* ARChartAnimator.swift in Sources */,
 				20E02D171F282D0C009DE002 /* ARChartHighlighter.swift in Sources */,
+				2097B7FE1F2901DA00E06831 /* ARChartLabel.swift in Sources */,
 				C3C2EC691F1BD6C3001EC280 /* ARDataSeries.swift in Sources */,
 				20E02D191F283C6C009DE002 /* CABasicAnimation+Utilities.swift in Sources */,
 				C3C2EC651F1A8B94001EC280 /* ARBarChart.swift in Sources */,

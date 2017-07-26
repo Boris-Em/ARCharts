@@ -126,17 +126,22 @@ public class ARBarChart: SCNNode {
             
             for index in 0..<dataSource.barChart(self, numberOfValuesInSeries: series) {
                 let value = dataSource.barChart(self, valueAtIndex: index, forSeries: series)
-                
                 let barHeight = Float(value) * maxBarHeight
                 let startingBarHeight = animationType == .grow || animationType == .progressiveGrow ? 0.0 : barHeight
+                let barOpacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
+                let startingBarOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
+                
                 let barBox = SCNBox(width: CGFloat(barsWidth),
                                     height: CGFloat(startingBarHeight),
                                     length: CGFloat(barsLength),
                                     chamferRadius: 0)
-                let barNode = ARBarChartBar(geometry: barBox, index: index, series: series, value: value, finalHeight: barHeight)
-                let opacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
-                let startingOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
-                barNode.opacity = CGFloat(startingOpacity)
+                let barNode = ARBarChartBar(geometry: barBox,
+                                            index: index,
+                                            series: series,
+                                            value: value,
+                                            finalHeight: barHeight,
+                                            finalOpacity: barOpacity)
+                barNode.opacity = CGFloat(startingBarOpacity)
 
                 let yPosition = 0.5 * Float(value) * Float(maxBarHeight)
                 let startingYPosition = animationType == .grow || animationType == .progressiveGrow ? 0.0 : yPosition
@@ -153,7 +158,7 @@ public class ARBarChart: SCNNode {
                 }
                 previousXPosition = xPosition
                 
-                animator?.addAnimation(toBarNode: barNode, atIndex: index, withBarHeight: barHeight, opacity)
+                animator?.addAnimation(to: barNode, atIndex: index, finalHeight: barHeight, finalOpacity: barOpacity)
             }
             
             self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barsLength)
@@ -266,7 +271,9 @@ public class ARBarChart: SCNNode {
             seriesLabel.font = UIFont.systemFont(ofSize: 10.0)
             seriesLabel.firstMaterial!.isDoubleSided = true
             seriesLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForSeries: series)
-            let seriesLabelNode = SCNNode(geometry: seriesLabel)
+            
+            let backgroundColor = delegate!.barChart(self, backgroundColorForLabelForSeries: series)
+            let seriesLabelNode = ARChartLabel(text: seriesLabel, type: .series, id: series, backgroundColor: backgroundColor)
             
             let unscaledLabelWidth = seriesLabelNode.boundingBox.max.x - seriesLabelNode.boundingBox.min.x
             let desiredLabelWidth = size.x * delegate!.spaceForSeriesLabels(in: self)
@@ -274,7 +281,7 @@ public class ARBarChart: SCNNode {
             let labelScale = min(desiredLabelWidth / unscaledLabelWidth, maxHeight / unscaledLabelHeight)
             seriesLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
             
-            let zShift = maxHeight - (maxHeight - labelScale * unscaledLabelHeight)
+            let zShift = 0.5 * maxHeight // maxHeight - (maxHeight - labelScale * unscaledLabelHeight)
             let position = SCNVector3(x: -0.5 * size.x,
                                       y: 0.0,
                                       z: zPosition + zShift)
@@ -298,7 +305,9 @@ public class ARBarChart: SCNNode {
             indexLabel.font = UIFont.systemFont(ofSize: 10.0)
             indexLabel.firstMaterial!.isDoubleSided = true
             indexLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForValuesAtIndex: index)
-            let indexLabelNode = SCNNode(geometry: indexLabel)
+            
+            let backgroundColor = delegate!.barChart(self, backgroundColorForLabelForValuesAtIndex: index)
+            let indexLabelNode = ARChartLabel(text: indexLabel, type: .index, id: index, backgroundColor: backgroundColor)
             
             let unscaledLabelWidth = indexLabelNode.boundingBox.max.x - indexLabelNode.boundingBox.min.x
             let desiredLabelWidth = size.z * delegate!.spaceForIndexLabels(in: self)

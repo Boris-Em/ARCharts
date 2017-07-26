@@ -21,6 +21,8 @@ public struct ARChartHighlighter {
     public var highlightedSeries: Int?
     public var highlightedIndex: Int?
     
+    private let defaultFadedOpacity: Float = 0.15
+    
     public init(animationStyle: AnimationStyle, animationDuration: TimeInterval) {
         self.animationStyle = animationStyle
         self.animationDuration = animationDuration
@@ -68,6 +70,14 @@ public struct ARChartHighlighter {
                         }
                     }
                 }
+            } else if let labelNode = node as? ARChartLabel {
+                if (labelNode.type == .series && labelNode.id != series)
+                    || (labelNode.type == .index && labelNode.id != index) {
+                    let startingOpacity: Float = isHighlighting ? 1.0 : defaultFadedOpacity
+                    let finalOpacity: Float = isHighlighting ? defaultFadedOpacity : 1.0
+                    let opacityAnimation = CABasicAnimation.animation(forKey: "opacity", from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)
+                    labelNode.addAnimation(opacityAnimation, forKey: "opacity")
+                }
             }
         }
     }
@@ -86,8 +96,9 @@ public struct ARChartHighlighter {
             ]
             animatedAttributeKeys = ["height", "position.y"]
         case .fade:
-            let startingOpacity: Float = isHighlighting ? 1.0 : 0.2
-            let finalOpacity: Float = isHighlighting ? 0.2 : 1.0
+            let fadedOpacity: Float = (barNode.finalOpacity <= 0.3) ? 0.0 : defaultFadedOpacity
+            let startingOpacity: Float = isHighlighting ? barNode.finalOpacity : fadedOpacity
+            let finalOpacity: Float = isHighlighting ? fadedOpacity : barNode.finalOpacity
             animations = [CABasicAnimation.animation(forKey: "opacity", from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)]
             animatedAttributeKeys = ["opacity"]
         }

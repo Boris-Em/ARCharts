@@ -104,7 +104,7 @@ public protocol ARBarChartDelegate: class {
     /**
      *  Asks the delegate to return the color for the text of a label for a specific series (Z axis).
      * - parameter barChart: The `ARBarChart` object requesting the color for the text of a series label.
-     * - parameter series: The index number identifying a series in the bar chart (Y axis).
+     * - parameter series: The series number identifying a series in the bar chart (Z axis).
      * - returns: The color to use for the label corresponding to the given series.
      */
     func barChart(_ barChart: ARBarChart,
@@ -118,6 +118,24 @@ public protocol ARBarChartDelegate: class {
      */
     func barChart(_ barChart: ARBarChart,
                   colorForLabelForValuesAtIndex index: Int) -> UIColor
+    
+    /**
+     *  Asks the delegate to return the color for the background of a label for a specific series (Z axis).
+     * - parameter barChart: The `ARBarChart` object requesting the color for the background of a series label.
+     * - parameter series: The series number identifying a series in the bar chart (Z axis).
+     * - returns: The color to use for the background of the label corresponding to the given series.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  backgroundColorForLabelForSeries series: Int) -> UIColor
+    
+    /**
+     *  Asks the delegate to return the color for the background of a label for a specific index (X axis).
+     * - parameter barChart: The `ARBarChart` object requesting the color for the background of a label.
+     * - parameter index: The index number identifying an index in the bar chart (X axis).
+     * - returns: The color to use for the background of the corresponding to the given index.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  backgroundColorForLabelForValuesAtIndex index: Int) -> UIColor
     
     /**
      * Asks the delegate to return the size of the gap to display after a specific series.
@@ -214,6 +232,14 @@ extension ARBarChartDelegate {
     
     public func barChart(_ barChart: ARBarChart, colorForLabelForValuesAtIndex index: Int) -> UIColor {
         return UIColor.white
+    }
+    
+    public func barChart(_ barChart: ARBarChart, backgroundColorForLabelForValuesAtIndex index: Int) -> UIColor {
+        return UIColor.clear
+    }
+    
+    public func barChart(_ barChart: ARBarChart, backgroundColorForLabelForSeries series: Int) -> UIColor {
+        return UIColor.clear
     }
     
 }
