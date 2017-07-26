@@ -16,10 +16,10 @@ public class ARBarChart: SCNNode {
     public var dataSource: ARBarChartDataSource?
     public var delegate: ARBarChartDelegate?
     public var size: SCNVector3!
-    public var animationType: ARChartAnimator.AnimationType? { didSet { updateAnimator() } }
-    public var animationDuration = 1.0 { didSet { updateAnimator() } }
+    public var animationType: ARChartPresenter.AnimationType? { didSet { updatePresenter() } }
+    public var animationDuration = 1.0 { didSet { updatePresenter() } }
     
-    private var animator: ARChartAnimator!
+    private var presenter: ARChartPresenter!
     private var highlighter: ARChartHighlighter!
     
     public required init(coder aDecoder: NSCoder) {
@@ -129,7 +129,7 @@ public class ARBarChart: SCNNode {
                 let barHeight = Float(value) * maxBarHeight
                 let startingBarHeight = animationType == .grow || animationType == .progressiveGrow ? 0.0 : barHeight
                 let barOpacity = delegate.barChart(self, opacityForBarAtIndex: index, forSeries: series)
-                let startingBarOpacity = animationType == .fadeIn || animationType == .progressiveFadeIn ? 0.0 : opacity
+                let startingBarOpacity = animationType == .fade || animationType == .progressiveFade ? 0.0 : opacity
                 
                 let barBox = SCNBox(width: CGFloat(barsWidth),
                                     height: CGFloat(startingBarHeight),
@@ -158,7 +158,7 @@ public class ARBarChart: SCNNode {
                 }
                 previousXPosition = xPosition
                 
-                animator?.addAnimation(to: barNode, atIndex: index, finalHeight: barHeight, finalOpacity: barOpacity)
+                presenter?.addAnimation(to: barNode)
             }
             
             self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barsLength)
@@ -185,15 +185,15 @@ public class ARBarChart: SCNNode {
     }
     
     /**
-     * Update the animator to use the new animation type. Called on `didSet` for member `animationType`.
+     * Update the presenter to use the new animation type. Called on `didSet` for member `animationType`.
      */
-    private func updateAnimator() {
+    private func updatePresenter() {
         if let animationType = self.animationType {
-            if self.animator != nil {
-                self.animator.animationType = animationType
-                self.animator.animationDuration = animationDuration
+            if presenter != nil {
+                presenter.animationType = animationType
+                presenter.animationDuration = animationDuration
             } else {
-                self.animator = ARChartAnimator(animationType: animationType, animationDuration: animationDuration)
+                presenter = ARChartPresenter(animationType: animationType, animationDuration: animationDuration)
             }
         }
     }
