@@ -173,13 +173,31 @@ public class ARBarChart: SCNNode {
         guard highlighter == nil else { return }
             
         highlighter = ARChartHighlighter(animationStyle: animationStyle, animationDuration: animationDuration)
-        highlighter.highlightBar(in: self, atIndex: index, forSeries: series)
+        highlighter.highlight(self, atIndex: index, forSeries: series)
+    }
+    
+    public func highlightSeries(_ series: Int,
+                                withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
+                                withAnimationDuration animationDuration: TimeInterval) {
+        guard highlighter == nil else { return }
+        
+        highlighter = ARChartHighlighter(animationStyle: animationStyle, animationDuration: animationDuration)
+        highlighter.highlight(self, atIndex: nil, forSeries: series)
+    }
+    
+    public func highlightIndex(_ index: Int,
+                               withAnimationStyle animationStyle: ARChartHighlighter.AnimationStyle,
+                               withAnimationDuration animationDuration: TimeInterval) {
+        guard highlighter == nil else { return }
+        
+        highlighter = ARChartHighlighter(animationStyle: animationStyle, animationDuration: animationDuration)
+        highlighter.highlight(self, atIndex: index, forSeries: nil)
     }
     
     public func unhighlight() {
-        guard let highlighter = self.highlighter else { return }
+        guard self.highlighter != nil else { return }
         
-        highlighter.unhighlightBar(in: self)
+        self.highlighter.unhighlight(self)
         
         self.highlighter = nil
     }
