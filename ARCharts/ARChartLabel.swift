@@ -23,6 +23,15 @@ public class ARChartLabel: SCNNode {
     /// Index number if `type` is `.index`, series number if `type` is `.series`.
     public let id: Int
     
+    public override var description: String {
+        switch type {
+        case .index:
+            return "IndexLabel(\(id))"
+        case .series:
+            return "SeriesLabel(\(id))"
+        }
+    }
+    
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -331,7 +331,7 @@ public class ARBarChart: SCNNode {
             let labelScale = min(desiredLabelWidth / unscaledLabelWidth, maxHeight / unscaledLabelHeight)
             seriesLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
             
-            let zShift = 0.5 * maxHeight // maxHeight - (maxHeight - labelScale * unscaledLabelHeight)
+            let zShift = 0.5 * maxHeight - (maxHeight - labelScale * unscaledLabelHeight)
             let position = SCNVector3(x: -0.5 * size.x,
                                       y: 0.0,
                                       z: zPosition + zShift)
@@ -365,7 +365,7 @@ public class ARBarChart: SCNNode {
             let labelScale = min(desiredLabelWidth / unscaledLabelWidth, maxHeight / unscaledLabelHeight)
             indexLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
             
-            let xShift = (maxHeight - labelScale * unscaledLabelHeight) - maxHeight
+            let xShift = (maxHeight - labelScale * unscaledLabelHeight) - 0.5 * maxHeight
             let position = SCNVector3(x: xPosition + xShift,
                                       y: 0.0,
                                       z: -0.5 * size.z)
