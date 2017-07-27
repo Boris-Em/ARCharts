@@ -283,13 +283,13 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.29999999999999999" minValue="0.10000000000000001" maxValue="3" translatesAutoresizingMaskIntoConstraints="NO" id="Odd-x5-SdF">
+                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.29999999999999999" minValue="0.10000000000000001" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Odd-x5-SdF">
                                                     <rect key="frame" x="106" y="30" width="263" height="31"/>
                                                     <connections>
                                                         <action selector="handleWidthSliderValueChange:" destination="gzb-DA-RSG" eventType="valueChanged" id="wLr-6h-zCH"/>
                                                     </connections>
                                                 </slider>
-                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.29999999999999999" minValue="0.10000000000000001" maxValue="3" translatesAutoresizingMaskIntoConstraints="NO" id="mFk-gd-9uG">
+                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.29999999999999999" minValue="0.10000000000000001" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="mFk-gd-9uG">
                                                     <rect key="frame" x="106" y="104" width="263" height="31"/>
                                                     <connections>
                                                         <action selector="handleLengthSliderValueChange:" destination="gzb-DA-RSG" eventType="valueChanged" id="fvP-Gc-Qpb"/>
