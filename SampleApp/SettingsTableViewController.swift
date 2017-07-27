@@ -51,7 +51,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         longPressAnimationSegmentedControl.selectedSegmentIndex = settings.index(forLongPressAnimationType: settings.longPressAnimationType)
         opacitySlider.value = settings.barOpacity
         opacityLabel.text = String(format: "%.1f", arguments: [opacitySlider.value])
-        labelSwitch.isOn = settings.labels
+        labelSwitch.isOn = settings.showLabels
         seriesTextField.text = String(settings.numberOfSeries)
         indicesTextField.text = String(settings.numberOfIndices)
         widthSlider.value = settings.graphWidth
@@ -92,7 +92,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @IBAction func handleSwitchValueChange(_ sender: UISwitch) {
-        settings?.labels = sender.isOn
+        settings?.showLabels = sender.isOn
     }
     
     @IBAction func handleDataSetValueChange(_ sender: UISegmentedControl) {
