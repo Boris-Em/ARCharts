@@ -9,8 +9,6 @@
 
 **ARCharts** is a library making it easy to create beautiful charts taylored for augmented reality. 
 
-![Alt Text](https://s2.postimg.org/fnwiclpdl/giphy-downsized-large.gif)
-
 ## Table of Contents
 
 * [**Project Details**](#project-details)  
@@ -20,6 +18,8 @@
 * [**Getting Started**](#getting-started)
 
 ## Project Details
+
+![Demo Gif](https://s2.postimg.org/fnwiclpdl/giphy-downsized-large.gif)
 
 ### Requirements
 - Requires iOS 11 or later
