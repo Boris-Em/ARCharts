@@ -148,13 +148,17 @@ class FocusSquare: SCNNode {
 		return 1.0
 	}
 	
-	private func pulseAction() -> SCNAction {
+	private func pulseAction() -> SCNAction? {
 		let pulseOutAction = SCNAction.fadeOpacity(to: 0.4, duration: 0.5)
 		let pulseInAction = SCNAction.fadeOpacity(to: 1.0, duration: 0.5)
 		pulseOutAction.timingMode = .easeInEaseOut
 		pulseInAction.timingMode = .easeInEaseOut
 		
-		return SCNAction.repeatForever(SCNAction.sequence([pulseOutAction, pulseInAction]))
+        if let sequence = SCNAction.sequence([pulseOutAction, pulseInAction]) {
+            return SCNAction.repeatForever(sequence)
+        }
+        
+        return nil
 	}
 	
 	private func stopPulsing(for node: SCNNode?) {
@@ -182,7 +186,9 @@ class FocusSquare: SCNNode {
 		self.segments?[5].open(direction: .down, newLength: sideLengthForOpenSquareSegments)
 		self.segments?[6].open(direction: .left, newLength: sideLengthForOpenSquareSegments)
 		self.segments?[7].open(direction: .right, newLength: sideLengthForOpenSquareSegments)
-		SCNTransaction.completionBlock = { self.entireSquare?.runAction(self.pulseAction(), forKey: "pulse") }
+        if let pulseAction = self.pulseAction() {
+            SCNTransaction.completionBlock = { self.entireSquare?.runAction(pulseAction, forKey: "pulse") }
+        }
 		SCNTransaction.commit()
 		
 		// Scale/bounce animation
@@ -231,22 +237,25 @@ class FocusSquare: SCNNode {
 		entireSquare?.addAnimation(scaleAnimation(for: "transform.scale.y"), forKey: "transform.scale.y")
 		entireSquare?.addAnimation(scaleAnimation(for: "transform.scale.z"), forKey: "transform.scale.z")
 		
-		// Flash
 		if flash {
 			let waitAction = SCNAction.wait(duration: animationDuration * 0.75)
 			let fadeInAction = SCNAction.fadeOpacity(to: 0.25, duration: animationDuration * 0.125)
 			let fadeAction = SCNAction.fadeOpacity(to: 0.0, duration: animationDuration * 0.125)
-			fillPlane?.runAction(SCNAction.sequence([waitAction, fadeInAction, fadeAction]))
+            if let sequence = SCNAction.sequence([waitAction, fadeInAction, fadeAction]) {
+                fillPlane?.runAction(sequence)
+            }
 			
 			let flashSquareAction = flashAnimation(duration: animationDuration * 0.25)
-			segments?[0].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
-			segments?[1].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
-			segments?[2].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
-			segments?[3].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
-			segments?[4].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
-			segments?[5].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
-			segments?[6].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
-			segments?[7].runAction(SCNAction.sequence([waitAction, flashSquareAction]))
+            if let sequence = SCNAction.sequence([waitAction, flashSquareAction]) {
+                segments?[0].runAction(sequence)
+                segments?[1].runAction(sequence)
+                segments?[2].runAction(sequence)
+                segments?[3].runAction(sequence)
+                segments?[4].runAction(sequence)
+                segments?[5].runAction(sequence)
+                segments?[6].runAction(sequence)
+                segments?[7].runAction(sequence)
+            }
 			
 		}
 		
