@@ -13,7 +13,7 @@ protocol SettingsDelegate {
     func didUpdateSettings(_ settings: Settings)
 }
 
-class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
+class SettingsTableViewController: UITableViewController {
     
     var settings: Settings?
     var delegate: SettingsDelegate?
@@ -23,8 +23,10 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var opacitySlider: UISlider!
     @IBOutlet weak var opacityLabel: UILabel!
     @IBOutlet weak var labelSwitch: UISwitch!
-    @IBOutlet weak var seriesTextField: UITextField!
-    @IBOutlet weak var indicesTextField: UITextField!
+    @IBOutlet weak var seriesLabel: UILabel!
+    @IBOutlet weak var indicesLabel: UILabel!
+    @IBOutlet weak var seriesSlider: UISlider!
+    @IBOutlet weak var indicesSlider: UISlider!
     @IBOutlet weak var widthLabel: UILabel!
     @IBOutlet weak var heightLabel: UILabel!
     @IBOutlet weak var lengthLabel: UILabel!
@@ -36,8 +38,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        seriesTextField.delegate = self
-        indicesTextField.delegate = self
         
         setupControlsState()
     }
@@ -52,8 +52,10 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         opacitySlider.value = settings.barOpacity
         opacityLabel.text = String(format: "%.1f", arguments: [opacitySlider.value])
         labelSwitch.isOn = settings.showLabels
-        seriesTextField.text = String(settings.numberOfSeries)
-        indicesTextField.text = String(settings.numberOfIndices)
+        seriesLabel.text = "Series: \(settings.numberOfSeries)"
+        indicesLabel.text = "Indices: \(settings.numberOfIndices)"
+        seriesSlider.value = Float(settings.numberOfSeries)
+        indicesSlider.value = Float(settings.numberOfIndices)
         widthSlider.value = settings.graphWidth
         heightSlider.value = settings.graphHeight
         lengthSlider.value = settings.graphLength
@@ -119,43 +121,21 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         settings?.graphLength = sender.value
     }
     
+    @IBAction func handleSeriesSliderValueChanged(_ sender: UISlider) {
+        seriesLabel.text = "Series: \(Int(sender.value))"
+        settings?.numberOfSeries = Int(sender.value)
+    }
+    
+    @IBAction func handleIndicesSliderValueChanged(_ sender: UISlider) {
+        indicesLabel.text = "Indices: \(Int(sender.value))"
+        settings?.numberOfIndices = Int(sender.value)
+    }
+    
     @IBAction func handleTapSave(_ sender: Any) {
         if let settings = settings {
             delegate?.didUpdateSettings(settings)
         }
         self.dismiss(animated: true, completion: nil)
     }
-        
-    // MARK: UITextFieldDelegate
-    
-    let textFieldMaxValue = 500
-    let textFieldMinValue = 1
-    let textFieldDefaultValue = 10
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        guard let text = textField.text else {
-            if textField == seriesTextField {
-                settings?.numberOfSeries = textFieldDefaultValue
-            } else {
-                settings?.numberOfIndices = textFieldDefaultValue
-            }
-            textField.text = String(textFieldDefaultValue)
-            
-            return true
-        }
-        
-        var value = Int(text) ?? textFieldDefaultValue
-        value = max(textFieldMinValue, min(textFieldMaxValue, value))
-        if textField == seriesTextField {
-            settings?.numberOfSeries = value
-        } else {
-            settings?.numberOfIndices = value
-        }
-        
-        textField.text = String(value)
-        textField.resignFirstResponder()
-        
-        return true
-    }
-    
+
 }
