@@ -15,7 +15,7 @@
     "ios": "11.0"
   },
   "source": {
-    "git": "https://github.com/Boris-Em/ARCharts",
+    "git": "https://github.com/Boris-Em/ARCharts.git",
     "tag": "0.0.1"
   },
   "source_files": [
