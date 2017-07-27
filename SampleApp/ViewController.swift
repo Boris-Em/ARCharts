@@ -18,7 +18,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
     @IBOutlet weak var settingsButton: UIButton!
     @IBOutlet var sceneView: ARSCNView!
     
-    var barChart: ARBarChart?
+    var barChart: ARBarChart? {
+        didSet {
+            chartButton.setTitle(barChart == nil ? "Add Chart" : "Remove Chart", for: .normal)
+        }
+    }
     private let arKitColors = [
         UIColor(red: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
         UIColor(red: 70.0  / 255.0, green: 150.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
@@ -207,10 +211,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
         if self.barChart != nil {
             self.barChart?.removeFromParentNode()
             self.barChart = nil
-            chartButton.setTitle("Add Chart", for: .normal)
         } else {
             self.addBarChart(at: lastPosition)
-            chartButton.setTitle("Remove Chart", for: .normal)
         }
     }
     
