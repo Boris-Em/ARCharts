@@ -678,3 +678,43 @@ func generateNumbers(fromDataSampleWithIndex index: Int) -> [[Double]]? {
     
     return data
 }
+
+func parseSeriesLabels(fromDataSampleWithIndex index: Int) -> [String]? {
+    let resourceName = String(format: "DataSample_%i", index)
+    
+    guard let dataPath = Bundle.main.path(forResource: resourceName, ofType: "csv") else {
+        print(String(format: "Could Not Load Data Sample File %@", resourceName))
+        return nil
+    }
+    
+    var seriesLabels: [String] = []
+    if let dataSampleString = try? String(contentsOfFile: dataPath) {
+        for line in dataSampleString.components(separatedBy: "\n").dropFirst() {
+            if let seriesLabel = line.components(separatedBy: ",").first {
+                seriesLabels.append(seriesLabel)
+            }
+        }
+    }
+    
+    return seriesLabels
+}
+
+func parseIndexLabels(fromDataSampleWithIndex index: Int) -> [String]? {
+    let resourceName = String(format: "DataSample_%i", index)
+    
+    guard let dataPath = Bundle.main.path(forResource: resourceName, ofType: "csv") else {
+        print(String(format: "Could Not Load Data Sample File %@", resourceName))
+        return nil
+    }
+    
+    var indexLabels: [String] = []
+    if let dataSampleString = try? String(contentsOfFile: dataPath) {
+        if let headerLine = dataSampleString.components(separatedBy: "\n").first {
+            for indexLabel in headerLine.components(separatedBy: ",").dropFirst() {
+                indexLabels.append(indexLabel)
+            }
+        }
+    }
+    
+    return indexLabels
+}

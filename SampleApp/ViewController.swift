@@ -115,15 +115,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
         }
         
         var values = generateRandomNumbers(withRange: 0..<50, numberOfRows: settings.numberOfSeries, numberOfColumns: settings.numberOfIndices)
+        var seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
+        var indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+        
         
         if settings.dataSet > 0 {
             values = generateNumbers(fromDataSampleWithIndex: settings.dataSet - 1) ?? values
+            seriesLabels = parseSeriesLabels(fromDataSampleWithIndex: settings.dataSet - 1) ?? seriesLabels
+            indexLabels = parseIndexLabels(fromDataSampleWithIndex: settings.dataSet - 1) ?? indexLabels
         }
         
         dataSeries = ARDataSeries(withValues: values)
-        if settings.labels {
-            dataSeries?.seriesLabels = Array(0..<values.count).map({ "Series \($0)" })
-            dataSeries?.indexLabels = Array(0..<values.first!.count).map({ "Index \($0)" })
+        if settings.showLabels {
+            dataSeries?.seriesLabels = seriesLabels
+            dataSeries?.indexLabels = indexLabels
             dataSeries?.spaceForIndexLabels = 0.2
             dataSeries?.spaceForIndexLabels = 0.2
         } else {
@@ -345,18 +350,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
     
     // MARK: Navigation
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toSettingsViewController" {
-            guard let navVC = segue.destination as? UINavigationController,
-            let settingsVC = navVC.viewControllers.first as? SettingsTableViewController else {
+    @IBAction func handleTapOnSettingsButton(_ sender: UIButton) {
+        guard let settingsNavigationController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "settingsPopoverNavigationControllerId") as? UINavigationController,
+            let settingsViewController = settingsNavigationController.viewControllers.first as? SettingsTableViewController else {
                 return
-            }
-            
-            navVC.modalPresentationStyle = UIModalPresentationStyle.popover
-            navVC.popoverPresentationController!.delegate = self
-            
-            settingsVC.delegate = self
-            settingsVC.settings = self.settings
+        }
+        
+        settingsNavigationController.modalPresentationStyle = .popover
+        settingsNavigationController.popoverPresentationController?.permittedArrowDirections = .any
+        settingsNavigationController.popoverPresentationController?.sourceView = sender
+        settingsNavigationController.popoverPresentationController?.sourceRect = sender.bounds
+        
+        settingsViewController.delegate = self
+        settingsViewController.settings = self.settings
+        
+        DispatchQueue.main.async {
+            self.present(settingsNavigationController, animated: true, completion: nil)
         }
     }
     

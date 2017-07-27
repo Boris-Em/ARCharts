@@ -50,9 +50,7 @@
                                     <color key="titleColor" red="0.16028749942779541" green="0.5866771936416626" blue="0.86923080682754517" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="sn0-rI-P0p" kind="popoverPresentation" identifier="toSettingsViewController" popoverAnchorView="4zr-Va-MAu" id="B8y-1h-oLH">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <action selector="handleTapOnSettingsButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="70D-mk-bcd"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -83,7 +81,7 @@
         <!--Navigation Controller-->
         <scene sceneID="YRu-1h-cSo">
             <objects>
-                <navigationController id="sn0-rI-P0p" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="settingsPopoverNavigationControllerId" id="sn0-rI-P0p" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="7Qh-Hu-3ge">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
