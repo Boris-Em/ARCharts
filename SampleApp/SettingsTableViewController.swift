@@ -71,11 +71,19 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: Actions
     
     @IBAction func handleEntranceAnimationSegmentControlValueChange(_ sender: UISegmentedControl) {
-        settings?.animationType = settings?.entranceAnimationType(forIndex: sender.selectedSegmentIndex) ?? .fade
+        if let entranceAnimationType = settings?.entranceAnimationType(forIndex: sender.selectedSegmentIndex) {
+            settings?.animationType = entranceAnimationType
+        } else {
+            settings?.animationType = .fade
+        }
     }
     
     @IBAction func handleLongPressAnimationSegmentControlValueChange(_ sender: UISegmentedControl) {
-        settings?.longPressAnimationType = settings?.longPressAnimationType(forIndex: sender.selectedSegmentIndex) ?? .shrink
+        if let longPressAnimationType = settings?.longPressAnimationType(forIndex: sender.selectedSegmentIndex){
+            settings?.longPressAnimationType = longPressAnimationType
+        } else {
+            settings?.longPressAnimationType = .shrink
+        }
     }
     
     @IBAction func handleOpacitySliderValueChange(_ sender: UISlider) {

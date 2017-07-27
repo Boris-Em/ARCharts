@@ -20,13 +20,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
     
     var barChart: ARBarChart?
     private let arKitColors = [
-        UIColor(colorLiteralRed: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 70.0  / 255.0, green: 150.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 134.0 / 255.0, green: 218.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 237.0 / 255.0, green: 231.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 0.0   / 255.0, green: 110.0 / 255.0, blue: 235.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 193.0 / 255.0, green: 193.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
-        UIColor(colorLiteralRed: 84.0  / 255.0, green: 204.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0)
+        UIColor(red: 238.0 / 255.0, green: 109.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
+        UIColor(red: 70.0  / 255.0, green: 150.0 / 255.0, blue: 150.0 / 255.0, alpha: 1.0),
+        UIColor(red: 134.0 / 255.0, green: 218.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
+        UIColor(red: 237.0 / 255.0, green: 231.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0),
+        UIColor(red: 0.0   / 255.0, green: 110.0 / 255.0, blue: 235.0 / 255.0, alpha: 1.0),
+        UIColor(red: 193.0 / 255.0, green: 193.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0),
+        UIColor(red: 84.0  / 255.0, green: 204.0 / 255.0, blue: 254.0 / 255.0, alpha: 1.0)
     ]
     
     var session: ARSession {
@@ -234,7 +234,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
         guard gestureRecognizer.state == .began else { return }
         var labelToHighlight: ARChartLabel?
         
-        let animationStyle = ARChartHighlighter.AnimationStyle.shrink
+        let animationStyle = settings.longPressAnimationType
         let animationDuration = 0.3
         let longPressLocation = gestureRecognizer.location(in: self.view)
         let selectedNode = self.sceneView.hitTest(longPressLocation, options: nil).first?.node
