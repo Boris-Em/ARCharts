@@ -7,7 +7,7 @@
 <p align="center"><img src="https://image.ibb.co/mzOvZk/ARCharts_Logo.jpg"/></p>	
 
 
-**ARCharts** is a library making it easy to create beautiful charts taylored for augmented reality. 
+**ARCharts** is a library making it easy to create beautiful charts tailored for augmented reality. 
 
 ## Table of Contents
 
@@ -41,10 +41,10 @@ There are three different ways of adding **ARCharts** to your project.
 <pre><code>pod 'ARCharts'</code></pre>
 
 #### Carthage
-*Carthage support is comming soon*.
+*Carthage support is coming soon*.
 
 #### Manual
-You can always install **ARCharts** manually by dragging the `ARCharts` folder into your XCode project. When you do so, make sure to check the "*Copy items into destination group's folder*" box.
+You can always install **ARCharts** manually by dragging the `ARCharts` folder into your XCode project. When you do so, make sure to check the *"Copy items into destination group's folder"* box.
 
 ### Setup
-**ARCharts** is a simple `SCNnode` subclass. That makes it very easy to use in your project!
+**ARCharts** is a simple `SCNNode` subclass. That makes it very easy to use in your project!
