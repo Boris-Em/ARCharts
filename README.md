@@ -19,7 +19,13 @@
 
 ## Project Details
 
-![Demo Gif](https://s2.postimg.org/fnwiclpdl/giphy-downsized-large.gif)
+![Demo Gif](https://s2.postimg.org/fnwiclpdl/giphy-downsized-large.gif)  
+[1](https://s1.postimg.org/xjna8qnnz/ARCharts-1.gif) 
+[2](https://s4.postimg.org/5v39nabxp/ARCharts-2.gif) 
+[3](https://s2.postimg.org/jtmd4cf3d/ARCharts-3.gif) 
+[4](https://s17.postimg.org/rpca8ffcv/ARCharts-4.gif) 
+[5](https://s2.postimg.org/xkhqpz6hl/ARCharts-5.gif)
+
 
 ### Requirements
 - Requires iOS 11 or later
