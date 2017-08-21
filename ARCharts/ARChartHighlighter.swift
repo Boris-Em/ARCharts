@@ -20,8 +20,6 @@ public struct ARChartHighlighter {
     public let animationDuration: TimeInterval
     public var highlightedSeries: Int?
     public var highlightedIndex: Int?
-    public var dataSource: ARBarChartDataSource?
-    public var delegate: ARBarChartDelegate?
     
     private let defaultFadedOpacity: Float = 0.15
     
