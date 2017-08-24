@@ -79,7 +79,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SettingsDelegate, UIP
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let configuration = ARWorldTrackingSessionConfiguration()
+        let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         sceneView.session.configuration?.isLightEstimationEnabled = true
         sceneView.session.run(configuration)
