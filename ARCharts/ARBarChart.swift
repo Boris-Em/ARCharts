@@ -157,6 +157,9 @@ public class ARBarChart: SCNNode {
                 
                 self.addChildNode(barNode)
                 
+                //Add value title on top of every bar
+                self.addTitle(barNode: barNode, barBox: barBox)
+                
                 if series == 0 {
                     self.addLabel(forIndex: index, atXPosition: xPosition + xShift, withMaxHeight: barWidth)
                 }
@@ -164,9 +167,9 @@ public class ARBarChart: SCNNode {
                 
                 presenter?.addAnimation(to: barNode, in: self)
             }
-            
             self.addLabel(forSeries: series, atZPosition: zPosition + zShift, withMaxHeight: barLength)
             previousZPosition = zPosition
+            
         }
     }
     
@@ -295,6 +298,7 @@ public class ARBarChart: SCNNode {
         
         return previousIndexXPosition + indexSize + indexSize * gapSize
     }
+
     
     /**
      * Calculates the Z position (Series Axis) for a specific series.
@@ -341,6 +345,37 @@ public class ARBarChart: SCNNode {
             
             self.addChildNode(seriesLabelNode)
         }
+    }
+    
+    /**
+     * Add a bar title on top of every bar
+     * - parameter bar: the ARChartBar to find height, seriesNo and indexNo.
+     * - parameter box: the SCNBox object to find geometry of the Bar.
+     */
+    private func addTitle(barNode bar: ARBarChartBar, barBox box: SCNBox) {
+        let titleLabelText = String(dataSource!.barChart(self, valueAtIndex: bar.index, forSeries: bar.series))
+        let titleLabel = SCNText(string: titleLabelText, extrusionDepth: 0.0)
+        titleLabel.truncationMode = kCATruncationNone
+        titleLabel.alignmentMode = kCAAlignmentCenter
+        titleLabel.firstMaterial!.isDoubleSided = true
+        titleLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForTitle: Int("\(bar.series)\(bar.index)")!)
+        
+        //TODO: Did type casting to give unique id
+        let backgroundColor = delegate!.barChart(self, backgroundColorForLabelForTitle: Int("\(bar.series)\(bar.index)")!)
+        let barNameLabelNode = ARChartLabel(text: titleLabel, type: .title, id: Int("\(bar.series)\(bar.index)")!, backgroundColor: backgroundColor)
+        
+        let unscaledLabelWidth = barNameLabelNode.boundingBox.max.x - barNameLabelNode.boundingBox.min.x
+        let desiredLabelWidth = box.length
+        let unscaledLabelHeight = barNameLabelNode.boundingBox.max.y - barNameLabelNode.boundingBox.min.y
+        let labelScale = min(Float(desiredLabelWidth) / unscaledLabelWidth, Float(bar.finalHeight) / Float(unscaledLabelHeight))
+        barNameLabelNode.scale = SCNVector3(labelScale, labelScale, labelScale)
+        
+        let position = SCNVector3(x: bar.position.x,
+                                  y: bar.finalHeight,
+                                  z: bar.position.z - Float(box.length/2))
+        barNameLabelNode.position = position
+        barNameLabelNode.eulerAngles = SCNVector3(0.0, -0.5 * Float.pi, 0.0)
+        self.addChildNode(barNameLabelNode)
     }
     
     /**
