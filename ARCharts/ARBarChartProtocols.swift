@@ -111,6 +111,15 @@ public protocol ARBarChartDelegate: class {
                   colorForLabelForSeries series: Int) -> UIColor
     
     /**
+     *  Asks the delegate to return the color for the text of a label for a specific series (Y axis).
+     * - parameter barChart: The `ARBarChart` object requesting the color for the text of a series label.
+     * - parameter series: The series number identifying a series in the bar chart (Y axis).
+     * - returns: The color to use for the label corresponding to the given series.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  colorForLabelForTitle title: Int) -> UIColor
+    
+    /**
      *  Asks the delegate to return the color for the text of a label for a specific index (X axis).
      * - parameter barChart: The `ARBarChart` object requesting the color for the text of a label.
      * - parameter index: The index number identifying an index in the bar chart (X axis).
@@ -127,6 +136,15 @@ public protocol ARBarChartDelegate: class {
      */
     func barChart(_ barChart: ARBarChart,
                   backgroundColorForLabelForSeries series: Int) -> UIColor
+    
+    /**
+     *  Asks the delegate to return the color for the background of a label for a specific series (Z axis).
+     * - parameter barChart: The `ARBarChart` object requesting the color for the background of a series label.
+     * - parameter series: The series number identifying a series in the bar chart (Z axis).
+     * - returns: The color to use for the background of the label corresponding to the given series.
+     */
+    func barChart(_ barChart: ARBarChart,
+                  backgroundColorForLabelForTitle title: Int) -> UIColor
     
     /**
      *  Asks the delegate to return the color for the background of a label for a specific index (X axis).
@@ -146,6 +164,7 @@ public protocol ARBarChartDelegate: class {
      */
     func barChart(_ barChart: ARBarChart,
                   gapSizeAfterSeries series: Int) -> Float
+    
     
     /**
      * Asks the delegate to return the size of the gap to display after a specific index.
@@ -241,6 +260,11 @@ extension ARBarChartDelegate {
         return UIColor.white
     }
     
+    public func barChart(_ barChart: ARBarChart,
+                         colorForLabelForTitle title: Int) -> UIColor {
+        return UIColor.white
+    }
+    
     func barChart(_ barChart: ARBarChart,
                   opacityForBarAtIndex index: Int,
                   forSeries series: Int) -> Float {
@@ -259,6 +283,9 @@ extension ARBarChartDelegate {
         return UIColor.clear
     }
     
+    public func barChart(_ barChart: ARBarChart, backgroundColorForLabelForTitle title: Int) -> UIColor {
+        return UIColor.black
+    }
     
     
 }

@@ -41,10 +41,10 @@ public struct ARChartHighlighter {
         guard highlightedIndex == nil && highlightedSeries == nil else { return }
         
         addAnimations(to: barChart, highlightIndex: index, highlightSeries: series, isHighlighting: true)
-        
         self.highlightedIndex = index
         self.highlightedSeries = series
     }
+    
     
     /**
      * Reverse highlighting animations on all bars except the one that was highlighted.
@@ -80,7 +80,7 @@ public struct ARChartHighlighter {
                 }
             } else if let labelNode = node as? ARChartLabel {
                 if (series != nil && labelNode.type == .series && labelNode.id != series!)
-                    || (index != nil && labelNode.type == .index && labelNode.id != index!) {
+                    || (index != nil && labelNode.type == .index && labelNode.id != index!) || (index != nil && series != nil && labelNode.type == .title && labelNode.id != Int("\(series!)\(index!)")) {
                     let startingOpacity: Float = isHighlighting ? 1.0 : defaultFadedOpacity
                     let finalOpacity: Float = isHighlighting ? defaultFadedOpacity : 1.0
                     let opacityAnimation = CABasicAnimation.animation(forKey: "opacity", from: startingOpacity, to: finalOpacity, duration: animationDuration, delay: nil)
