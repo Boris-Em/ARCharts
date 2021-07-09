@@ -317,8 +317,8 @@ public class ARBarChart: SCNNode {
     private func addLabel(forSeries series: Int, atZPosition zPosition: Float, withMaxHeight maxHeight: Float) {
         if let seriesLabelText = dataSource!.barChart(self, labelForSeries: series) {
             let seriesLabel = SCNText(string: seriesLabelText, extrusionDepth: 0.0)
-            seriesLabel.truncationMode = kCATruncationNone
-            seriesLabel.alignmentMode = kCAAlignmentCenter
+            seriesLabel.truncationMode = CATextLayerTruncationMode.none.rawValue
+            seriesLabel.alignmentMode = CATextLayerAlignmentMode.center.rawValue
             seriesLabel.font = UIFont.systemFont(ofSize: 10.0)
             seriesLabel.firstMaterial!.isDoubleSided = true
             seriesLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForSeries: series)
@@ -351,8 +351,8 @@ public class ARBarChart: SCNNode {
     private func addLabel(forIndex index: Int, atXPosition xPosition: Float, withMaxHeight maxHeight: Float) {
         if let indexLabelText = dataSource!.barChart(self, labelForValuesAtIndex: index) {
             let indexLabel = SCNText(string: indexLabelText, extrusionDepth: 0.0)
-            indexLabel.truncationMode = kCATruncationNone
-            indexLabel.alignmentMode = kCAAlignmentCenter
+            indexLabel.truncationMode = CATextLayerTruncationMode.none.rawValue
+            indexLabel.alignmentMode = CATextLayerAlignmentMode.center.rawValue
             indexLabel.font = UIFont.systemFont(ofSize: 10.0)
             indexLabel.firstMaterial!.isDoubleSided = true
             indexLabel.firstMaterial!.diffuse.contents = delegate!.barChart(self, colorForLabelForValuesAtIndex: index)
