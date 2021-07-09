@@ -14,7 +14,7 @@ import UIKit
  * The `ARBarChartDataSource` protocol is adopted by an object that mediates the application's data model for an `ARBarChart` object.
  * The data source proves the bar chart object with the information it needs to construct and modify a bar chart.
  */
-public protocol ARBarChartDataSource: class {
+public protocol ARBarChartDataSource: AnyObject {
     
     /**
      *  Asks the data source to return the number of series (rows on the Y axis) in the bar chart.
@@ -76,7 +76,7 @@ extension ARBarChartDataSource {
     
 }
 
-public protocol ARBarChartDelegate: class {
+public protocol ARBarChartDelegate: AnyObject {
     
     /**
      *  Asks the delegate to return the color for a bar at a given index (X axis) for a specific series (rows on the Y axis) in the bar chart.
